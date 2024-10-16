@@ -21,14 +21,16 @@ p{
 
     background-repeat: no-repeat;
     background-size: cover;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
 }
 .homebackgroundimagetext{
-    padding: 30px;
+    width: inherit;
+    padding: 7.5vw;
     backdrop-filter: blur(5px);
     font-size: 2.5em;
-    text-align: center;
-    
-    margin: auto;
 }
 .navbar-custom{
     background-color: var(--secondary-background);
