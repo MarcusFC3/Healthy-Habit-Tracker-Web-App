@@ -5,6 +5,9 @@
     --main-text-color: black;
     --secondary-text-color: grey;
 }
+body{ /*Temporary background change to be able to see better*/
+    background-color: var(--gray);
+}
 .container{
     background-color: var(--background);
 }
