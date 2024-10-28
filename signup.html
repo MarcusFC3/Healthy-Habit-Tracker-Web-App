@@ -56,18 +56,21 @@
             <div class="col-6">
                 <form id="sign_up_form" action="" method="post">
                     <h4>Sign Up</h4>
-                    <p>
-                        Email: <br>
-                        <input type="text" name="email" id="email" placeholder="Enter your email">
-                    </p>
-                    <p>
-                        Password: <br>
-                        <input type="password" name="create_password" id="create_password" placeholder="Enter a password">
-                    </p>
-                    <p>
-                        Username: <br>
-                        <input type="text" name="username" id="username" placeholder="Enter a Username">
-                    </p>
+                    <div>
+                        <label for="email_address">Email:</label>
+                        <input type="email" name="email_address" id="email_address" placeholder="Enter your email" required autofocus autocomplete="on">
+                        <span class="required">*</s pan>
+                    </div>
+                    <div>
+                        <label for="create_password">Password:</label> 
+                        <input type="password" name="create_password" id="create_password" placeholder="Enter a password" required>
+                        <span class="required">*</span>
+                    </div>
+                    <div>
+                        <label for="verify_password">Verify Password:</label>
+                        <input type="password" name="verify_password" id="verify_password" placeholder="Verify the password" required>
+                        <span class="required">*</span>
+                    </div>
 
                     <input type="submit" value="Sign Up" id="submit">
 
@@ -81,4 +84,7 @@
     <footer>
         
     </footer>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>"
+    <script src="js/sign_up.js"></script>
 </body>
