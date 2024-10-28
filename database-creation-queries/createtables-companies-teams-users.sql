@@ -24,3 +24,7 @@ CONSTRAINT PK_UserID PRIMARY KEY (UserID),
 CONSTRAINT FK_Teams FOREIGN KEY (TeamID)
 REFERENCES Teams (TeamID)
 )
+
+CREATE TABLE UserHealthData(
+    User
+)
