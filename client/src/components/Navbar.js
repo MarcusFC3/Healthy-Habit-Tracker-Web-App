@@ -6,8 +6,8 @@ const Navbar = () => {
                     <a class="navbar-brand" aria-disabled="true"><span id="navbarBrand">
                         <img src="logo.svg" alt="Simply Health Logo" height="35"></img>
                     </span></a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navb`arSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
