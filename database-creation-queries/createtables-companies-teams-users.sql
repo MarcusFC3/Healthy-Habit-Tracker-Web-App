@@ -16,7 +16,8 @@ REFERENCES Companies (CompanyID)
 
 CREATE TABLE Users
 (UserID int NOT NULL AUTO_INCREMENT,
-Username varchar(25) NOT NULL ,
+FullName varchar(60) NOT NULL,
+Username varchar(25) NOT NULL,
 email varchar(25) NOT NULL ,
 hashedpassword varchar(25) NOT NULL ,
 TeamID int,
