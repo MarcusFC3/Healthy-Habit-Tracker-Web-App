@@ -1,7 +1,13 @@
+import {
+    BrowserRouter as Router,
+  } from "react-router-dom";
 import Navbar from "./components/Navbar";
+
 const App = () =>{
     return (<div class="container">
-    <Navbar />
+    <Router exact path= "/">
+        <Navbar />
+    </Router>
     </div>)
 }
 

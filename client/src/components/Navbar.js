@@ -14,13 +14,13 @@ const Navbar = () => {
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="index.html">Home</a>
+                                <a class="nav-link" href="home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="activities.html">Activities</a>
+                                <a class="nav-link" href="activities">Activities</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="leaderboards.html">leaderboards</a>
+                                <a class="nav-link" href="leaderboards">leaderboards</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -28,7 +28,7 @@ const Navbar = () => {
                                     Dropdown
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="login.html">Login</a></li>
+                                    <li><a class="dropdown-item" href="login">Login</a></li>
                                     <li></li>
                                 </ul>
                             </li>
