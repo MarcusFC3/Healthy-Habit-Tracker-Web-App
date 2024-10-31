@@ -18,7 +18,7 @@ p{
 .homebackgroundimage{
     font-family: Arial, Helvetica, sans-serif;
     height: 200px;
-    background-image: url("../img/testbackgroundimg.jpg");
+    background-image: url("../../public/img/testbackgroundimg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     text-align: center;

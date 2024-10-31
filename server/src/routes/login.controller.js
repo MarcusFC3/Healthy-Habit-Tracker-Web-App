@@ -25,6 +25,12 @@ function signup(req, res) {
     else {
         //check if user already exists
         //Create a new user with this data
+        return res.status(200).json({
+            fullName: fullName,
+            username: username,
+            email: email,
+            password: password
+        })
         //log them in
     }
 
