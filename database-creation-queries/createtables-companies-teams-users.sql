@@ -15,7 +15,7 @@ REFERENCES Companies (CompanyID)
 )
 
 CREATE TABLE Users
-(UserID int NOT NULL AUTO_INCREMENT,
+(UserID int NOT NULL ,
 FullName varchar(60) NOT NULL,
 Username varchar(25) NOT NULL,
 email varchar(25) NOT NULL ,
@@ -31,5 +31,5 @@ CREATE TABLE UserActivites(
     ActivityID int NOT NULL,
     ActivityName varchar(30) NOT NULL,
     CONSTRAINT PK_UserActivites PRIMARY KEY (UserID, ActivityID),
-    CONSTRAINT FK_UserID FOREIGN KEY (UserID)
+    CONSTRAINT FK_UserID FOREIGN KEY (UserID) REFERENCES Users (UserID)
 )

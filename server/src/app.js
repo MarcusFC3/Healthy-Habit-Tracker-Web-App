@@ -3,6 +3,8 @@ const mysql = require("mysql");
 const morgan = require("morgan");
 const cors = require("cors");
 const path = require("path");
+const session = require("express-session");
+const bcrypt = require("bcrypt");
 
 const loginRouter = require("./routes/login.router");
 
@@ -15,6 +17,11 @@ app.use(cors({
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname,"..","public")));
+app.use(session({
+    secret: bcrypt.hash("isnfpos[pkv"),
+    resave: false,
+    saveUninitialized: false,
+}))
 
 app.use("/", loginRouter)
 

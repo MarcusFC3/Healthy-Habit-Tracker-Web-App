@@ -1,14 +1,15 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const mysql = require("mysql");
+const sql = require("mssql");
+const { adminconf } = require("../models/user")
 // const {serverAdminConnection} = require("../models/user");
 
 function signup(req, res) {
-    let { fullName, username, email, password } = req.body;
+    let { firstName, lastName, username, email, password } = req.body;
     username = username;
     email = email;
     password = password;
-    if (fullName === "" || username === "" || email === "" || password === "") {
+    if (firstName === "" || lastName === "" || username === "" || email === "" || password === "") {
         return res.status(400).json({
             status: "Failure",
             message: "One or more fields were empty"
@@ -18,55 +19,55 @@ function signup(req, res) {
             status: "Failure",
             message: "Username must only contain alphanumeric characters"
         })
-    } else if (!/^[a-z]/i.test(fullName)) {
+    } else if (!/^[a-z]/i.test(firstName)) {
         return res.status(400).json({
             status: "Failure",
-            message: "Name must only contain alphabectic characters"
+            message: "First name must only contain alphabectic characters"
+        })
+    } else if (!/^[a-z]/i.test(localStorageName)) {
+        return res.status(400).json({
+            status: "Last name must only contain alphabectic characters"
         })
     }
     else {
-        const serverAdminConnection = mysql.createConnection({
-            host: "10.44.142.88",
-            user: "serveradministrator",
-            password: "administrator142",
-            database: "SimplyHealth",
-            port: 57161,
-            TrustServerCertificate: true
-        })
-        console.log("1212121")
-        serverAdminConnection.on("error", (err) => console.log("An error occured with the database. Again. ush. \n" + err))
-        serverAdminConnection.connect((error) => {
-            console.log("starting connection...")
-            if (error) {
-                console.log(error);
-                console.log("Something went wrong...");
-                serverAdminConnection.end();
-            } else {
-                console.log("MySql Connected!" + serverAdminConnection.json());
-                serverAdminConnection.query(`SELECT email FROM Users WHERE email=${email}`, (error, res) => {
-                    console.log("starting query")
-                    if (error) {
-                        console.log("Failiure")
-        
-                    }
-                    else {
-                        console.log("Success!")
-                    }
-        
-                    serverAdminConnection.end()
+        async function checkIfUserExists(email) {
+            const connectionPool = await sql.connect(adminconf);
+            const request = await connectionPool.request();
+            request = request.input(email, sql.VarChar, `${email}`);
+            const result = request.query("SELECT @email FROM Users");
+            connectionPool.close();
+            return result === email
+        }
+        if (checkIfUserExists(email)) {
+            return res.status(400).json({
+                status: "Failure",
+                message: "An account with that email already exists"
+            })
+        }
+        else {
+            try {
+                async function addUserToDb(firstName, lastName, username, email, password) {
+                    password = bcrypt.hash(password);
+                    const connection = await sql.connect(adminconf);
+                    const request = connection.request();
+                    request = request.input()//put all fields in
+                    const result = request.query("INSERT INTO Users (firstName, lastName, username, email, hashedpassword) VALUES (@firstName, @lastName, @email, @password)");
+                    //if result is successfull
+                    return res.status(200).json({
+                        status: "Successful",
+                        message: "account successfully added"
+                    })
+
+                }
+                addUserToDb(firstName, lastName, username, email, password)
+            }
+            catch (e) {
+                return res.status(500).json({
+                    status: "Failure",
+                    message: "Something went wrong, try again later"
                 })
             }
-        });
-      
-
-        //check if user already exists
-        //Create a new user with this data
-        // return res.status(200).json({
-        //     fullName: fullName,
-        //     username: username,
-        //     email: email,
-        //     password: password
-        // })
+        }
         //log them in
     }
 
