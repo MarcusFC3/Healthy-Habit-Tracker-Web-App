@@ -4,6 +4,7 @@ const sql = require("mssql");
 const { adminconf } = require("../models/user")
 // const {serverAdminConnection} = require("../models/user");
 
+let userId = 0;
 function signup(req, res) {
     let { firstName, lastName, username, email, password } = req.body;
     username = username;
@@ -24,20 +25,27 @@ function signup(req, res) {
             status: "Failure",
             message: "First name must only contain alphabectic characters"
         })
-    } else if (!/^[a-z]/i.test(localStorageName)) {
+    } else if (!/^[a-z]/i.test(lastName)) {
         return res.status(400).json({
             status: "Last name must only contain alphabectic characters"
         })
     }
     else {
+        console.log("Checking Db...")
         async function checkIfUserExists(email) {
             const connectionPool = await sql.connect(adminconf);
-            const request = await connectionPool.request();
-            request = request.input(email, sql.VarChar, `${email}`);
-            const result = request.query("SELECT @email FROM Users");
-            connectionPool.close();
-            return result === email
+            let request = await connectionPool.request();
+            request = await request.input("email", sql.VarChar, `${email}`);
+            await request.query("SELECT email FROM Users WHERE email = @email").then(
+                (res) => { connectionPool.close(); 
+                    console.log("email =" + email  + "res =" + JSON.stringify(res) + res['recordset'].length);
+                    console.log("" + res['recordset'].length > 0);
+                    return res['recordset'].length > 0
+        }).catch((err) => {console.log("an error has occured\n" + err.toString() )});
+            
+           
         }
+        console.log("calling function brother" + checkIfUserExists(email).then((yes) => {console.log(JSON.stringify(yes))}))
         if (checkIfUserExists(email)) {
             return res.status(400).json({
                 status: "Failure",
@@ -51,7 +59,7 @@ function signup(req, res) {
                     const connection = await sql.connect(adminconf);
                     const request = connection.request();
                     request = request.input()//put all fields in
-                    const result = request.query("INSERT INTO Users (firstName, lastName, username, email, hashedpassword) VALUES (@firstName, @lastName, @email, @password)");
+                    request.query("INSERT INTO Users (FullName, username, email, hashedpassword) VALUES (@firstName @lastName, @email, @password)")
                     //if result is successfull
                     return res.status(200).json({
                         status: "Successful",
@@ -70,11 +78,38 @@ function signup(req, res) {
         }
         //log them in
     }
-
 }
 
 function login(req, res) {
-
+    let {email, password} = req.body;
+    if (email === "" || password === ""){
+        return res.status(400).json({
+            status: "Failure",
+            message: "One or more fields are empty"
+        })
+    } else{
+        async function checkformatch(email, password) {
+            const connection = await sql.connect(adminconf);
+            const request = connection.request()
+            request = request.input("email", sql.VarChar(), email)
+            const result = sql.query("SELECT hashedpassword FROM Users WHERE email = '@email' ")
+            // unhash the password
+            if (result === password) {
+                req.session.user = {
+                    //relevant user data
+                }
+                return res.status(200).json({
+                    status: "success",
+                    message: "Account login successful"
+                })
+            } else{
+                return res.status(400).json({
+                    status: "Failure",
+                    message : "Incorrect password or email"
+                })
+            }
+        }
+    }
 }
 
 module.exports = {

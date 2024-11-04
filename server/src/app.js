@@ -18,7 +18,10 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname,"..","public")));
 app.use(session({
-    secret: bcrypt.hash("isnfpos[pkv"),
+    secret: "secret",
+    cookie: {
+      maxAge: 30000  
+    },
     resave: false,
     saveUninitialized: false,
 }))
