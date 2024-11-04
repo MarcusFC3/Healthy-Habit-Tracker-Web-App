@@ -1,25 +1,48 @@
 const express = require("express");
 const http = require("http");
 const app = require("./app");
-const mysql2 = require("mysql2");
+const sql = require("mssql");
 const { error } = require("console");
+const { connectionString } = require("connection-string")
+
 
 const server = http.createServer(app);
 const PORT = 8000;
 
 
 
-server.listen(PORT,() =>{
+server.listen(PORT, () => {
     console.log("Server is listening");
-    const serverAdminConnection = mysql2.createConnection({
-        host: "localhost",
+    /*
+    install and enable sql server browser using server installation center.
+    start the service.
+    include localhost/ip in server field 
+    */
+
+   async function connect(){
+    let pool;
+    try{
+    pool = await sql.connect({
+        server: "localhost\\SQLEXPRESS",
         user: "serveradministrator",
-        password: "administrator142",
+        password: "admin",
         database: "SimplyHealth",
-        port: 57161,
-        TrustServerCertificate: true
-    })
-    serverAdminConnection.connect((error) =>{
-        console.log("Hello " + error);
-    })
-})
+ 
+        options: { 
+            encrypt: true, // Use true for Azure or if required by your server
+            trustServerCertificate: true // Set to true to bypass certificate validation
+        }
+    });
+    const result = await pool.request().query("SELECT * FROM Users")
+    console.log(result.recordset)
+    }
+    catch (err) {
+        console.log("SQL error", err)
+    }finally{
+        if (pool){
+            await pool.close()
+        }
+    }
+}
+connect()
+})    
