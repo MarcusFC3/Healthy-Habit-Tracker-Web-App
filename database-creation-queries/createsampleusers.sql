@@ -1,8 +1,8 @@
-INSERT INTO USERS (UserID, Username,email,hashedpassword)
-VALUES (1, 'jeff', 'Jeff@gmail', '123awsd')
+INSERT INTO USERS (firstName,lastName, Username,email,hashedpassword)
+VALUES ('jeff','Bezos', 'JeffB@gmail', '123awsd')
 
-INSERT INTO USERS (UserID, Username,email,hashedpassword)
-VALUES (2, 'John', 'JohnD@gmail.com', '123awsd')
+INSERT INTO USERS (firstName,lastName, Username,email,hashedpassword)
+VALUES ('John', 'Doe', 'JohnD@gmail.com', '123awsd')
 
 
 SELECT * 

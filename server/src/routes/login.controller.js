@@ -15,6 +15,9 @@ function signup(req, res) {
             status: "Failure",
             message: "One or more fields were empty"
         })
+        /*
+            Need better regex name testing
+        */
     } else if (!/^[a-z0-9]+$/i.test(username)) {
         return res.status(400).json({
             status: "Failure",
@@ -36,63 +39,72 @@ function signup(req, res) {
             const connectionPool = await sql.connect(adminconf);
             let request = await connectionPool.request();
             request = await request.input("email", sql.VarChar, `${email}`);
-            await request.query("SELECT email FROM Users WHERE email = @email").then(
-                (res) => { connectionPool.close(); 
-                    console.log("email =" + email  + "res =" + JSON.stringify(res) + res['recordset'].length);
-                    console.log("" + res['recordset'].length > 0);
-                    return res['recordset'].length > 0
-        }).catch((err) => {console.log("an error has occured\n" + err.toString() )});
-            
-           
+            return await request.query("SELECT email FROM Users WHERE email = @email")
         }
-        console.log("calling function brother" + checkIfUserExists(email).then((yes) => {console.log(JSON.stringify(yes))}))
-        if (checkIfUserExists(email)) {
-            return res.status(400).json({
-                status: "Failure",
-                message: "An account with that email already exists"
-            })
-        }
-        else {
-            try {
+        checkIfUserExists(email).then((result) => {
+            if (result.recordset[0]) {
+                return res.status(400).json({
+                    status: "Failure",
+                    message: "An account with that email already exists"
+                }
+                )
+            } else {
                 async function addUserToDb(firstName, lastName, username, email, password) {
-                    password = bcrypt.hash(password);
                     const connection = await sql.connect(adminconf);
                     const request = connection.request();
-                    request = request.input()//put all fields in
-                    request.query("INSERT INTO Users (FullName, username, email, hashedpassword) VALUES (@firstName @lastName, @email, @password)")
-                    //if result is successfull
-                    return res.status(200).json({
-                        status: "Successful",
-                        message: "account successfully added"
+                    bcrypt.genSalt(10, (err, salt) => {
+                        bcrypt.hash(password, salt, (err, hash) => {
+                            if (err) {
+                                throw err;
+                            }
+                            else {
+                                console.log("We made it here!")
+                                request.input("password", sql.VarChar, hash);
+                            }
+                        });
                     })
+                   
+                     
+                    request.input("firstName", sql.VarChar, firstName);//put all fields in
+                    request.input("lastName", sql.VarChar, lastName);
+                    request.input("username", sql.VarChar, username);
+                    request.input("email", sql.VarChar, email);
+                    
+                    return await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedpassword) VALUES (@firstName, @lastName, @username, @email, @password)");
 
                 }
-                addUserToDb(firstName, lastName, username, email, password)
+                addUserToDb(firstName, lastName, username, email, password).then(
+                    () => {
+                        return res.status(200).json({
+                            status: "Success",
+                            message: "Account was successfully created"
+                        })
+                    }
+                )
             }
-            catch (e) {
-                return res.status(500).json({
-                    status: "Failure",
-                    message: "Something went wrong, try again later"
-                })
-            }
-        }
-        //log them in
+        }).catch((err) => {
+            console.log("an error occured" + err)
+            return res.status(500).json({
+                status: "Failure",
+                message: "Something went wrong, try again later"
+            })
+        })
     }
 }
 
 function login(req, res) {
-    let {email, password} = req.body;
-    if (email === "" || password === ""){
+    let { email, password } = req.body;
+    if (email === "" || password === "") {
         return res.status(400).json({
             status: "Failure",
             message: "One or more fields are empty"
         })
-    } else{
+    } else {
         async function checkformatch(email, password) {
             const connection = await sql.connect(adminconf);
             const request = connection.request()
             request = request.input("email", sql.VarChar(), email)
-            const result = sql.query("SELECT hashedpassword FROM Users WHERE email = '@email' ")
+            const result = await sql.query("SELECT hashedpassword FROM Users WHERE email = '@email' ")
             // unhash the password
             if (result === password) {
                 req.session.user = {
@@ -102,10 +114,10 @@ function login(req, res) {
                     status: "success",
                     message: "Account login successful"
                 })
-            } else{
+            } else {
                 return res.status(400).json({
                     status: "Failure",
-                    message : "Incorrect password or email"
+                    message: "Incorrect password or email"
                 })
             }
         }
