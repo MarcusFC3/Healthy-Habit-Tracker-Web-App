@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simply Health Sign Up</title>
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/stylesheet.css" rel="stylesheet">
+    <link href="../bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="../css/stylesheet.css" rel="stylesheet">
 </head>
 
 <body>
@@ -19,8 +19,8 @@
                                 <!-- <img src="img/arrow-right-square-fill.svg" alt="right arrow" height="35"> -->
                                 Simply Health
                             </span></a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
@@ -57,19 +57,29 @@
                 <form id="sign_up_form" action="" method="post">
                     <h4>Sign Up</h4>
                     <p>
-                        Email: <br>
-                        <input type="text" name="email" id="email" placeholder="Enter your email">
+                        <label for="email">Email: </label>
+                        <input type="text" name="email" id="email" placeholder="Enter your email"></input>
                     </p>
                     <p>
-                        Password: <br>
-                        <input type="password" name="create_password" id="create_password" placeholder="Enter a password">
-                    </p>
-                    <p>
-                        Username: <br>
-                        <input type="text" name="username" id="username" placeholder="Enter a Username">
+                        <label for="create_password">Password: </label>
+                        <input type="password" name="create_password" id="create_password" placeholder="Enter a password"></input>
                     </p>
 
-                    <input type="submit" value="Sign Up" id="submit">
+                    <p>
+                        <label for="">First Name: </label>
+                        <input type="text" name="first_name" id="first_name" placeholder=""></input>
+                    </p>
+
+                    <p>
+                        <label for="username">Last Name: </label>
+                        <input type="text" name="last_name" id="last_name" placeholder=""></input>
+                    </p>
+                    <p>
+                        <label for="username">Username: </label>
+                        <input type="text" name="username" id="username" placeholder="Enter a Username"></input>
+                    </p>
+
+                    <input type="submit" value="Sign Up" id="submit"></input>
 
                 </form>
             </div>
