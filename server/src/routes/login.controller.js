@@ -64,13 +64,6 @@ function signup(req, res) {
 
                     })
 
-                    if (typeof hashedpassword !== "string") {
-                        return res.status(500).json({
-                            status: "Failure",
-                            message: "Something went wrong, try again later"
-                        })
-
-                    }
                     console.log("we out...")
 
                     request.input("firstName", sql.VarChar, firstName);//put all fields in
