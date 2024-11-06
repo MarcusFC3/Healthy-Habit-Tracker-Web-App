@@ -7,9 +7,6 @@ const { adminconf } = require("../models/user")
 let userId = 0;
 function signup(req, res) {
     let { firstName, lastName, username, email, password } = req.body;
-    username = username;
-    email = email;
-    password = password;
     if (firstName === "" || lastName === "" || username === "" || email === "" || password === "") {
         return res.status(400).json({
             status: "Failure",
@@ -52,27 +49,39 @@ function signup(req, res) {
                 async function addUserToDb(firstName, lastName, username, email, password) {
                     const connection = await sql.connect(adminconf);
                     const request = connection.request();
-                    bcrypt.genSalt(10, (err, salt) => {
-                        bcrypt.hash(password, salt, (err, hash) => {
+                    const hashedpassword = await new Promise((resolve, reject) => {
+                        bcrypt.hash(password, 10, (err, hash) => {
                             if (err) {
-                                throw err;
+                                reject(err);
+                                console.log("blud" + err);
                             }
                             else {
                                 console.log("We made it here!")
-                                request.input("password", sql.VarChar, hash);
+                                console.log(hash + "+ buh")
+                                resolve(hash)
                             }
                         });
+
                     })
-                   
-                     
+
+                    if (typeof hashedpassword !== "string") {
+                        return res.status(500).json({
+                            status: "Failure",
+                            message: "Something went wrong, try again later"
+                        })
+
+                    }
+                    console.log("we out...")
+
                     request.input("firstName", sql.VarChar, firstName);//put all fields in
                     request.input("lastName", sql.VarChar, lastName);
                     request.input("username", sql.VarChar, username);
                     request.input("email", sql.VarChar, email);
-                    
-                    return await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedpassword) VALUES (@firstName, @lastName, @username, @email, @password)");
+                    request.input("password", sql.VarChar, hashedpassword);
 
+                    return await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword) VALUES (@firstName, @lastName, @username, @email, @password)");
                 }
+
                 addUserToDb(firstName, lastName, username, email, password).then(
                     () => {
                         return res.status(200).json({
@@ -80,14 +89,15 @@ function signup(req, res) {
                             message: "Account was successfully created"
                         })
                     }
-                )
+                ).catch((err) => {
+                    console.log("an error occured" + err)
+                    return res.status(500).json({
+                        status: "Failure",
+                        message: "Something went wrong, try again later"
+                    })
+                })
             }
-        }).catch((err) => {
-            console.log("an error occured" + err)
-            return res.status(500).json({
-                status: "Failure",
-                message: "Something went wrong, try again later"
-            })
+
         })
     }
 }
@@ -100,30 +110,52 @@ function login(req, res) {
             message: "One or more fields are empty"
         })
     } else {
-        async function checkformatch(email, password) {
+        async function checkformatch(email) {
             const connection = await sql.connect(adminconf);
-            const request = connection.request()
-            request = request.input("email", sql.VarChar(), email)
-            const result = await sql.query("SELECT hashedpassword FROM Users WHERE email = '@email' ")
+            const request = connection.request() 
+            console.log(email + " JaneD@gmail.com")
+            request.input("email", sql.VarChar, email)
+            return await request.query("SELECT hashedPassword FROM Users WHERE email = @email ")
             // unhash the password
-            if (result === password) {
-                req.session.user = {
-                    //relevant user data
-                }
-                return res.status(200).json({
-                    status: "success",
-                    message: "Account login successful"
-                })
-            } else {
-                return res.status(400).json({
-                    status: "Failure",
-                    message: "Incorrect password or email"
-                })
-            }
+           
+        
         }
+        checkformatch(email).then(
+            (result)=>{
+                console.log(result.recordset[0]['hashedPassword'])
+                const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password).catch(
+                    (err) => {
+                        throw err
+                    }
+                )
+                if (correctPassword) {
+                    req.session.user = {
+                        //relevant user data
+                    }
+                    return res.status(200).json({
+                        status: "success",
+                        message: "Account login successful"
+                    })
+                } else {
+                    return res.status(400).json({
+                        status: "Failure",
+                        message: "Incorrect password or email"
+                    })
+                }
+            }
+        ).catch(
+            (err) => {
+                return res.status(400).json({
+                    result: "error",
+                    message: "Encountered an error"
+                })
+            } 
+        )
+            
+        
     }
 }
-
+ 
 module.exports = {
     login,
     signup,
