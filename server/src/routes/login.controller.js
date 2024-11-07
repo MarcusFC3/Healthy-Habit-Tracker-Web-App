@@ -31,7 +31,6 @@ function signup(req, res) {
         })
     }
     else {
-        console.log("Checking Db...")
         async function checkIfUserExists(email) {
             const connectionPool = await sql.connect(adminconf);
             let request = await connectionPool.request();
@@ -53,18 +52,13 @@ function signup(req, res) {
                         bcrypt.hash(password, 10, (err, hash) => {
                             if (err) {
                                 reject(err);
-                                console.log("blud" + err);
                             }
                             else {
-                                console.log("We made it here!")
-                                console.log(hash + "+ buh")
                                 resolve(hash)
                             }
                         });
 
                     })
-
-                    console.log("we out...")
 
                     request.input("firstName", sql.VarChar, firstName);//put all fields in
                     request.input("lastName", sql.VarChar, lastName);
@@ -77,13 +71,14 @@ function signup(req, res) {
 
                 addUserToDb(firstName, lastName, username, email, password).then(
                     () => {
+
                         return res.status(200).json({
                             status: "Success",
                             message: "Account was successfully created"
                         })
                     }
                 ).catch((err) => {
-                    console.log("an error occured" + err)
+                    console.log(`an error occured during signup for ${firstName} ${lastName} ${err}`)
                     return res.status(500).json({
                         status: "Failure",
                         message: "Something went wrong, try again later"
@@ -92,7 +87,7 @@ function signup(req, res) {
             }
 
         })
-    }
+    } 
 }
 
 function login(req, res) {
@@ -105,57 +100,60 @@ function login(req, res) {
     } else {
         async function checkformatch(email) {
             const connection = await sql.connect(adminconf);
-            const request = connection.request() 
-            console.log(email + " JaneD@gmail.com")
+            const request = connection.request()
             request.input("email", sql.VarChar, email)
             return await request.query("SELECT hashedPassword FROM Users WHERE email = @email ")
             // unhash the password
-           
-        
+
+
         }
         checkformatch(email).then(
-            (result)=>{
-                console.log(result.recordset[0]['hashedPassword'])
-                const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password).catch(
-                    (err) => {
-                        throw err
+            (result) => {
+                if (result.recordset.length != 0) {
+                    const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password)
+                    if (correctPassword) {
+                        // req.session.user = {
+                        //     //relevant user data
+                        // } 
+                        return res.status(200).json({
+                            status: "success",
+                            message: "Account login successful"
+                        })
+                    } else {
+                        return res.status(400).json({
+                            status: "Failure",
+                            message: "Incorrect password or email"
+                        })
                     }
-                )
-                if (correctPassword) {
-                    req.session.user = {
-                        //relevant user data
-                    }
-                    return res.status(200).json({
-                        status: "success",
-                        message: "Account login successful"
-                    })
+
                 } else {
                     return res.status(400).json({
                         status: "Failure",
-                        message: "Incorrect password or email"
+                        message: "No accounts match this email"
                     })
                 }
             }
         ).catch(
             (err) => {
+                console.log(err)
                 return res.status(400).json({
                     result: "error",
                     message: "Encountered an error"
                 })
-            } 
+            }
         )
-            
-        
+
+
     }
 }
- 
+
 module.exports = {
     login,
     signup,
 }
 
 /*
-    fetch("http://localhost:8000/signup", 
+    fetch("http://localhost:8000/signup",  
 {
     "method":"post",
      "headers":{"Content-Type" : "appication/json" },

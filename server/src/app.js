@@ -7,9 +7,9 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const { adminconf } = require("./models/user")
 const MssqlStore = require("mssql-session-store");
+const helmet = require("helmet");
 
 const loginRouter = require("./routes/login.router");
-
 
 const app = express();
 
@@ -22,7 +22,7 @@ const app = express();
 
 // }
 // )
-
+app.use(helmet())
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
@@ -38,11 +38,9 @@ app.use(express.static(path.join(__dirname,"..","public")));
 //     saveUninitialized: false,
 // }))
 
-app.use("/", loginRouter)
+app.use("/login", loginRouter);
 
-app.get("/*", (req, res) =>{
-    res.sendFile(path.join(__dirname,"..","public","index.html"))
-})
+app.get("/", (req, res) => {return res.send("Buh")})    
 
 
 module.exports = app;

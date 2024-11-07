@@ -1,21 +1,23 @@
 const express = require("express");
-const http = require("http");
+const https = require("https");
 const app = require("./app");
 const sql = require("mssql");
+const fs = require("fs");
+const path = require("path");
+
 const { error } = require("console");
 const { connectionString } = require("connection-string")
 
-
-const server = http.createServer(app);
 const PORT = 8000;
 
+const server = https.createServer({
+    key: fs.readFileSync(path.join(__dirname, ".." , ".." , "key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, ".." , ".." , "cert.pem")),
+}, app); 
+
+ 
 
 
 server.listen(PORT, () => {
-    console.log("Server is listening");
-    /*
-    install and enable sql server browser using server installation center.
-    start the service.
-    include localhost/ip in server field 
-    */
+    console.log("Server is listening on port " + PORT);
 })    

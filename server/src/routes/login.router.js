@@ -4,7 +4,7 @@ const loginController = require("./login.controller");
 
 loginRouter = express.Router();
 
-loginRouter.post("/login", loginController.login)
+loginRouter.post("/", loginController.login)
 
 loginRouter.post("/signup", loginController.signup)
 
