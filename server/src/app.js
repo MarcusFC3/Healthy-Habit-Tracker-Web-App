@@ -8,6 +8,9 @@ const bcrypt = require("bcrypt");
 const { adminconf } = require("./models/user")
 const MssqlStore = require("mssql-session-store");
 const helmet = require("helmet");
+const sanitizer = require("perfect-express-sanitizer");
+
+
 
 const loginRouter = require("./routes/login.router");
 
@@ -22,10 +25,20 @@ const app = express();
 
 // }
 // )
+
 app.use(helmet())
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
+app.use(
+    sanitizer.clean({
+      xss: true,
+      noSql: true,
+      sql: true,
+      sqlLevel: 5,
+      noSqlLevel: 5,
+    })
+  );
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname,"..","public")));

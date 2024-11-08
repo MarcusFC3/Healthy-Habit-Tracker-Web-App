@@ -107,11 +107,15 @@ function login(req, res) {
 
 
         }
-        checkformatch(email).then(
-            (result) => {
-                if (result.recordset.length != 0) {
+        checkformatch(email).then
+        (
+            (result) => 
+            {
+                if (result.recordset.length != 0) 
+                {
                     const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password)
-                    if (correctPassword) {
+                    if (correctPassword) 
+                    {
                         // req.session.user = {
                         //     //relevant user data
                         // } 
@@ -119,22 +123,25 @@ function login(req, res) {
                             status: "success",
                             message: "Account login successful"
                         })
-                    } else {
+                    } else 
+                    {
                         return res.status(400).json({
                             status: "Failure",
                             message: "Incorrect password or email"
                         })
                     }
-
-                } else {
+                } else 
+                {
                     return res.status(400).json({
                         status: "Failure",
                         message: "No accounts match this email"
                     })
                 }
             }
-        ).catch(
-            (err) => {
+        ).catch
+        (
+            (err) => 
+            {
                 console.log(err)
                 return res.status(400).json({
                     result: "error",
