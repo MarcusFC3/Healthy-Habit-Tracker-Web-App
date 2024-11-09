@@ -1,6 +1,6 @@
 import React from 'react';
 
-const signUp = () => {
+export default function signUp() {
 
     const [formData, setFormData] = React.useState(
         {firstName: "",
@@ -101,4 +101,3 @@ const signUp = () => {
         </div>
     </div>
 }
-export default signUp;
