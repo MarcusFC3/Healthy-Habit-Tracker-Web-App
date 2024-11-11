@@ -1,3 +1,5 @@
+"use strict"
+
 const express = require("express");
 const mssql = require("mssql");
 const morgan = require("morgan");
@@ -5,13 +7,12 @@ const cors = require("cors");
 const path = require("path");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
-const { adminconf } = require("./models/user")
 const MssqlStore = require("mssql-session-store");
 const helmet = require("helmet");
 const sanitizer = require("perfect-express-sanitizer");
 
 
-
+const activitiesRouter = require("./routes/activities.router");
 const loginRouter = require("./routes/login.router");
 
 const app = express();
@@ -30,6 +31,7 @@ app.use(helmet())
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
+app.use(express.json());
 app.use(
     sanitizer.clean({
       xss: true,
@@ -40,7 +42,7 @@ app.use(
     })
   );
 app.use(morgan('combined'));
-app.use(express.json());
+
 app.use(express.static(path.join(__dirname,"..","public")));
 // app.use(session({
 //     secret: "hashed secret",
@@ -51,6 +53,7 @@ app.use(express.static(path.join(__dirname,"..","public")));
 //     saveUninitialized: false,
 // }))
 
+app.use("/activities", activitiesRouter)
 app.use("/login", loginRouter);
 
 app.get("/", (req, res) => {return res.send("Buh")})    

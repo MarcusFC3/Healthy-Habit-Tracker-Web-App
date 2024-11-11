@@ -1,13 +1,31 @@
+"use strict"
+
 const express = require("express");
 const bcrypt = require("bcrypt");
 const sql = require("mssql");
-const { adminconf } = require("../models/user")
+const { adminconf } = require("../models/dbusers")
 // const {serverAdminConnection} = require("../models/user");
 
 let userId = 0;
+/**
+ * First checks for existing users with matching credentials, 
+ * then adds user to database
+ */
 function signup(req, res) {
-    let { firstName, lastName, username, email, password } = req.body;
-    if (firstName === "" || lastName === "" || username === "" || email === "" || password === "") {
+    let firstName = req.body.firstName;
+    let lastName = req.body.lastName;
+    let username = req.body.username;
+    let email = req.body.email;
+    let password = req.body.password;
+    console.log(firstName)
+    console.log(lastName)
+    if(!firstName, !lastName, !username, !email, !password){
+        return res.status(400).json({
+            status: "Failure",
+            message: "One or more fields were empty"
+        })
+    }
+    else if (firstName === "" || lastName === "" || username === "" || email === "" || password === "") {
         return res.status(400).json({
             status: "Failure",
             message: "One or more fields were empty"
@@ -46,6 +64,7 @@ function signup(req, res) {
                 )
             } else {
                 async function addUserToDb(firstName, lastName, username, email, password) {
+                    console.log("added lol " + firstName)
                     const connection = await sql.connect(adminconf);
                     const request = connection.request();
                     const hashedpassword = await new Promise((resolve, reject) => {
@@ -54,7 +73,7 @@ function signup(req, res) {
                                 reject(err);
                             }
                             else {
-                                resolve(hash)
+                                resolve(hash) 
                             }
                         });
 
@@ -92,6 +111,7 @@ function signup(req, res) {
 
 function login(req, res) {
     let { email, password } = req.body;
+    console.log(req.body)
     if (email === "" || password === "") {
         return res.status(400).json({
             status: "Failure",

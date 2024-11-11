@@ -1,3 +1,5 @@
+"use strict"
+
 const express = require("express");
 const https = require("https");
 const app = require("./app");
@@ -15,9 +17,6 @@ const server = https.createServer({
     cert: fs.readFileSync(path.join(__dirname, ".." , ".." , "cert.pem")),
 }, app); 
 
- 
-
-
 server.listen(PORT, () => {
     console.log("Server is listening on port " + PORT);
-})    
+})
