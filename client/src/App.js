@@ -3,6 +3,7 @@ import {
   } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/home"
+import Sign_Up from "./pages/sign_up"
 
 const App = () =>{
     return (<div class="container">

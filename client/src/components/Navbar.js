@@ -29,7 +29,7 @@ const Navbar = () => {
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="login">Login</a></li>
-                                    <li></li>
+                                    <li><a class="dropdown-item" href="signup">Sign Up</a></li>
                                 </ul>
                             </li>
                         </ul>
