@@ -10,7 +10,7 @@ const bcrypt = require("bcrypt");
 const MssqlStore = require("mssql-session-store");
 const helmet = require("helmet");
 const sanitizer = require("perfect-express-sanitizer");
-
+const cookieSession = require("cookie-session");
 
 const activitiesRouter = require("./routes/activities.router");
 const loginRouter = require("./routes/login.router");
@@ -28,6 +28,31 @@ const app = express();
 // )
 
 app.use(helmet())
+app.use(cookieSession({
+  name: 'session',
+  maxAge:  24* 60 * 60 * 1000,
+  keys: [ '123', '1234' ]
+}))
+function checkLoggedIn(req, res, next){
+  const isLoggedIn = true;
+  if (!isLoggedIn){
+    return res.status(401).json({
+      error: "You must login"
+    })
+  }
+    next();
+}
+
+function checkPermissions(req, res, next){
+  const permissions = true;
+  if (!permissions){
+    return res.status(401).json({
+      error: "You must login"
+    })
+  }
+  next();
+}
+
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
@@ -43,17 +68,20 @@ app.use(
   );
 app.use(morgan('combined'));
 
-app.use(express.static(path.join(__dirname,"..","public")));
-// app.use(session({
-//     secret: "hashed secret",
-//     cookie: {
-//       maxAge: 30000  
-//     },
-//     resave: false,
-//     saveUninitialized: false,
-// }))
+//possibly add this to login router/controller?
+app.get("/auth/google", (req, res) => { //endpoint for google authentication
 
-app.use("/activities", activitiesRouter)
+})
+
+app.get("/auth/google/callback", (req, res) =>{
+
+})
+
+app.get("/logout", (req, res) =>{
+
+})
+
+app.use("/activities",checkLoggedIn, activitiesRouter)
 app.use("/login", loginRouter);
 
 app.get("/", (req, res) => {return res.send("Buh")})    

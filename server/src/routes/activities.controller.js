@@ -14,20 +14,20 @@ const { adminconf } = require("../models/dbusers");
 /*
  * Company activites will give each team a team activity and have a central 
  * company activity which tracks how many relevant team activites have been completed 
-*/
+ */
 
 
 
 function createUserActivity(req, res) {
     let { UserID, ActivityName, repsorduration, amount, activityDescription } = req.body;//many variables may be predetermined by activites we create
     //Input validation
-    if(!UserID || !ActivityName || !Repsorduration || !amount){
+    if(!UserID || !ActivityName || !repsorduration || !amount){
         return res.status(400).json({
             status: "Failure",
             message: "One or more required parameters are missing"
         })
     } else if(isNaN(UserID)){
-        return res.status(400).json({
+        return res.status(500).json({
             status: "Failure",
             message: "The field 'UserID' must be an integer"
         })
