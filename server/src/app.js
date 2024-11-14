@@ -1,38 +1,44 @@
 "use strict"
 
 const express = require("express");
-const mssql = require("mssql");
 const morgan = require("morgan");
 const cors = require("cors");
 const path = require("path");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
-const MssqlStore = require("mssql-session-store");
+const MssqlStore = require("connect-mssql-v2");
 const helmet = require("helmet");
 const sanitizer = require("perfect-express-sanitizer");
 const cookieSession = require("cookie-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 
 const activitiesRouter = require("./routes/activities.router");
 const loginRouter = require("./routes/login.router");
 
 const app = express();
 
+const store = new MssqlStore({server: "localhost\\SQLEXPRESSBPA",
+  user: "serveradministrator",
+  password: "admin",
+  database: "SimplyHealth",
 
-// const sessionStore = new MssqlStore( {
-//     connection: "",
-//     ttl: 3600,
-//     reapInterval: 3600,
-//     reapCallback: function() { console.log('expired sessions were removed'); }
+  options: { 
+      encrypt: true, 
+      trustServerCertificate: true
+  }},
 
-// }
-// )
+)
 
 app.use(helmet())
-app.use(cookieSession({
-  name: 'session',
-  maxAge:  24* 60 * 60 * 1000,
-  keys: [ '123', '1234' ]
-}))
+app.use(session({
+  key: "key_name",
+  secret: "secret_session",
+  store: store 
+}
+))
+app.use(passport.initialize())
+app.use(passport.session())
 function checkLoggedIn(req, res, next){
   const isLoggedIn = true;
   if (!isLoggedIn){
@@ -42,7 +48,10 @@ function checkLoggedIn(req, res, next){
   }
     next();
 }
-
+/**
+ * 
+ * Take a look at how stored procedure's may be able to stop sql injection
+ */
 function checkPermissions(req, res, next){
   const permissions = true;
   if (!permissions){
@@ -63,7 +72,7 @@ app.use(
       noSql: true,
       sql: true,
       sqlLevel: 5,
-      noSqlLevel: 5,
+      noSqlLevel: 5, 
     })
   );
 app.use(morgan('combined'));
