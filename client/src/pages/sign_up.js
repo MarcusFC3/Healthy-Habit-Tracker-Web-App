@@ -32,8 +32,8 @@ export default function signUp() {
 
 
     return <div>
-        <div class="row">
-            <div class="col-12 col-md-4">
+        <div className="row">
+            <div className="col-12 col-md-4">
             <form id="sign_up_form" onSubmit={handleSubmit}>
 
                     <h4>Sign Up</h4>

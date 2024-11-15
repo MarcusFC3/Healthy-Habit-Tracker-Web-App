@@ -1,16 +1,22 @@
 import {
-    BrowserRouter as Router,
+    Route, Routes,
+    BrowserRouter
   } from "react-router-dom";
+import React from "react";
 import Navbar from "./components/Navbar";
 import Home from "./pages/home"
 import Sign_Up from "./pages/sign_up"
 
+
 const App = () =>{
-    return (<div class="container">
-    <Router exact path= "/">
-        <Navbar />
-        <Home />
-    </Router>
+    return (<div className="container">
+    <BrowserRouter>
+    <Navbar changePage={changePage}/>
+        <Routes>
+            <Route path="/home" element={<Home />}/>
+            <Route path="/sign_up" element={<Sign_Up />} />
+        </Routes> 
+    </BrowserRouter>
     </div>)
 }
 

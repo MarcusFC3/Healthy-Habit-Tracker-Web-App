@@ -1,35 +1,38 @@
-const Navbar = () => {
-    return <div class="row">
-        <div class="col-12">
-            <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
-                <div class="container-fluid">
-                    <a class="navbar-brand" aria-disabled="true"><span id="navbarBrand">
+import React from "react"
+
+const Navbar = (props) => {
+
+    return <div className="row">
+        <div className="col-12">
+            <nav className="navbar navbar-expand-lg navbar-light navbar-custom">
+                <div className="container-fluid">
+                    <a className="navbar-brand" aria-disabled="true"><span id="navbarBrand">
                         <img src="logo.svg" alt="Simply Health Logo" height="35"></img>
                     </span></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navb`arSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="home">Home</a>
+                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul className="navbar-nav mr-auto">
+                            <li className="nav-item">
+                                <a className="nav-link" href="home">Home</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="activities">Activities</a>
+                            <li className="nav-item">
+                                <a className="nav-link" href="activities">Activities</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="leaderboards">leaderboards</a>
+                            <li className="nav-item">
+                                <a className="nav-link" href="leaderboards">leaderboards</a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                     Dropdown
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="login">Login</a></li>
-                                    <li><a class="dropdown-item" href="signup">Sign Up</a></li>
+                                <ul className="dropdown-menu">
+                                    <li><a className="dropdown-item" href="login" >Login</a></li>
+                                    <li><a className="dropdown-item" href="sign_up">Sign Up</a></li>
                                 </ul>
                             </li>
                         </ul>
