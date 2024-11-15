@@ -69,3 +69,15 @@ CREATE TABLE UserActivities(
     CONSTRAINT FK_UserID FOREIGN KEY (UserID) REFERENCES Users (UserID),
 	CONSTRAINT FK_TeamActivityID FOREIGN KEY (TeamActivityID) REFERENCES TeamActivities (ActivityID)
 )
+
+ALTER TABLE Users
+ADD isTeamLeader BIT Default 'False'
+
+ALTER TABLE Users
+ADD isCompanyLeader BIT Default 'False'
+
+CREATE TABLE [dbo].[sessions](
+    [sid] [nvarchar](255) NOT NULL PRIMARY KEY,
+    [session] [nvarchar](max) NOT NULL,
+    [expires] [datetime] NOT NULL
+)
