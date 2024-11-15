@@ -18,27 +18,12 @@ const loginRouter = require("./routes/login.router");
 
 const app = express();
 
-const store = new MssqlStore({server: "localhost\\SQLEXPRESSBPA",
-  user: "serveradministrator",
-  password: "admin",
-  database: "SimplyHealth",
-
-  options: { 
-      encrypt: true, 
-      trustServerCertificate: true
-  }},
-
-)
-
 app.use(helmet())
-app.use(session({
-  key: "key_name",
-  secret: "secret_session",
-  store: store 
-}
-))
-app.use(passport.initialize())
-app.use(passport.session())
+
+app.use(cookieSession({
+  name: "session",
+  keys: ["secretkey123"]
+}))
 function checkLoggedIn(req, res, next){
   const isLoggedIn = true;
   if (!isLoggedIn){
@@ -46,7 +31,7 @@ function checkLoggedIn(req, res, next){
       error: "You must login"
     })
   }
-    next();
+  next();
 }
 /**
  * 
@@ -65,6 +50,7 @@ function checkPermissions(req, res, next){
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
+app.use(morgan('combined'));
 app.use(express.json());
 app.use(
     sanitizer.clean({
@@ -75,17 +61,20 @@ app.use(
       noSqlLevel: 5, 
     })
   );
-app.use(morgan('combined'));
+
 
 //possibly add this to login router/controller?
 app.get("/auth/google", (req, res) => { //endpoint for google authentication
 
-})
+} )
 
 app.get("/auth/google/callback", (req, res) =>{
 
 })
+app.get("/asd", (req, res)=>{
+  res.send("test.html")
 
+})
 app.get("/logout", (req, res) =>{
 
 })
@@ -97,3 +86,17 @@ app.get("/", (req, res) => {return res.send("Buh")})
 
 
 module.exports = app;
+// fetch(
+//   "login",
+  
+//     {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json"
+//       },
+//       body: JSON.stringify({
+//         "email": "22936@my4County.com",
+//         "password": "konrad222"
+//     })
+//     }
+// )

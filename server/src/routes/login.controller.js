@@ -67,6 +67,7 @@ function signup(req, res) {
                     console.log("added lol " + firstName)
                     const connection = await sql.connect(adminconf);
                     const request = connection.request();
+                    //Generate salt seperatly and store it in the database along with the password
                     const hashedpassword = await new Promise((resolve, reject) => {
                         bcrypt.hash(password, 10, (err, hash) => {
                             if (err) {
@@ -109,7 +110,7 @@ function signup(req, res) {
     } 
 }
 
-function login(req, res) {
+function login(req, res, next) {
     let { email, password } = req.body;
     console.log(req.body)
     if (email === "" || password === "") {
@@ -122,23 +123,26 @@ function login(req, res) {
             const connection = await sql.connect(adminconf);
             const request = connection.request()
             request.input("email", sql.VarChar, email)
-            return await request.query("SELECT hashedPassword FROM Users WHERE email = @email ")
+            return await request.query("SELECT * FROM Users WHERE email = @email ")
             // unhash the password
-
-
+            
         }
         checkformatch(email).then
         (
             (result) => 
             {
+                console.log(result)
                 if (result.recordset.length != 0) 
                 {
                     const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password)
                     if (correctPassword) 
                     {
-                        // req.session.user = {
-                        //     //relevant user data
-                        // } 
+                        req.user = {
+                            id : result.recordset[0]["UserID"],
+                            username : result.recordset[0]["Username"],
+                            email: result.recordset[0]["email"]
+                        }
+                        next();
                         return res.status(200).json({
                             status: "success",
                             message: "Account login successful"
