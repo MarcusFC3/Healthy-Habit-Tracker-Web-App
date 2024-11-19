@@ -12,18 +12,70 @@ const sanitizer = require("perfect-express-sanitizer");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const bodyParser = require("body-parser")
 
 const activitiesRouter = require("./routes/activities.router");
 const loginRouter = require("./routes/login.router");
 
 const app = express();
-
+app.use(bodyParser.json())
+app.use(express.json());
 app.use(helmet())
+const store = new MssqlStore({
+  server: "localhost\\SQLEXPRESSBPA",
+  user: "serveradministrator",
+  password: "admin",
+  database: "SimplyHealth",
+  options: {
+      encrypt: true,
+      trustServerCertificate: true
+  }
+  
+},)
 
-app.use(cookieSession({
-  name: "session",
-  keys: ["secretkey123"]
-}))
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {secure: true, sameSite: "none",maxAge:  60 * 60 * 1000},
+  
+
+}));
+app.use(passport.initialize())
+app.use(passport.session())
+const local = new LocalStrategy(()=>{
+    
+    
+        
+  const customFields = {
+      usernameField: "uname",
+      passwordField: "pw"
+  }
+  
+  
+  console.log(userData)
+  console.log("DUDEUIHOHUBU IT BROKEN WHYYY")
+  return done(null, userData)
+})
+passport.use(local)
+passport.serializeUser((userData, done)=>{
+  
+   
+  console.log("Athast cap to be honest your honor")
+   return done(null, userData.id)
+ 
+  
+});
+
+
+app.use((req, res, next) => {
+  console.log(req.session);
+  console.log(req.user + "user data");
+  next();
+})
+
+
+
 function checkLoggedIn(req, res, next){
   const isLoggedIn = true;
   if (!isLoggedIn){
@@ -51,7 +103,7 @@ app.use(cors({
     origin: 'http://localhost:3000'
 }));
 app.use(morgan('combined'));
-app.use(express.json());
+
 app.use(
     sanitizer.clean({
       xss: true,

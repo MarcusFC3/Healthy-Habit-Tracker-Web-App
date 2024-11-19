@@ -20,48 +20,27 @@ const loginRouter = express.Router();
 
 
 
-loginRouter.post("/", loginController.login)
+loginRouter.post("/", loginController.login,   passport.authenticate('local',{
+    successRedirect: 'https://localhost:8000/login', // The user logged in fine, redirect them do the dashboard
+failureRedirect: 'https://localhost:8000/login/signup',
+}))
+loginRouter.get("/signup", (req, res) => {
+    res.status(500).json({
+        status: "cooked"
+    })
+})
 
-loginRouter.use("/", createSession),
+loginRouter.get("/login", (req, res) => {
+    res.status(500).json({
+        status: "cooking with gas"
+    })
+})
+
+
 
 loginRouter.post("/signup", loginController.signup)
 
-
+ 
 function createSession(req, res) {
-    console.log("SESSION")
-    passport.initialize()
-    const customFields = {
-        usernameField: "uname",
-        passwordField: "pw"
-    }
-    const store = new MssqlStore({
-        server: "localhost\\SQLEXPRESSBPA",
-        user: "serveradministrator",
-        password: "admin",
-        database: "SimplyHealth",
-        options: {
-            encrypt: true,
-            trustServerCertificate: true
-        }
-        
-    },)
-    passport.serializeUser((user, done)=>{
-    
-       let userData = req.user
-       console.log("Aw Yeah, This is Happennin'!\n\n\n" + userData.id)
-       done(null, userData.id)
-    });
-
-    session({
-        resave: false,
-        saveUninitialized: false,
-        key: "key_name",
-        secret: "secret_session",
-        store: store
-    }
-    )
-    passport.initialize()
-    passport.session()
-
 }
 module.exports = loginRouter;
