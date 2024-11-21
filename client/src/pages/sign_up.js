@@ -2,39 +2,21 @@ import React from 'react';
 
 export default function signUp() {
 
-    const [formData, setFormData] = React.useState(
-        {firstName: "",
-        lastName: "",
-        email: "",
-        username: "",
-        password: ""})
-
-    function handleChange(event) {
-        const {name, value} =  event.target
-        setFormData(prevFormData => {
-            return {
-                ...prevFormData,
-                [name]: value
-            }
-        }
-
-        )
-    }
-
-    function handleSubmit(event) {
+    function registerAccount(event) {
         event.preventDefault()
-        /** 
-         * This is were you would submit the 
-         * formData kind of like this: 
-         * submitToAPI(formData)
-         */
+        const formEl = event.currentTarget
+        const formData = new FormData(formEl)
+        const fullName = formData.get("firstName")
+        console.log(fullName)
+        
+        
     }
 
 
     return <div>
         <div className="row">
             <div className="col-12 col-md-4">
-            <form id="sign_up_form" onSubmit={handleSubmit}>
+            <form id="sign_up_form" onSubmit={registerAccount}>
 
                     <h4>Sign Up</h4>
 
@@ -44,8 +26,6 @@ export default function signUp() {
                             type="text" 
                             name="firstName" 
                             id="first_name" 
-                            onChange={handleChange}
-                            value={formData.firstName}
                         />
                         
                     </p>
@@ -56,8 +36,6 @@ export default function signUp() {
                             type="text" 
                             name="lastName" 
                             id="last_name" 
-                            onChange={handleChange}
-                            value={formData.lastName}
                         />
                         
                     </p>
@@ -68,8 +46,6 @@ export default function signUp() {
                             type="text" 
                             name="email" 
                             id="email"
-                            onChange={handleChange}
-                            value={formData.email}
                         />
                     </p>
                     
@@ -79,8 +55,6 @@ export default function signUp() {
                             type="text" 
                             name="username" 
                             id="username"
-                            onChange={handleChange}
-                            value={formData.username}
                         />
                     </p>
 
@@ -90,8 +64,6 @@ export default function signUp() {
                             type="password" 
                             name="password" 
                             id="password"
-                            onChange={handleChange}
-                            value={formData.password}
                         />
                     </p>
 

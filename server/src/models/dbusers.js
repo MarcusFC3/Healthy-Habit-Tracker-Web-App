@@ -5,7 +5,7 @@ const servadminconf = {
         user: "serveradministrator",
         password: "admin",
         database: "SimplyHealth",
- 
+
         options: { 
             encrypt: true, 
             trustServerCertificate: true

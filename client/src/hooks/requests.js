@@ -1,6 +1,6 @@
 const API_URL = "";
 async function httpRegisterAccount(accountData){
-    return await fetch(`${API_URL}/signup`,
+    return await fetch(`${API_URL}/login/signup`,
         {
             method: "POST",
             headers: {
