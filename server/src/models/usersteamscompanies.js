@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const sql = require("mssql");
-const { adminconf } = require("./models/dbusers");
+const { adminconf } = require("../models/dbusers")
 const { response } = require("../app");
 
 async function getTeamIDFromName(teamName){
@@ -48,6 +48,16 @@ async function getTeamsFromCompanyID(CompanyID){
     return await request.query("SELECT TeamName FROM Teams WHERE CompanyID = @CompanyID")
 }
 
-function getTeamsFromCompany(CompanyName){
+async function getCompanyIDFromTeamID(TeamID){
+    const connectionPool = await sql.connect(adminconf);
+    let request = await connectionPool.request();
+    request = await request.input("TeamID", sql.Int, TeamID);
+    return await request.query("SELECT CompanyID FROM Teams WHERE TeamID = 1")
+}
 
+function getTeamsFromCompany(CompanyName){
+ 
+}
+module.exports = {
+    getCompanyIDFromTeamID,
 }
