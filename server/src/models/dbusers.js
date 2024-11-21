@@ -1,7 +1,7 @@
 "use strict"
 
 const servadminconf = {
-    server: "localhost\\SQLEXPRESSBPA",
+    server: "10.44.142.88\\SQLEXPRESSBPA",
         user: "serveradministrator",
         password: "admin",
         database: "SimplyHealth",
