@@ -11,27 +11,30 @@ const helmet = require("helmet");
 const sanitizer = require("perfect-express-sanitizer");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+const {Strategy} = require("passport-local");
 
 const loginController = require("./login.controller"); 
-
 
 const loginRouter = express.Router();
 
 
 
-loginRouter.post("/", loginController.login,   passport.authenticate('local',{
-    successRedirect: 'https://localhost:8000/login', // The user logged in fine, redirect them do the dashboard
-failureRedirect: 'https://localhost:8000/login/signup',
-}))
+loginRouter.post("/", loginController.login, passport.authenticate('local'), (req,res) =>{
+    console.log("skibodi");
+    return res.status(200).json({
+        status: "success!",
+        message: "User has successfully logged in!"
+    })
+
+})
 loginRouter.get("/signup", (req, res) => {
-    res.status(500).json({
+    res.status(400).json({
         status: "cooked"
     })
 })
 
 loginRouter.get("/login", (req, res) => {
-    res.status(500).json({
+    res.status(200).json({
         status: "cooking with gas"
     })
 })

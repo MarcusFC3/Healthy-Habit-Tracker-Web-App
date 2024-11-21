@@ -11,17 +11,21 @@ const helmet = require("helmet");
 const sanitizer = require("perfect-express-sanitizer");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const bodyParser = require("body-parser")
+const {Strategy} = require("passport-local");
+const bodyParser = require("body-parser");
+const sql = require("mssql");
+const { adminconf } = require("./models/dbusers")
+
 
 const activitiesRouter = require("./routes/activities.router");
 const loginRouter = require("./routes/login.router");
+const { error } = require("console");
 
 const app = express();
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(helmet())
-const store = new MssqlStore({
+const sqlstore = new MssqlStore({
   server: "localhost\\SQLEXPRESSBPA",
   user: "serveradministrator",
   password: "admin",
@@ -35,37 +39,60 @@ const store = new MssqlStore({
 
 app.use(session({
   secret: 'secret',
-  resave: false,
+  resave: true,
   saveUninitialized: false,
   cookie: {secure: true, sameSite: "none",maxAge:  60 * 60 * 1000},
-  
+  store: sqlstore,
 
 }));
 app.use(passport.initialize())
 app.use(passport.session())
-const local = new LocalStrategy(()=>{
-    
-    
-        
-  const customFields = {
-      usernameField: "uname",
-      passwordField: "pw"
+
+passport.use(new Strategy({
+  usernameField: "email",
+},
+  (email, password, done) =>{
+    let failed = false;
+  console.log("Local Strategy is a go!\n\n\n\n\nYESSSS");
+    async function getUserId(){
+      const connection = await sql.connect(adminconf);
+      const request = connection.request()
+      request.input("email", sql.VarChar, email)
+      return await request.query("SELECT UserId FROM Users WHERE email = @email ")
+      // unhash the password
+    }
+   getUserId().then((result) =>{
+    console.log(result);
+    const user = {
+      id: result.recordset[0]['UserId']
+    }
+  return done(null, user)
+  }).catch(
+    (err)=>{
+      return done(err)
+    }
+  )
+
   }
+
+//
   
-  
-  console.log(userData)
-  console.log("DUDEUIHOHUBU IT BROKEN WHYYY")
-  return done(null, userData)
-})
-passport.use(local)
-passport.serializeUser((userData, done)=>{
+));
+
+passport.serializeUser(
+  (user, done)=>{
   
    
-  console.log("Athast cap to be honest your honor")
-   return done(null, userData.id)
- 
+  console.log("thats just cap to be honest your honor" + JSON.stringify(user))
+   done(null, user)
+ //{"cookie":{"originalMaxAge":3600000,"expires":"2024-11-21T19:38:26.272Z","secure":true,"httpOnly":true,"path":"/","sameSite":"none"},"passport":{"user":{}}}
   
 });
+passport.deserializeUser((user, done)=>{
+  done(null, user)
+})
+
+
 
 
 app.use((req, res, next) => {
@@ -124,7 +151,7 @@ app.get("/auth/google/callback", (req, res) =>{
 
 })
 app.get("/asd", (req, res)=>{
-  res.send("test.html")
+  res.send(req.session.passport.user)
 
 })
 app.get("/logout", (req, res) =>{
