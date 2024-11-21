@@ -137,17 +137,8 @@ function login(req, res, next) {
                     const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password)
                     if (correctPassword) 
                     {
-                        req.body = {user:{
-                            id : result.recordset[0]["UserID"],
-                            username : result.recordset[0]["Username"],
-                            email: result.recordset[0]["email"]
-                        }}
                         
                         next();
-                        // return res.status(200).json({
-                        //     status: "success",
-                        //     message: "Account login successful"
-                        // })
                     } else 
                     {
                         return res.status(400).json({
