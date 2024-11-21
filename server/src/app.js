@@ -3,28 +3,22 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const path = require("path");
 const session = require("express-session");
-const bcrypt = require("bcrypt");
 const MssqlStore = require("connect-mssql-v2");
 const helmet = require("helmet");
 const sanitizer = require("perfect-express-sanitizer");
-const cookieSession = require("cookie-session");
 const passport = require("passport");
 const {Strategy} = require("passport-local");
 const bodyParser = require("body-parser");
 const sql = require("mssql");
 const { adminconf } = require("./models/dbusers")
-
+const {getCompanyIDFromTeamID} = require("./models/usersteamscompanies")
 
 const activitiesRouter = require("./routes/activities.router");
 const loginRouter = require("./routes/login.router");
-const { error } = require("console");
 
 const app = express();
-app.use(bodyParser.json());
-app.use(express.json());
-app.use(helmet())
+
 const sqlstore = new MssqlStore({
   server: "localhost\\SQLEXPRESSBPA",
   user: "serveradministrator",
@@ -36,6 +30,12 @@ const sqlstore = new MssqlStore({
   }
   
 },)
+
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(helmet())
+
+
 
 app.use(session({
   secret: 'secret',
@@ -54,19 +54,17 @@ passport.use(new Strategy({
   (email, password, done) =>{
     let failed = false;
   console.log("Local Strategy is a go!\n\n\n\n\nYESSSS");
-    async function getUserId(){
+    async function getUserSessionData(){
       const connection = await sql.connect(adminconf);
       const request = connection.request()
       request.input("email", sql.VarChar, email)
-      return await request.query("SELECT UserId FROM Users WHERE email = @email ")
+      return await request.query("SELECT UserID, Users.TeamID, CompanyID, isTeamLeader, isCompanyLeader FROM Users INNER JOIN Teams on Teams.TeamID = Users.TeamID WHERE email = @email")
       // unhash the password
     }
-   getUserId().then((result) =>{
-    console.log(result);
-    const user = {
-      id: result.recordset[0]['UserId']
-    }
-  return done(null, user)
+   getUserSessionData().then((result) =>{
+    let user = result.recordset[0]
+    console.log("", user)
+    return done(user)
   }).catch(
     (err)=>{
       return done(err)
@@ -83,23 +81,25 @@ passport.serializeUser(
   (user, done)=>{
   
    
-  console.log("thats just cap to be honest your honor" + JSON.stringify(user))
-   done(null, user)
+   return done("nullbuh", user)
  //{"cookie":{"originalMaxAge":3600000,"expires":"2024-11-21T19:38:26.272Z","secure":true,"httpOnly":true,"path":"/","sameSite":"none"},"passport":{"user":{}}}
   
 });
+
+
+//FIX ERROR 
 passport.deserializeUser((user, done)=>{
-  done(null, user)
+  return done("nulldode", user)
 })
 
 
 
 
-app.use((req, res, next) => {
-  console.log(req.session);
-  console.log(req.user + "user data");
-  next();
-})
+// app.use((req, res, next) => {
+//   console.log(req.session);
+//   console.log(req.user + "user data");
+//   next();
+// })
 
 
 
