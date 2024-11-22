@@ -1,17 +1,24 @@
-import React from 'react';
+import { React } from 'react';
 
 export default function signUp() {
 
-    function registerAccount(event) {
+    async function registerAccount(event) {
         event.preventDefault()
         const formEl = event.currentTarget
         const formData = new FormData(formEl)
         const fullName = formData.get("firstName")
-        console.log(fullName)
-        
-        
-    }
+        const username = formData.get("username");
+        const email = formData.get("email");
+        const password = formData.get("password");
+        const passwordVerify = formData.get("password_verify");
 
+        if (password !== passwordVerify) {
+            alert("Passwords do not match.")
+        }
+        else {
+            console.log(fullName, email, username, password, passwordVerify)
+        }
+    }
 
     return <div>
         <div className="row">
@@ -64,6 +71,15 @@ export default function signUp() {
                             type="password" 
                             name="password" 
                             id="password"
+                        />
+                    </p>
+
+                    <p>
+                        <label htmlFor="password_verify">Verify Password: </label>
+                        <input 
+                            type="password" 
+                            name="password_verify" 
+                            id="password_verify"
                         />
                     </p>
 
