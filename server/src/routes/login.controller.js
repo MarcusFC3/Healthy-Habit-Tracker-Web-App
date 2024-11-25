@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const sql = require("mssql");
 const { adminconf } = require("../models/dbusers")
 // const {serverAdminConnection} = require("../models/user");
+const nodemailer = require("nodemailer");
 
 let userId = 0;
 /**
@@ -19,7 +20,7 @@ function signup(req, res) {
     let password = req.body.password;
     console.log(firstName)
     console.log(lastName)
-    if(!firstName, !lastName, !username, !email, !password){
+    if (!firstName, !lastName, !username, !email, !password) {
         return res.status(400).json({
             status: "Failure",
             message: "One or more fields were empty"
@@ -64,17 +65,27 @@ function signup(req, res) {
                 )
             } else {
                 async function addUserToDb(firstName, lastName, username, email, password) {
-                    console.log("added lol " + firstName)
                     const connection = await sql.connect(adminconf);
                     const request = connection.request();
                     //Generate salt seperatly and store it in the database along with the password
+                    const salt = await new Promise((resolve, reject) => {
+                        bcrypt.genSalt(10, (err, salt) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                console.log("" + salt)
+                                resolve(salt)
+                            }
+                        })
+                    })
                     const hashedpassword = await new Promise((resolve, reject) => {
-                        bcrypt.hash(password, 10, (err, hash) => {
+
+                        bcrypt.hash(password, salt, (err, hash) => {
                             if (err) {
                                 reject(err);
                             }
                             else {
-                                resolve(hash) 
+                                resolve(hash)
                             }
                         });
 
@@ -91,7 +102,6 @@ function signup(req, res) {
 
                 addUserToDb(firstName, lastName, username, email, password).then(
                     () => {
-
                         return res.status(200).json({
                             status: "Success",
                             message: "Account was successfully created"
@@ -107,7 +117,7 @@ function signup(req, res) {
             }
 
         })
-    } 
+    }
 }
 
 function login(req, res, next) {
@@ -125,54 +135,124 @@ function login(req, res, next) {
             request.input("email", sql.VarChar, email)
             return await request.query("SELECT * FROM Users WHERE email = @email ")
             // unhash the password
-            
+
         }
         checkformatch(email).then
-        (
-            (result) => 
-            {
-                console.log(result)
-                if (result.recordset.length != 0) 
-                {
-                    const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password)
-                    if (correctPassword) 
-                    {
-                        
-                        next();
-                    } else 
-                    {
+            (
+                (result) => {
+                    console.log(result)
+                    if (result.recordset.length != 0) {
+                        const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password)
+                        if (correctPassword) {
+
+                            next();
+                        } else {
+                            return res.status(400).json({
+                                status: "Failure",
+                                message: "Incorrect password or email"
+                            })
+                        }
+                    } else {
                         return res.status(400).json({
                             status: "Failure",
-                            message: "Incorrect password or email"
+                            message: "No accounts match this email"
                         })
                     }
-                } else 
-                {
+                }
+            ).catch
+            (
+                (err) => {
+                    console.log(err)
                     return res.status(400).json({
-                        status: "Failure",
-                        message: "No accounts match this email"
+                        result: "error",
+                        message: "Encountered an error"
                     })
                 }
-            }
-        ).catch
-        (
-            (err) => 
-            {
-                console.log(err)
-                return res.status(400).json({
-                    result: "error",
-                    message: "Encountered an error"
-                })
-            }
-        )
+            )
 
 
     }
 }
 
+//it broken =(
+function passwordReset(req, res) {
+    const email = req.body.email
+    console.log(email)
+    async function checkformatch(email) {
+        const connection = await sql.connect(adminconf);
+        const request = connection.request()
+        request.input("email", sql.VarChar, email)
+        return await request.query("SELECT firstName, email FROM Users WHERE email = @email ")
+        // unhash the password
+
+    }
+    checkformatch(email).then(
+        (result) => {
+            console.log(result)
+            if (result.recordset.length != 0) {
+                /*
+                might need Oauth 2
+                */
+                // Create a transporter object
+                const transporter = nodemailer.createTransport({
+                    host: 'smtp.gmail.com', // use false for STARTTLS; true for SSL on port 465
+                    auth: {
+                        user: 'simplyhealthorg@gmail.com',
+                        pass: 'yolu vmiw bphu lbht',
+                    },tls: {
+        // do not fail on invalid certs
+        rejectUnauthorized: false
+    },
+                });
+
+                // Configure the mailoptions object
+                const mailOptions = {
+                    from: 'simplyhealthorg@gmail.com',
+                    to: 'simplyhealthorg@gmail.com',
+                    subject: 'Password Reset',
+                    text: 'Hello A passsword reset was requested for your account. Please click this link to reset your password.'
+                };
+                transporter.verify((error, success)=>{
+                    if(error) {
+                        console.log(error)
+                    }else{
+                        console.log("Nice")
+                    }
+                })
+                // Send the email
+                // transporter.sendMail(mailOptions, function (error, info) {
+                //     if (error) {
+                //         console.log('Error:', error);
+                //         res.status
+                //     } else {
+                //         console.log('Email sent: ', info.response);
+                //         return res.status(200).json({
+                //             status: "success",
+                //             message:"Email Sent!"
+                //         });
+                //     }
+                // });
+            }
+            else{
+                console.log("buh where da email");
+            }
+        }
+    ).catch(
+        (error) => {
+            console.log(error)
+            res.status(500).json({
+                status: "failure",
+                message: "it was a failure..."
+            })
+        }
+    )
+}
+
+
 module.exports = {
     login,
     signup,
+    passwordReset,
 }
 
 /*

@@ -27,17 +27,7 @@ loginRouter.post("/", loginController.login, passport.authenticate('local'), (re
     })
 
 })
-loginRouter.get("/signup", (req, res) => {
-    res.status(400).json({
-        status: "cooked"
-    })
-})
-
-loginRouter.get("/login", (req, res) => {
-    res.status(200).json({
-        status: "cooking with gas"
-    })
-})
+loginRouter.post("/pwdreset", loginController.passwordReset)
 
 
 
