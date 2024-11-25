@@ -1,7 +1,7 @@
 import React from "react"
 import { Link} from "react-router-dom"
 
-const Navbar = (props) => {
+const Navbar = () => {
 
     return <div className="row">
         <div className="col-12">

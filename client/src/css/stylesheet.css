@@ -6,7 +6,7 @@
     --secondary-text-color: grey;
 }
 body{ /*Temporary background change to be able to see better*/
-    background-color: var(--gray);
+    background-color: gray;
 }
 .container{
     background-color: var(--background);
@@ -14,7 +14,6 @@ body{ /*Temporary background change to be able to see better*/
 p{
     padding: 10px;
 }
-
 .homebackgroundimage{
     font-family: Arial, Helvetica, sans-serif;
     height: 200px;

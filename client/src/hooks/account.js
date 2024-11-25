@@ -1,16 +1,19 @@
+import { useCallback } from "react";
+import httpRegisterAccount from "./requests";
 
-const registerAccount = UseCallback(async (e) => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const fullName = new Date(data.get("launch-day"));
-    const username = data.get("mission-name");
-    const email = data.get("rocket-name");
-    const password = data.get("planets-selector");
-    const passwordVerify = data.get("planets-selector");
+const registerAccount = useCallback(async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const fullName = formData.get("firstName")
+    const username = formData.get("username");
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const passwordVerify = formData.get("password_verify");
     if (password !== passwordVerify) {
-        //error
+        alert("ERROR: Passwords do not match")
     }
     else {
+        
         response = await httpRegisterAccount({
             fullName,
             username,
@@ -26,4 +29,4 @@ if (response.ok){
     //Something went wrong
 }
 
-
+export default registerAccount
