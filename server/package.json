@@ -23,6 +23,7 @@
     "helmet": "^8.0.0",
     "morgan": "^1.10.0",
     "mssql": "^11.0.1",
+    "nodemailer": "^6.9.16",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "perfect-express-sanitizer": "^2.0.2"
