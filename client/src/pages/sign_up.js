@@ -22,7 +22,7 @@ export default function signUp() {
 
     return <div>
         <div className="row">
-            <div className="col-12 col-md-4">
+            <div className="col-12 col-md-6 mx-auto">
             <form id="sign_up_form" onSubmit={registerAccount}>
 
                     <h4>Sign Up</h4>
