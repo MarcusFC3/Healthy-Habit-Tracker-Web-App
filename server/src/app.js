@@ -12,8 +12,8 @@ const {Strategy} = require("passport-local");
 const bodyParser = require("body-parser");
 const sql = require("mssql");
 const { adminconf } = require("./models/dbusers")
-const {getCompanyIDFromTeamID} = require("./models/usersteamscompanies")
 
+const userRouter = require("./routes/user.router");
 const activitiesRouter = require("./routes/activities.router");
 const loginRouter = require("./routes/login.router");
 
@@ -59,15 +59,15 @@ passport.use(new Strategy({
       const request = connection.request()
       request.input("email", sql.VarChar, email)
       return await request.query("SELECT UserID, Users.TeamID, CompanyID, isTeamLeader, isCompanyLeader FROM Users INNER JOIN Teams on Teams.TeamID = Users.TeamID WHERE email = @email")
-      // unhash the password
+      
     }
    getUserSessionData().then((result) =>{
     let user = result.recordset[0]
-    console.log("", user)
-    return done(user)
+    console.log("asldnnabokuiwdn o", user)
+    done(null,JSON.stringify(user))
   }).catch(
     (err)=>{
-      return done(err)
+      return done("it buggin :(" + err)
     }
   )
 
@@ -79,18 +79,24 @@ passport.use(new Strategy({
 
 passport.serializeUser(
   (user, done)=>{
-  
-   
-   return done("nullbuh", user)
+  user = JSON.parse(user)
+  console.log("buasghd " + user)
+   return done(null, user)
  //{"cookie":{"originalMaxAge":3600000,"expires":"2024-11-21T19:38:26.272Z","secure":true,"httpOnly":true,"path":"/","sameSite":"none"},"passport":{"user":{}}}
-  
+
 });
 
 
 //FIX ERROR 
+try{
 passport.deserializeUser((user, done)=>{
-  return done("nulldode", user)
-})
+  
+  console.log("DESERIALIZED ASDSAD" + user)
+  return done(null, user)
+})}
+catch(err){
+  console.log(err)
+}
 
 
 
@@ -105,6 +111,7 @@ passport.deserializeUser((user, done)=>{
 
 function checkLoggedIn(req, res, next){
   const isLoggedIn = true;
+  console.log(req.session)
   if (!isLoggedIn){
     return res.status(401).json({
       error: "You must login"
@@ -127,7 +134,7 @@ function checkPermissions(req, res, next){
 }
 
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: 'http://10.44.142.93:3000'
 }));
 app.use(morgan('combined'));
 
@@ -154,16 +161,16 @@ app.get("/asd", (req, res)=>{
   res.send(req.session.passport.user)
 
 })
-app.get("/logout", (req, res) =>{
-
-})
 
 app.use("/activities",checkLoggedIn, activitiesRouter)
 app.use("/login", loginRouter);
-
+app.use("/user", userRouter);
 app.get("/", (req, res) => {return res.send("Buh")})    
 
-
+app.get("/logout", (req, res) =>{
+  req.logout();
+  return res.redirect("/")
+})
 module.exports = app;
 // fetch(
 //   "login",
