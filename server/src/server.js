@@ -7,9 +7,6 @@ const sql = require("mssql");
 const fs = require("fs");
 const path = require("path");
 
-const { error } = require("console");
-const { connectionString } = require("connection-string")
-
 const PORT = 8000;
 
 const server = https.createServer({

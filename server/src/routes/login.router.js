@@ -13,7 +13,7 @@ const cookieSession = require("cookie-session");
 const passport = require("passport");
 const {Strategy} = require("passport-local");
 
-const loginController = require("./login.controller"); 
+const loginController = require("../controllers/login.controller"); 
 
 const loginRouter = express.Router();
 
@@ -27,13 +27,12 @@ loginRouter.post("/", loginController.login, passport.authenticate('local'), (re
     })
 
 })
-loginRouter.post("/pwdreset", loginController.passwordReset)
+loginRouter.post("/pwdreset", loginController.passwordResetEmail)
 
 
 
 loginRouter.post("/signup", loginController.signup)
 
- 
 function createSession(req, res) {
 }
 module.exports = loginRouter;

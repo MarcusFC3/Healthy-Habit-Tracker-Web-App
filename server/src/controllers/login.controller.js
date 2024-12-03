@@ -175,7 +175,7 @@ function login(req, res, next) {
 }
 
 //it broken =(
-function passwordReset(req, res) {
+function passwordResetEmail(req, res) {
     const email = req.body.email
     console.log(email)
     async function checkformatch(email) {
@@ -195,26 +195,26 @@ function passwordReset(req, res) {
                 */
                 // Create a transporter object
                 const transporter = nodemailer.createTransport({
-                    host: 'smtp.gmail.com', // use false for STARTTLS; true for SSL on port 465
+                    host: 'smtp.office365.com', // use false for STARTTLS; true for SSL on port 465
+                    port: 587,
+                    secure: false,
                     auth: {
-                        user: 'simplyhealthorg@gmail.com',
-                        pass: 'yolu vmiw bphu lbht',
-                    },tls: {
-        // do not fail on invalid certs
-        rejectUnauthorized: false
-    },
+                        user: 'simplyhealthorg@outlook.com',
+                        pass: 'tzlcgvtfvhbuafab',
+                    }
                 });
 
                 // Configure the mailoptions object
                 const mailOptions = {
-                    from: 'simplyhealthorg@gmail.com',
-                    to: 'simplyhealthorg@gmail.com',
-                    subject: 'Password Reset',
-                    text: 'Hello A passsword reset was requested for your account. Please click this link to reset your password.'
+                    from: 'simplyhealthorg@outlook.com',
+                    to: 'simplyhealthorg@outlook.com',
+                    subject: 'Hello world',
+                    text: 'Hello world.'
                 };
                 transporter.verify((error, success)=>{
                     if(error) {
                         console.log(error)
+                        res.status(500).send("")
                     }else{
                         console.log("Nice")
                     }
@@ -248,11 +248,19 @@ function passwordReset(req, res) {
     )
 }
 
+function resetPassword(req,res){
+    accEmail = req.body.email
+    newPassword = req.body.password
+    
+    //sql query UPDATE Users SET hashedPassword to bcrypt(new password) WHERE email = accEmail
+     
+}
+
 
 module.exports = {
     login,
     signup,
-    passwordReset,
+    passwordResetEmail,
 }
 
 /*
