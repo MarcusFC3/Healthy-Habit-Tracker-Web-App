@@ -39,13 +39,13 @@ async function getCompanyIDFromName(companyName){
     const connectionPool = await sql.connect(adminconf);
     let request = await connectionPool.request();
     request = await request.input("companyName", sql.VarChar, `${companyName}`);
-    return await request.query("SELECT CompanyID FROM Companies WHERE CompanyName = @companyName")
+    return await request.query("SELECT CompanyID FROM Companies WHERE CompanyName = @companyName");
 }
 async function getTeamsFromCompanyID(CompanyID){
     const connectionPool = await sql.connect(adminconf);
     let request = await connectionPool.request();
     request = await request.input("CompanyID", sql.Int, `${CompanyID}`);
-    return await request.query("SELECT TeamName FROM Teams WHERE CompanyID = @CompanyID")
+    return await request.query("SELECT TeamName FROM Teams WHERE CompanyID = @CompanyID");
 }
 
 async function getCompanyIDFromTeamID(TeamID){

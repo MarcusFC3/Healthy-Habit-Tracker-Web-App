@@ -16,7 +16,11 @@ BEGIN
 	SELECT @amount = amount FROM inserted
 	Declare @ActivityDescription varchar(100)
 	SELECT @ActivityDescription = ActivityDescription FROM inserted
-	
+	Declare @Date Date
+	SELECT @Date FROM inserted
+
+
+
 	declare @CompanyMemberstable table
 	(
 	TeamID int, 
@@ -24,7 +28,8 @@ BEGIN
 	RepetitionsOrDuration int ,
 	Amount int,
 	ActivityDescription varchar(100),
-	CompanyActivityID int)
+	CompanyActivityID int,
+	DateCreated Date)
 
 	INSERT INTO @CompanyMemberstable(TeamID)
 	SELECT TeamID FROM Teams Where CompanyID = @CompanyID
@@ -36,9 +41,11 @@ BEGIN
 	RepetitionsOrDuration = @reps,
 	Amount = @amount,
 	ActivityDescription = @ActivityDescription,
-	CompanyActivityID = @ActivityID
+	CompanyActivityID = @ActivityID,
+	DateCreated = @Date
 
-	INSERT INTO TeamActivities (TeamID,ActivityName, RepetitionsOrDuration, Amount, ActivityDescription, CompanyActivityID)
-	SELECT TeamID,ActivityName, RepetitionsOrDuration, Amount, ActivityDescription, CompanyActivityID FROM @CompanyMemberstable
+	INSERT INTO TeamActivities (TeamID,ActivityName, RepetitionsOrDuration, Amount, ActivityDescription, CompanyActivityID, DateCreated)
+	SELECT TeamID,ActivityName, RepetitionsOrDuration, Amount, ActivityDescription, CompanyActivityID, DateCreated FROM @CompanyMemberstable
 
 END
+ 

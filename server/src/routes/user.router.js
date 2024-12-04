@@ -16,4 +16,3 @@ userRouter.get("/data", function(req, res){
 
 userRouter.post("/del/usr",userController.deleteUser)
 module.exports = userRouter
- 
