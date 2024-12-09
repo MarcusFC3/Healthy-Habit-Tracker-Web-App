@@ -11,7 +11,8 @@ const passport = require("passport");
 const {Strategy} = require("passport-local");
 const bodyParser = require("body-parser");
 const sql = require("mssql");
-const { adminconf } = require("./models/dbusers")
+const { adminconf } = require("./models/dbusers");
+const db = require("./models/dbqueries");
 
 const userRouter = require("./routes/user.router");
 const activitiesRouter = require("./routes/activities.router");
@@ -31,6 +32,8 @@ const sqlstore = new MssqlStore({
   
 },)
 
+
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(helmet())
@@ -133,9 +136,7 @@ function checkPermissions(req, res, next){
   next();
 }
 
-app.use(cors({
-    origin: 'http://10.44.142.93:3000'
-}));
+
 app.use(morgan('combined'));
 
 app.use(
