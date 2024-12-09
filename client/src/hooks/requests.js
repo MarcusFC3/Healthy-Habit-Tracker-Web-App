@@ -9,8 +9,16 @@ async function httpRegisterAccount(accountData){
             body: JSON.stringify(accountData)
         }
     ).catch(
-        (error) => { return {
+        (error) => { 
+            console.log("pppppppppp0ppppppp" + error)
+            return {
             ok: false,
         }}
     )
 }
+
+async function httpCheckAccount(){
+    
+}
+
+export {httpRegisterAccount, httpCheckAccount}

@@ -1,12 +1,12 @@
 import React from "react"
+import { checkAccount } from "../hooks/account"
 
 export default function Login() {
 
-
     return <div>
-        <div class="row">
-            <div class="col-12 col-md-4">
-            <form id="login_form">
+        <div className="row">
+            <div className="col-12 col-md-4">
+            <form id="login_form" onSubmit={checkAccount}>
 
                     <h4>Login</h4>
 

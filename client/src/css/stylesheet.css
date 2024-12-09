@@ -26,6 +26,10 @@ form > p{
 form > p > label{
     display: flex;
 }
+.home_text{
+    box-shadow: 2px;
+    background-color: rgb(175, 175, 175);
+}
 .homebackgroundimage{
     font-family: Arial, Helvetica, sans-serif;
     height: 200px;
@@ -33,6 +37,7 @@ form > p > label{
     background-repeat: no-repeat;
     background-size: cover;
     text-align: center;
+    margin: 5px 0px;
 }
 .homebackgroundimagetext{
     width: inherit;

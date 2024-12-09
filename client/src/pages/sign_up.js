@@ -1,24 +1,7 @@
 import { React } from 'react';
+import {registerAccount} from '../hooks/account';
 
 export default function signUp() {
-
-    async function registerAccount(event) {
-        event.preventDefault()
-        const formEl = event.currentTarget
-        const formData = new FormData(formEl)
-        const fullName = formData.get("firstName")
-        const username = formData.get("username");
-        const email = formData.get("email");
-        const password = formData.get("password");
-        const passwordVerify = formData.get("password_verify");
-
-        if (password !== passwordVerify) {
-            alert("Passwords do not match.")
-        }
-        else {
-            console.log(fullName, email, username, password, passwordVerify)
-        }
-    }
 
     return <div>
         <div className="row">

@@ -7,18 +7,18 @@ const Home = () => {
                 </div>
             </div>
         </div>
-        <div className="row">
-            <div className="col-12 col-md-4">
-                <h2>Habit Tracking Made Easy</h2>
-                <p>Desc</p>
+        <div className="row d-flex">
+            <div className="home_text col-12 col-md-4">
+                <h2>Easy Habit Tracking</h2>
+                <p>Simply Health makes it easy to track your habits</p>
             </div>
-            <div className="col-12 col-md-4">
+            <div className="home_text col-12 col-md-4">
                 <h2>Teams</h2>
-                <p>Desc</p>
+                <p>You work together with your coworkers to compete against other teams</p>
             </div>
-            <div className="col-12 col-md-4">
+            <div className="home_text col-12 col-md-4">
                 <h2>Goals</h2>
-                <p></p>
+                <p>Your team managers can set habit goals for you to meet</p>
             </div>
         </div>
     </div>
