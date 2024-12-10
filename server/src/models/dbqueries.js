@@ -68,11 +68,17 @@ const check = {
         return await request.query("SELECT email FROM Users WHERE email = @email")
     },
 
-    IfCompanyExists: async function checkIfCompanyExists(email) {
+    IfCompanyExists: async function checkIfCompanyExists(companyName) {
         const connectionPool = await sql.connect(adminconf);
         let request = await connectionPool.request();
-        request = await request.input("email", sql.VarChar, `${email}`);
-        return await request.query("SELECT CompanyName FROM Companies WHERE CompanyName = @CompanyName")
+        request = await request.input("companyName", sql.VarChar, `${companyName}`);
+        return await request.query("SELECT CompanyName FROM Companies WHERE CompanyName = @companyName")
+    },
+    IfTeamExists: async function checkIfTeamExists(teamName) {
+        const connectionPool = await sql.connect(adminconf);
+        let request = await connectionPool.request();
+        request = await request.input("teamName", sql.VarChar, `${teamName}`);
+        return await request.query("SELECT TeamName FROM Teams WHERE TeamName = @teamName")
     },
     ForMatchingPassword: async function checkformatch(email) {
         const connection = await sql.connect(adminconf);
@@ -84,7 +90,109 @@ const check = {
     }
 }
 const add = {
-    UserToDbWIthTeam : async function addUserToDbWithTeam(firstName, lastName, username, email, password, companyName) {
+    UserToDbWithTeam: async function addUserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName) {
+        const connection = await sql.connect(adminconf);
+        const request = connection.request();
+        //Generate salt seperatly and store it in the database along with the password
+        const salt = await new Promise((resolve, reject) => {
+            bcrypt.genSalt(10, (err, salt) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.log("" + salt)
+                    resolve(salt)
+                }
+            })
+        })
+        const hashedpassword = await new Promise((resolve, reject) => {
+
+            bcrypt.hash(password, salt, (err, hash) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(hash)
+                }
+            });
+
+        },
+        )
+        let error = undefined;
+
+        check.IfTeamExists(teamName).then((result) => {
+            if (result.recordset[0]) {
+                error = new Error({
+                    status: "Failure",
+                    message: "This Team Already Exists"
+                })
+
+
+            }
+        })
+        check.IfCompanyExists(companyName).then(async (result) => {
+            if (result.recordset[0]) {
+                error = new Error({
+                    status: "Failure",
+                    message: "This Company Already Exists"
+                })
+            }
+        })
+        if (error){
+            throw error
+        }
+
+
+/**
+ * Transaction keeps executing SQL code even with error.
+ * Console.logs in tranaction rollback and commit are not activating
+ */
+        const transaction =  connection.transaction(connection)
+        await transaction.begin(async err => {
+         
+            request.input("companyName", sql.VarChar, companyName)
+
+            await request.query("INSERT INTO Companies (CompanyName) VALUES (@companyName)")
+
+
+            request.input("teamName", sql.VarChar, teamName)
+
+            await request.query("INSERT INTO Teams (TeamName, CompanyID) VALUES (@TeamName, 2)")
+
+          
+          
+
+            request.input("firstName", sql.VarChar, firstName);//put all fields in
+            request.input("lastName", sql.VarChar, lastName);
+            request.input("username", sql.VarChar, username);
+            request.input("email", sql.VarChar, email);
+            request.input("password", sql.VarChar, hashedpassword);
+
+            await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword, TeamID, isCompanyLeader) VALUES (@firstName, @lastName, @username, @email, @password, 3, 1)").then(
+                (result) => {
+                    console.log(JSON.stringify(result));
+                }  
+            );
+            
+       
+            if (err){
+                transaction.rollback(err =>{
+                   console.log('hi')-
+                   return new Error("busted")
+               })
+           } else {
+               transaction.commit(err => {
+                console.log('hi1ew')
+                   return "Yes"
+               })
+           }
+        
+            
+        })
+          
+            
+        
+    },
+    /*userToDbNoTeam: async function addUserToDbNoTeam(firstName, lastName, username, email, password, leader) {
         const connection = await sql.connect(adminconf);
         const request = connection.request();
         //Generate salt seperatly and store it in the database along with the password
@@ -110,32 +218,17 @@ const add = {
             });
 
         })
-        
-        request.input("companyName", sql.VarChar, companyName);
-        await request.query("SELECT TeamID FROM Teams WHERE companyName = @companyName").then(
-            (result)=>{
-                console.log(JSON.stringify(result))
-                const teamID = result.recordset[0]['TeamID']
-                console.log(teamID)
-                request.input("TeamID", sql.Int, teamID);
-                
-                if (!teamID){
-                    return res.status(400).json({
-                        status: "Failure",
-                        message: "Team named '" + companyName + "' Does not exist"
-                    })
-                }
-            }
-        )
+
 
         request.input("firstName", sql.VarChar, firstName);//put all fields in
         request.input("lastName", sql.VarChar, lastName);
         request.input("username", sql.VarChar, username);
         request.input("email", sql.VarChar, email);
         request.input("password", sql.VarChar, hashedpassword);
+        request.input("leader", sql.Bit, leader)
 
-        return await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword, TeamID) VALUES (@firstName, @lastName, @username, @email, @password, @companyName)");
-    }
+        return await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword, isCompanyLeader) VALUES (@firstName, @lastName, @username, @email, @password, @leader)");
+    }*/
 }
 module.exports = {
     get,
