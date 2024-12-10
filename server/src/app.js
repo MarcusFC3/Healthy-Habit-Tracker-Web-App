@@ -56,7 +56,6 @@ passport.use(new Strategy({
 },
   (email, password, done) =>{
     let failed = false;
-  console.log("Local Strategy is a go!\n\n\n\n\nYESSSS");
     async function getUserSessionData(){
       const connection = await sql.connect(adminconf);
       const request = connection.request()
@@ -66,7 +65,6 @@ passport.use(new Strategy({
     }
    getUserSessionData().then((result) =>{
     let user = result.recordset[0]
-    console.log("asldnnabokuiwdn o", user)
     done(null,JSON.stringify(user))
   }).catch(
     (err)=>{
@@ -83,7 +81,6 @@ passport.use(new Strategy({
 passport.serializeUser(
   (user, done)=>{
   user = JSON.parse(user)
-  console.log("buasghd " + user)
    return done(null, user)
  //{"cookie":{"originalMaxAge":3600000,"expires":"2024-11-21T19:38:26.272Z","secure":true,"httpOnly":true,"path":"/","sameSite":"none"},"passport":{"user":{}}}
 
@@ -93,8 +90,6 @@ passport.serializeUser(
 //FIX ERROR 
 try{
 passport.deserializeUser((user, done)=>{
-  
-  console.log("DESERIALIZED ASDSAD" + user)
   return done(null, user)
 })}
 catch(err){
@@ -103,19 +98,8 @@ catch(err){
 
 
 
-
-// app.use((req, res, next) => {
-//   console.log(req.session);
-//   console.log(req.user + "user data");
-//   next();
-// })
-
-
-
 function checkLoggedIn(req, res, next){
-  const isLoggedIn = true;
-  console.log(req.session)
-  if (!isLoggedIn){
+  if (!req.session.passport){
     return res.status(401).json({
       error: "You must login"
     })
