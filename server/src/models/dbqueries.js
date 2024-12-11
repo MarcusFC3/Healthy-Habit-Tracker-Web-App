@@ -144,7 +144,6 @@ const add = {
 
 /**
  * Transaction keeps executing SQL code even with error.
- * Console.logs in tranaction rollback and commit are not activating
  */
         const transaction =  connection.transaction(connection)
         await transaction.begin(async err => {
@@ -176,13 +175,11 @@ const add = {
        
             if (err){
                 transaction.rollback(err =>{
-                   console.log('hi')-
-                   return new Error("busted")
+                   console.log('hi')
                })
            } else {
                transaction.commit(err => {
                 console.log('hi1ew')
-                   return "Yes"
                })
            }
         

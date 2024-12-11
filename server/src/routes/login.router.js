@@ -27,11 +27,13 @@ loginRouter.post("/", loginController.login, passport.authenticate('local'), (re
     })
 
 })
-loginRouter.post("/pwdreset", loginController.passwordResetEmail)
+loginRouter.post("/pwdreset", loginController.passwordReset)
 
 
 
 loginRouter.post("/signup", loginController.signup)
+
+loginRouter.post("/signup/co")//maybe allow leaders to signup users with this?
 
 function createSession(req, res) {
 }
