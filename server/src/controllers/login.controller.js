@@ -56,78 +56,10 @@ function inputValidation(bodyobj) {//FI Regex expressions
 }
 
 
-function signupCompany(req, res) {
-    let firstName = req.body.firstName;
-    let lastName = req.body.lastName;
-    let username = req.body.username;
-    let email = req.body.email;
-    let password = req.body.password;
-    let companyName = req.body.companyName;
-    console.log(firstName)
-    console.log(lastName)
-    if (!firstName, !lastName, !username, !email, !password, !companyName) {
-        return res.status(400).json({
-            status: "Failure",
-            message: "One or more fields were empty"
-        })
-    }
-    else if (firstName === "" || lastName === "" || username === "" || email === "" || password === "" || companyName === "") {
-        return res.status(400).json({
-            status: "Failure",
-            message: "One or more fields were empty"
-        })
-    } else if (!/^[a-z0-9]+$/i.test(username)) {
-        return res.status(400).json({
-            status: "Failure",
-            message: "Username must only contain alphanumeric characters"
-        })
-    } else if (!/^[a-z]/i.test(firstName)) {
-        return res.status(400).json({
-            status: "Failure",
-            message: "First name must only contain alphabectic characters"
-        })
-    } else if (!/^[a-z]/i.test(lastName)) {
-        return res.status(400).json({
-            status: "Last name must only contain alphabectic characters"
-        })
-    } else if (!/^[a-z]/i.test(companyName)) {
-        return res.status(400).json({
-            status: "Last name must only contain alphabectic characters"
-        })
-    }
-    else {
-
-        checkIfUserExists(email).then((result) => {
-            if (result.recordset[0]) {
-                return res.status(400).json({
-                    status: "Failure",
-                    message: "An account with that email already exists"
-                })
-            } else {
-
-                addUserToDb(firstName, lastName, username, email, password, companyName).then(
-                    () => {
-                        return res.status(200).json({
-                            status: "Success",
-                            message: "Account was successfully created"
-                        })
-                    }
-                ).catch((err) => {
-                    console.log(`an error occured during signup for ${firstName} ${lastName} ${err}`)
-                    return res.status(500).json({
-                        status: "Failure",
-                        message: "Something went wrong, try again later"
-                    })
-                })
-            }
-
-        })
-    }
-}
-
-
-
-function signup(req, res) {
+function signupUser(req, res) {
+    /**
+     * Currently contains signupCompany code. needs to only insert user into desired team.
+     */
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
     let username = req.body.username;
@@ -153,13 +85,7 @@ function signup(req, res) {
             } else {
                 
 
-                dbqueries.add.UserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName).catch((err) => {
-                    console.log(`an error occured during signup for ${firstName} ${lastName} ${err}`)
-                    return res.status(500).json({
-                        status: "Failure",
-                        message: "Something went wrong, try again later"
-                    })
-                }).then(
+                dbqueries.add.UserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName).then(
                     () => {
                         console.log("WHAT????")
                         return res.status(200).json({
@@ -167,7 +93,105 @@ function signup(req, res) {
                             message: "Account was successfully created"
                         })
                     }
+                ).catch((err) => {
+                    console.log(`an error occured during signup for ${firstName} ${lastName} ${JSON.stringify(err)}`)
+                    return res.status(500).json({
+                        status: "Failure",
+                        message: "Something went wrong, try again later"
+                    })
+                })
+            }
+
+        })
+    }
+}
+
+function login(req, res, next) {
+    let { email, password } = req.body;
+    console.log(req.body)
+    const valid = inputValidation(req.body)
+    console.log(valid)
+    if (valid["status"] == "Failure") {
+        return res.status(400).json(valid)
+    }
+
+    dbqueries.check.ForMatchingPassword(email).then
+        (
+            (result) => {
+                console.log(result)
+                if (result.recordset.length != 0) {
+                    const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password)
+                    if (correctPassword) {
+
+                        next();
+                    } else {
+                        return res.status(400).json({
+                            status: "Failure",
+                            message: "Incorrect password or email"
+                        })
+                    }
+                } else {
+                    return res.status(400).json({
+                        status: "Failure",
+                        message: "No accounts match this email"
+                    })
+                }
+            }
+        ).catch
+        (
+            (err) => {
+                console.log(err)
+                return res.status(400).json({
+                    result: "error",
+                    message: "Encountered an error"
+                })
+            }
+        )
+}
+
+
+
+function signupCompany(req, res) {
+    let firstName = req.body.firstName;
+    let lastName = req.body.lastName;
+    let username = req.body.username;
+    let email = req.body.email;
+    let password = req.body.password;
+    let teamName = req.body.teamName;
+    let companyName = req.body.companyName;
+    console.log(firstName)
+    console.log(lastName)
+    const valid = inputValidation({ firstName, lastName, username, email, password })
+    console.log(valid)
+    if (valid.status === "Failure") {
+        return res.status(400).json({ valid })
+    }
+    else {
+        dbqueries.check.IfUserExists(email).then((result) => {
+            if (result.recordset[0]) {
+                return res.status(400).json({
+                    status: "Failure",
+                    message: "An account with that email already exists"
+                }
                 )
+            } else {
+                
+
+                dbqueries.add.UserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName).then(
+                    () => {
+                        console.log("WHAT????")
+                        return res.status(200).json({
+                            status: "Success",
+                            message: "Account was successfully created"
+                        })
+                    }
+                ).catch((err) => {
+                    console.log(`an error occured during signup for ${firstName} ${lastName} ${JSON.stringify(err)}`)
+                    return res.status(500).json({
+                        status: "Failure",
+                        message: "Something went wrong, try again later"
+                    })
+                })
             }
 
         })
@@ -302,7 +326,8 @@ function resetPassword(req, res) {
 
 module.exports = {
     login,
-    signup,
+    signupUser,
+    signupCompany,
     passwordReset,
 }
 
