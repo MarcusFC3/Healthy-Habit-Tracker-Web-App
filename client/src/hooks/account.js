@@ -1,8 +1,12 @@
-import {httpRegisterAccount, httpCheckAccount} from "./requests";
+import {httpRegisterAccount, httpGetAccount} from "./requests";
+
+/* 
+function that collects the data from the sign up form 
+to register an account
+*/
 
 async function registerAccount(event){
     event.preventDefault();
-    console.log("hkjhkjhkjulkgh")
     const formData = new FormData(event.target);
     const firstName = formData.get("firstName");
     const lastName = formData.get("lastName");
@@ -30,28 +34,33 @@ async function registerAccount(event){
        
     }
 
-if (response.ok){
-    console.log("Mathmatical")
-    //something happens
-} else{
-    console.log("didn't work")
-    //Something went wrong
-}
+    if (response.ok){
+        console.log("Mathmatical")
+        //something happens
+    } else{
+        console.log("didn't work")
+        //Something went wrong
+    }
 }
 
+/*
+Function that collects the data from the login form
+*/
 async function checkAccount (event){
     event.preventDefault();
     const formData = new FormData(event.target);
     const email = formData.get("email");
     const password = formData.get("password");
 
-    const accountData = {
+    const account = {
         email,
-        password,
+        password
     }
+    console.log(account)
 
-    console.log(accountData)
-
+    response = await httpGetAccount(account).catch((error)=>{
+        console.log(error)
+    })
 }
 
 export {registerAccount, checkAccount} 

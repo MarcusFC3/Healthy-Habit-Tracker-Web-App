@@ -24,8 +24,11 @@ const Navbar = () => {
                                 <Link className="nav-link" to="/activities">Activities</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/leaderboards">leaderboards</Link>
+                                <Link className="nav-link" to="/leaderboards">Leaderboards</Link>
                             </li>
+
+                            {/*if the user isn't logged in or doesn't have an 
+                            account then we want to show this dropdown*/}
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="false">
@@ -36,6 +39,22 @@ const Navbar = () => {
                                     <li><Link className="dropdown-item" to="/sign_up">Sign Up</Link></li>
                                 </ul>
                             </li>
+
+                            {/* 
+                            If the user is logged in then we will show this dropdown
+                            
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Account
+                                </a>
+                                <ul className="dropdown-menu">
+                                    <li><Link className="dropdown-item" to="." >Account details</Link></li>
+                                    <li><Link className="dropdown-item" to=".">Settings</Link></li>
+                                </ul>
+                            </li> 
+                            */}
+                            
                         </ul>
                     </div>
                 </div>
@@ -43,4 +62,5 @@ const Navbar = () => {
         </div>
     </div>
 }
+
 export default Navbar

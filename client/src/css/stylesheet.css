@@ -26,9 +26,45 @@ form > p{
 form > p > label{
     display: flex;
 }
+
+table{
+    overflow: auto;
+    text-align: center;
+}
+
+tr{
+    margin:auto;
+    padding: auto;
+}
+
+th{
+    border: 3px solid black;
+    margin: auto;
+    padding: auto;
+    background-color: rgb(184, 184, 184);
+}
+
+td{
+    border: 2px solid black;
+    margin: auto;
+    padding: auto;
+}
+
 .home_text{
-    box-shadow: 2px;
+    margin: auto;
     background-color: rgb(175, 175, 175);
+}
+.progress-bar-holder{
+    padding: 2px;
+    background-color: rgb(221, 221, 221);
+    width: 200px;
+    height: 20px;
+    border: 2px solid black;
+}
+.progress_bar{
+    padding: 6px;
+    background-color: green;
+    width: 50%;
 }
 .homebackgroundimage{
     font-family: Arial, Helvetica, sans-serif;
