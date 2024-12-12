@@ -83,9 +83,16 @@ function signupUser(req, res) {
                 }
                 )
             } else {
+                dbqueries.check.IfCompanyExists(companyName).then((result) => {
+                    if (result.recordset[0]) {
+                        return res.status(400).json({
+                            status: "Failure",
+                            message: "An account with that email already exists"
+                        }
+                        )}
                 
-
-                dbqueries.add.UserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName).then(
+            
+                dbqueries.add.userToDbAddToCompanyAndTeam(firstName, lastName, username, email, password, teamName, companyName).then(
                     () => {
                         console.log("WHAT????")
                         return res.status(200).json({
@@ -100,6 +107,10 @@ function signupUser(req, res) {
                         message: "Something went wrong, try again later"
                     })
                 })
+            
+            }
+            )
+
             }
 
         })
@@ -177,7 +188,7 @@ function signupCompany(req, res) {
             } else {
                 
 
-                dbqueries.add.UserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName).then(
+                dbqueries.add.userToDbAddToCompanyAndTeam(firstName, lastName, username, email, password, teamName, companyName).then(
                     () => {
                         console.log("WHAT????")
                         return res.status(200).json({
@@ -185,7 +196,8 @@ function signupCompany(req, res) {
                             message: "Account was successfully created"
                         })
                     }
-                ).catch((err) => {
+                )
+                .catch((err) => {
                     console.log(`an error occured during signup for ${firstName} ${lastName} ${JSON.stringify(err)}`)
                     return res.status(500).json({
                         status: "Failure",
@@ -210,9 +222,9 @@ function login(req, res, next) {
     dbqueries.check.ForMatchingPassword(email).then
         (
             (result) => {
-                console.log(result)
+                console.log(JSON.stringify(result) + result.recordset[0]['hashedPassword'])
                 if (result.recordset.length != 0) {
-                    const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password)
+                    const correctPassword = bcrypt.compare(result.recordset[0]['hashedpassword'], password)
                     if (correctPassword) {
 
                         next();

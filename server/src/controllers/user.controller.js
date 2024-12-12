@@ -2,8 +2,20 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const sql = require("mssql");
 const { adminconf } = require("../models/dbusers")
+const dbqueries = require("../models/dbqueries");
 // const {serverAdminConnection} = require("../models/user");
 const nodemailer = require("nodemailer");
+
+
+function getUserData(req, res){
+   const userID = req.session.passport.user.UserID;
+   dbqueries.get.UserInfoFromUserID(userID).then(
+      (result) =>{
+         return result.recordset[0]
+      }
+   )
+
+}
 
 function deleteUser(req, res) {
    let email = req.body.email
@@ -38,5 +50,6 @@ function deleteUser(req, res) {
 
 
 module.exports = {
-   deleteUser
+   deleteUser,
+   getUserData,
 }

@@ -14,6 +14,7 @@ const sql = require("mssql");
 const { adminconf } = require("./models/dbusers");
 const db = require("./models/dbqueries");
 
+
 const userRouter = require("./routes/user.router");
 const activitiesRouter = require("./routes/activities.router");
 const loginRouter = require("./routes/login.router");
@@ -60,7 +61,7 @@ passport.use(new Strategy({
       const connection = await sql.connect(adminconf);
       const request = connection.request()
       request.input("email", sql.VarChar, email)
-      return await request.query("SELECT UserID, Users.TeamID, CompanyID, isTeamLeader, isCompanyLeader FROM Users INNER JOIN Teams on Teams.TeamID = Users.TeamID WHERE email = @email")
+      return await request.query("SELECT UserID FROM Users")
       
     }
    getUserSessionData().then((result) =>{
@@ -76,7 +77,7 @@ passport.use(new Strategy({
 
 //
   
-));
+)); 
 
 passport.serializeUser(
   (user, done)=>{
@@ -90,7 +91,17 @@ passport.serializeUser(
 //FIX ERROR 
 try{
 passport.deserializeUser((user, done)=>{
-  return done(null, user)
+  console.log(JSON.stringify(user))
+  const userID = user.UserID;
+  db.get.UserInfoFromUserID(userID).then(
+     (result) =>{
+      console.log(JSON.stringify(result.recordset[0]))
+        user = result.recordset[0]
+        console.log(JSON.stringify(user))
+        return done(null, user)
+     }
+  )
+  
 })}
 catch(err){
   console.log(err)
@@ -150,7 +161,7 @@ app.get("/asd", (req, res)=>{
 app.use("/activities",checkLoggedIn, activitiesRouter)
 app.use("/login", loginRouter);
 app.use("/user", userRouter);
-app.get("/", (req, res) => {return res.send("Buh")})    
+app.get("/", (req, res) => {return res.send(req.user)})    
 
 app.get("/logout", (req, res) =>{
   req.logout();

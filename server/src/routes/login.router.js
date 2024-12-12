@@ -31,9 +31,9 @@ loginRouter.post("/pwdreset", loginController.passwordReset)
 
 
 
-loginRouter.post("/signup", loginController.signup)
+loginRouter.post("/signup/user", loginController.signupUser)//maybe allow leaders to signup users with this?
 
-loginRouter.post("/signup/co")//maybe allow leaders to signup users with this?
+loginRouter.post("/signup/company", loginController.signupCompany)
 
 function createSession(req, res) {
 }
