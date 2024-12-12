@@ -18,7 +18,7 @@ const get = {
     },
 
     UsersFromTeam: function getUsersFromTeam(teamName) {
-        TeamIDFromName(teamName).then((response => {
+        get.TeamIDFromName(teamName).then((response => {
             if (!response.recordset[0]) {
                 return "teamNotFound"
             }
@@ -90,7 +90,7 @@ const check = {
     }
 }
 const add = {
-    UserToDbWithTeam: async function addUserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName) {
+    UserToDbCreateCompanyAndTeam: async function addUserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName) {
         const connection = await sql.connect(adminconf);
         const request = connection.request();
         //Generate salt seperatly and store it in the database along with the password
@@ -120,6 +120,8 @@ const add = {
         let error = undefined;
 
         check.IfTeamExists(teamName).then((result) => {
+            console.log(JSON.stringify(result))
+            console.log(JSON.stringify(result))
             if (result.recordset[0]) {
                 error = new Error({
                     status: "Failure",
@@ -136,60 +138,91 @@ const add = {
                     message: "This Company Already Exists"
                 })
             }
-        })
+        }).catch(
+            (err) => {
+                console.log(JSON.stringify(err))
+            }
+        )
         if (error){
             throw error
-        }
+        } else{
 
+        
 
 /**
  * Transaction keeps executing SQL code even with error.
  */
-        const transaction =  connection.transaction(connection)
-        await transaction.begin(async err => {
-         
-            request.input("companyName", sql.VarChar, companyName)
-
-            await request.query("INSERT INTO Companies (CompanyName) VALUES (@companyName)")
 
 
-            request.input("teamName", sql.VarChar, teamName)
+const transaction = connection.transaction(connection);
+try {
+    
+    await transaction.begin();
+    const tRequest = transaction.request();
+    
+    console.log("Transaction started");
 
-            await request.query("INSERT INTO Teams (TeamName, CompanyID) VALUES (@TeamName, 2)")
+    // Inserting Company
+    tRequest.input("companyName", sql.VarChar, companyName);
+    await tRequest.query("INSERT INTO Companies (CompanyName) VALUES (@companyName)");
 
+    let companyID;
+    console.log("Company inserted");
+
+    // Getting Company ID
+    await tRequest.query("SELECT CompanyID FROM Companies WHERE CompanyName = @companyName")
+        .then(result => {
+            companyID = result.recordset[0]["CompanyID"];
+        });
+
+    console.log("Company ID retrieved");
+
+    // Inserting Team
+    tRequest.input("teamName", sql.VarChar, teamName);
+    tRequest.input("companyID", sql.Int, companyID);
+    await tRequest.query("INSERT INTO Teams (TeamName, CompanyID) VALUES (@teamName, @companyID)");
+
+    console.log("Team inserted");
+
+    // Inserting User
+    tRequest.input("firstName", sql.VarChar, firstName);
+    tRequest.input("lastName", sql.VarChar, lastName);
+    tRequest.input("username", sql.VarChar, username);
+    tRequest.input("email", sql.VarChar, email);
+    tRequest.input("password", sql.VarChar, hashedpassword);
+    await tRequest.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword, TeamName, CompanyID, isCompanyLeader, isTeamLeader) VALUES (@firstName, @lastName, @username, @email, @password, @teamName, @companyID, 1, 1)");
+
+    console.log("User inserted");
+
+    // Commit the transaction
+    await transaction.commit();
+    console.log("Transaction committed");
+
+} catch (err) {
+        console.log(err)
+        // Rollback the transaction in case of error
+        await transaction.rollback()
+        console.log("Transaction rolled back due to error");
+    
+
+    // Assigning error and throwing it
+    error = err
+    
+    throw error;
+
+} finally {
+    if (error) {
+        console.log("Error: ", JSON.stringify(error));
+    }
+}
+      
           
-          
-
-            request.input("firstName", sql.VarChar, firstName);//put all fields in
-            request.input("lastName", sql.VarChar, lastName);
-            request.input("username", sql.VarChar, username);
-            request.input("email", sql.VarChar, email);
-            request.input("password", sql.VarChar, hashedpassword);
-
-            await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword, TeamID, isCompanyLeader) VALUES (@firstName, @lastName, @username, @email, @password, 3, 1)").then(
-                (result) => {
-                    console.log(JSON.stringify(result));
-                }  
-            );
             
-       
-            if (err){
-                transaction.rollback(err =>{
-                   console.log('hi')
-               })
-           } else {
-               transaction.commit(err => {
-                console.log('hi1ew')
-               })
-           }
         
-            
-        })
-          
-            
-        
-    },
-    /*userToDbNoTeam: async function addUserToDbNoTeam(firstName, lastName, username, email, password, leader) {
+    }
+}
+,
+    /*userToDbAddToCompanyAndTeam: async function addUserToDbNoTeam(firstName, lastName, username, email, password, leader) {
         const connection = await sql.connect(adminconf);
         const request = connection.request();
         //Generate salt seperatly and store it in the database along with the password
