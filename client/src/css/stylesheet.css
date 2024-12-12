@@ -54,6 +54,13 @@ td{
     margin: auto;
     background-color: rgb(175, 175, 175);
 }
+.Activity{
+    border: 1px solid black;
+}
+.editActivity{
+    color: black;
+    text-decoration: none;
+}
 .progress-bar-holder{
     padding: 2px;
     background-color: rgb(221, 221, 221);
