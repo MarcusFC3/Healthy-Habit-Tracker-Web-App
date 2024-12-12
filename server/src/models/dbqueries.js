@@ -4,17 +4,25 @@ const sql = require("mssql");
 const { adminconf } = require("../models/dbusers")
 const { response } = require("../app");
 const get = {
+    UserInfoFromUserID : async function getNamesFromUserID(userID) {
+        const connectionPool = await sql.connect(adminconf);
+        let request = await connectionPool.request();
+        request = await request.input("userID", sql.VarChar, `${userID}`);
+        return await request.query("SELECT firstName, lastName, username, TeamName, CompanyID, isTeamLeader, isCompanyLeader FROM Users WHERE UserID = @userID")
+    },
+
     TeamIDFromName: async function getTeamIDFromName(teamName) {
         const connectionPool = await sql.connect(adminconf);
         let request = await connectionPool.request();
         request = await request.input("teamName", sql.VarChar, `${teamName}`);
         return await request.query("SELECT TeamID FROM Teams WHERE TeamName = @teamName")
     },
-    UsersFromTeamID: async function getUsersFromTeamID(teamID) {
+    UserInfoFromTeamID: async function getUsersFromTeamID(teamName, companyID) {
         const connectionPool = await sql.connect(adminconf);
-        let request = await connectionPool.request();
-        request = await request.input("TeamID", sql.Int, `${teamID}`);
-        return await request.query("SELECT firstName + lastName as Name, Username FROM Users WHERE TeamID = @TeamID")
+        let request = connectionPool.request();
+        request.input("teamName", sql.VarChar,teamName)
+        request.input("companyID", sql.Int,companyID)
+        return await request.query("SELECT firstName + lastName as Name, Username, isTeamLeader, isCompanyLeader FROM Users WHERE TeamID = @TeamID")
     },
 
     UsersFromTeam: function getUsersFromTeam(teamName) {
@@ -222,9 +230,10 @@ try {
     }
 }
 ,
-    /*userToDbAddToCompanyAndTeam: async function addUserToDbNoTeam(firstName, lastName, username, email, password, leader) {
+    userToDbAddToCompanyAndTeam: async function addUserToDbNoTeam(firstName, lastName, username, email, password, teamName, companyName) {
         const connection = await sql.connect(adminconf);
         const request = connection.request();
+        let companyID;
         //Generate salt seperatly and store it in the database along with the password
         const salt = await new Promise((resolve, reject) => {
             bcrypt.genSalt(10, (err, salt) => {
@@ -246,20 +255,26 @@ try {
                     resolve(hash)
                 }
             });
-
+            
         })
-
+        await get.CompanyIDFromName(companyName).then(
+            (result =>{
+                companyID = result.recordset[0]["CompanyID"]
+            })
+        )
 
         request.input("firstName", sql.VarChar, firstName);//put all fields in
         request.input("lastName", sql.VarChar, lastName);
         request.input("username", sql.VarChar, username);
         request.input("email", sql.VarChar, email);
         request.input("password", sql.VarChar, hashedpassword);
-        request.input("leader", sql.Bit, leader)
+        request.input("teamName", sql.VarChar, teamName);
+        request.input("companyID", sql.Int, companyID);
 
-        return await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword, isCompanyLeader) VALUES (@firstName, @lastName, @username, @email, @password, @leader)");
-    }*/
+        return await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword, TeamName, CompanyID) VALUES (@firstName, @lastName, @username, @email, @password, @teamName, @companyID)");
+    }
 }
+
 module.exports = {
     get,
     check,
