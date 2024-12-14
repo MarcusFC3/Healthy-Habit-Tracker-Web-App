@@ -33,7 +33,7 @@ function getUserActivityData(req, res) {
         getUserActivities(req.session.passport.user.UserID).then((results) => {
             return res.status(200).json({
                 "status": "success",
-                "StatsByTeamID": results.recordset
+                "UserActivites": results.recordset
             })
         })
     }
@@ -55,20 +55,24 @@ if (!req.session.passport) {
                     
                     await request.query("SELECT * FROM TeamActivities WHERE CompanyID = @CompanyID").then((result) => {
                        
-                        let completed = 0;
-                        let started = 0;
-                        let teams = new Set([])
+                        for (let i = 0;  result.recordset.length > i; i++){
+                            let tname = result.recordset[i]["TeamName"]
+                            StatsByTeam[tname] = {
+                                Completed: 0,
+                                Started: 0
+                            }
+                            
+                        }
                         for (let i = 0;  result.recordset.length > i; i++){
                             let tname = result.recordset[i]["TeamName"]
                             if (result.recordset["Completed"]){
-                                completed++;
+                                StatsByTeam[tname].Completed++;
+                                StatsByTeam[tname].Started++;
+                            }else {
+                                StatsByTeam[tname].Started++;
                             }
                             
-                            started ++;
-                            StatsByTeam[tname] = {
-                                Completed: completed,
-                                Started: started
-                            }
+                            
                             
                         }
                         
@@ -94,36 +98,49 @@ function viewTopUsers(req, res) {
         const connection = await sql.connect(adminconf);
         const request = connection.request();
         request.input("CompanyID", sql.Int, CompanyID);
-        return await request.query("SELECT UserID, firstName + ' ' + lastName as FullName FROM Users WHERE TeamID in (SELECT TeamID FROM Teams Where CompanyID = @CompanyID)").then(
+        return await request.query("SELECT UserID, firstName + ' ' + lastName as FullName FROM Users WHERE TeamName in (SELECT TeamName FROM Teams Where CompanyID = @CompanyID)").then(
+           
             async (result) => {
-                let completed = 0;
-                let started = 0;
-                let teams = new Set([])
+                console.log(JSON.stringify(result.recordset))
+                users = result.recordset
+
+                StatsByUser = {}
+                await request.query("SELECT UA.Completed, Users.firstName + ' ' + Users.lastName as fullName FROM UserActivities as UA JOIN Users ON UA.UserID = Users.UserID WHERE CompanyID = @CompanyID").then((result) => {
+                console.log("query results are:  " + JSON.stringify(result.recordset))
+                
                 for (let i = 0;  result.recordset.length > i; i++){
-                    let tname = result.recordset[i]["TeamName"]
-                    if (result.recordset["Completed"]){
-                        completed++;
-                    }
-                    
-                    started ++;
-                    StatsByTeam[tname] = {
-                        Completed: completed,
-                        Started: started
+                    let fname = result.recordset[i]["fullName"]
+                    StatsByUser[fname] = {
+                        Completed: 0,
+                        Started: 0
                     }
                     
                 }
-                
+                for (let i = 0;  result.recordset.length > i; i++){
+                    let fname = result.recordset[i]["fullName"]
+                    if (result.recordset["Completed"]){
+                        StatsByUser[fname].Completed++;
+                        StatsByUser[fname].Started++;
+                    }else {
+                        StatsByUser[fname].Started++;
+                    }
                     
+                    
+                    
+                }
                 
+
+            })
+                 
                 return StatsByUser;
             }
         )
     }
-    getUsersData(req.session.passport.user.CompanyID).then((StatsByUser) => {
+    getUsersData(req.user.CompanyID).then((StatsByUser) => {
         console.log(StatsByUser);
         return res.status(200).json({
             "status": "success",
-            "StatsByTeamID": StatsByUser
+            "StatsByUser": StatsByUser
         })
     })
     }
@@ -132,17 +149,12 @@ function createUserActivity(req, res) {
     let date = new Date()
     let { ActivityName, repsorduration, amount, activityDescription } = req.body;//many variables may be predetermined by activites we create
     //Input validation
-    if (!UserID || !ActivityName || !repsorduration || !amount) {
+    if ( !ActivityName || !repsorduration || !amount) {
         return res.status(400).json({
             status: "Failure",
             message: "One or more required parameters are missing"
         })
-    } else if (isNaN(UserID)) {
-        return res.status(500).json({
-            status: "Failure",
-            message: "The field 'UserID' must be an integer"
-        })
-    } else {
+    }else {
      
         async function addUserActivityToDb(UserID, ActivityName, repsorduration, amount, activityDescription) {
             const connection = await sql.connect(adminconf);
@@ -156,7 +168,7 @@ function createUserActivity(req, res) {
 
             return await request.query("INSERT INTO UserActivities(UserID, ActivityName, RepetitionsOrDuration, amount, activityDescription, DateCreated) VALUES (@UserID, @ActivityName, @repsorduration, @amount, @activityDescription, @Date)");
         }
-        addUserActivityToDb(UserID, ActivityName, repsorduration, amount, activityDescription).then(() => {
+        addUserActivityToDb(req.session.passport.user.UserID, ActivityName, repsorduration, amount, activityDescription).then(() => {
             return res.status(200).json({
                 status: "success",
                 message: "User activity successfully created"
@@ -215,22 +227,18 @@ function createTeamActivity(req, res) {
 function createCompanyActivity(req, res) {
     let date = new Date()
     
-    let { CompanyID, ActivityName, repsorduration, amount, activityDescription } = req.body;//many variables may be predetermined by activites we create
+    let {ActivityName, repsorduration, amount, activityDescription } = req.body;//many variables may be predetermined by activites we create
     //Input validation
-    if (!CompanyID || !ActivityName || !repsorduration || !amount) {
+    if ( !ActivityName || !repsorduration || !amount) {
         return res.status(400).json({
             status: "Failure",
             message: "One or more required parameters are missing"
         })
-    } else if (isNaN(CompanyID)) {
-        return res.status(500).json({
-            status: "Failure",
-            message: "The field 'CompanyID' must be an integer"
-        })
-    } else {
+    }  else {
         async function addCompanyActivityToDb(CompanyID, ActivityName, repsorduration, amount, activityDescription) {
             const connection = await sql.connect(adminconf);
             const request = connection.request();
+            console.log(CompanyID)
             request.input("CompanyID", sql.Int, CompanyID)
             request.input("ActivityName", sql.VarChar, ActivityName)
             request.input("repsorduration", sql.Int, repsorduration)
@@ -239,7 +247,8 @@ function createCompanyActivity(req, res) {
             request.input("Date", sql.Date, date.toLocaleDateString().substring(0, 10))
             return await request.query("INSERT INTO CompanyActivities(CompanyID, ActivityName, RepetitionsOrDuration, amount, activityDescription, DateCreated) VALUES (@CompanyID, @ActivityName, @repsorduration, @amount, @activityDescription, @Date)");
         }
-        addCompanyActivityToDb(CompanyID, ActivityName, repsorduration, amount, activityDescription).then(() => {
+        console.log(req.user.CompanyID)
+        addCompanyActivityToDb(req.user.CompanyID, ActivityName, repsorduration, amount, activityDescription).then(() => {
             return res.status(200).json({
                 status: "success",
                 message: "Company activity successfully created"

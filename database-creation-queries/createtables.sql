@@ -107,8 +107,8 @@ CREATE TABLE Users
 firstName varchar(25) NOT NULL,
 lastName varchar(25) NOT NULL,
 Username varchar(25) NOT NULL,
-email varchar(25) NOT NULL ,
-hashedpassword varchar NOT NULL ,
+email varchar(60) NOT NULL ,
+hashedpassword varchar(130) NOT NULL ,
 TeamName varchar(40),
 CompanyID int,
 CONSTRAINT PK_UserID PRIMARY KEY (UserID),
@@ -127,7 +127,6 @@ CREATE TABLE CompanyActivities(
     DateCreated Date,
     CONSTRAINT PK_CompanyActivites PRIMARY KEY (ActivityID),
     CONSTRAINT FK_CompanyID FOREIGN KEY (CompanyID) REFERENCES Companies (CompanyID),
-	
 )
 
 CREATE TABLE TeamActivities(

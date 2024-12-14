@@ -37,4 +37,4 @@ loginRouter.post("/signup/company", loginController.signupCompany)
 
 function createSession(req, res) {
 }
-module.exports = loginRouter;
+module.exports = loginRouter; 

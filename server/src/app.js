@@ -21,17 +21,7 @@ const loginRouter = require("./routes/login.router");
 
 const app = express();
 
-const sqlstore = new MssqlStore({
-  server: "localhost\\SQLEXPRESSBPA",
-  user: "serveradministrator",
-  password: "admin",
-  database: "SimplyHealth",
-  options: {
-      encrypt: true,
-      trustServerCertificate: true
-  }
-  
-},)
+const sqlstore = new MssqlStore(adminconf)
 
 
 app.use(cors());

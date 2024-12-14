@@ -42,12 +42,15 @@ BEGIN
 	Amount = @amount,
 	ActivityDescription = @ActivityDescription,
 	CompanyActivityID = @ActivityID,
-	DateCreated = @Date
+	DateCreated = @Date,
+	CompanyID = @CompanyID
+	
 
 	INSERT INTO TeamActivities (TeamName, CompanyID, ActivityName, RepetitionsOrDuration, Amount, ActivityDescription, CompanyActivityID, DateCreated)
 	SELECT TeamName, CompanyID, ActivityName, RepetitionsOrDuration, Amount, ActivityDescription, CompanyActivityID, DateCreated FROM @CompanyMemberstable
-
+	
 END
+ 
  
 Create TRIGGER [dbo].[createTeamActivitiesForUsers]
 ON [dbo].[TeamActivities]

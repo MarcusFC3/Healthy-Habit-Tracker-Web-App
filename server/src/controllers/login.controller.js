@@ -69,6 +69,7 @@ function signupUser(req, res) {
     let companyName = req.body.companyName;
     console.log(firstName)
     console.log(lastName)
+
     const valid = inputValidation({ firstName, lastName, username, email, password })
     console.log(valid)
     if (valid.status === "Failure") {
@@ -76,7 +77,11 @@ function signupUser(req, res) {
     }
     else {
         dbqueries.check.IfUserExists(email).then((result) => {
+            console.log(JSON.stringify(result.recordset[0]) + "asdasdd")
             if (result.recordset[0]) {
+               
+
+
                 return res.status(400).json({
                     status: "Failure",
                     message: "An account with that email already exists"
@@ -84,10 +89,10 @@ function signupUser(req, res) {
                 )
             } else {
                 dbqueries.check.IfCompanyExists(companyName).then((result) => {
-                    if (result.recordset[0]) {
+                    if (!result.recordset[0]) {
                         return res.status(400).json({
                             status: "Failure",
-                            message: "An account with that email already exists"
+                            message: "The Company " + companyName + " does not exist"
                         }
                         )}
                 
@@ -107,7 +112,7 @@ function signupUser(req, res) {
                         message: "Something went wrong, try again later"
                     })
                 })
-            
+        
             }
             )
 
@@ -116,6 +121,39 @@ function signupUser(req, res) {
         })
     }
 }
+
+
+function CreateTeam(req, res){
+
+}
+
+function switchUserTeam(req, res){
+
+}
+
+function deleteTeam(req, res){
+
+}
+
+function deleteCompany(req, res){
+
+}
+function addTeamLeader(req, res){
+
+}
+function removeTeamLeader(req, res){
+
+}
+function addCompanyLeader(req, res){
+    
+}
+function removeCompanyLeader(req, res){
+
+}
+
+
+
+
 
 function login(req, res, next) {
     let { email, password } = req.body;
@@ -131,9 +169,9 @@ function login(req, res, next) {
             (result) => {
                 console.log(result)
                 if (result.recordset.length != 0) {
-                    const correctPassword = bcrypt.compare(result.recordset[0]['hashedPassword'], password)
+                    const correctPassword = bcrypt.compare(result.recordset[0]['hashedpassword'], password)
                     if (correctPassword) {
-
+                       console.log("Correct password input!") 
                         next();
                     } else {
                         return res.status(400).json({
@@ -146,7 +184,7 @@ function login(req, res, next) {
                         status: "Failure",
                         message: "No accounts match this email"
                     })
-                }
+                } 
             }
         ).catch
         (
@@ -187,8 +225,8 @@ function signupCompany(req, res) {
                 )
             } else {
                 
-
-                dbqueries.add.userToDbAddToCompanyAndTeam(firstName, lastName, username, email, password, teamName, companyName).then(
+                
+                dbqueries.add.UserToDbCreateCompanyAndTeam(firstName, lastName, username, email, password, teamName, companyName).then(
                     () => {
                         console.log("WHAT????")
                         return res.status(200).json({
@@ -210,24 +248,31 @@ function signupCompany(req, res) {
     }
 }
 
-function login(req, res, next) {
-    let { email, password } = req.body;
-    console.log(req.body)
-    const valid = inputValidation(req.body)
-    console.log(valid)
-    if (valid["status"] == "Failure") {
-        return res.status(400).json(valid)
-    }
 
+//it broken =(
+function passwordReset(req, res) {
+    const email = req.body.email;
+    const oldpassword = req.body.oldpassword;
+    const newpassword = req.body.newpassword
+    console.log(email)
     dbqueries.check.ForMatchingPassword(email).then
         (
             (result) => {
-                console.log(JSON.stringify(result) + result.recordset[0]['hashedPassword'])
+                console.log(result)
                 if (result.recordset.length != 0) {
-                    const correctPassword = bcrypt.compare(result.recordset[0]['hashedpassword'], password)
+                    const correctPassword = bcrypt.compare(result.recordset[0]['hashedpassword'], oldpassword)
                     if (correctPassword) {
-
-                        next();
+                        console.log("Correct password input!") 
+                        console.log("changing password...")
+                        //change password
+                        dbqueries.update.resetPassword(newpassword, email).then(
+                            (result) =>{
+                                return res.status(200).json({
+                                    status: "Success",
+                                    message: "Password successfully updated"
+                                })
+                            }
+                        )
                     } else {
                         return res.status(400).json({
                             status: "Failure",
@@ -239,7 +284,7 @@ function login(req, res, next) {
                         status: "Failure",
                         message: "No accounts match this email"
                     })
-                }
+                } 
             }
         ).catch
         (
@@ -251,80 +296,7 @@ function login(req, res, next) {
                 })
             }
         )
-}
 
-
-//it broken =(
-function passwordReset(req, res) {
-    const email = req.body.email
-    console.log(email)
-    async function checkformatch(email) {
-        const connection = await sql.connect(adminconf);
-        const request = connection.request()
-        request.input("email", sql.VarChar, email)
-        return await request.query("SELECT firstName, email FROM Users WHERE email = @email ")
-
-    }
-    dbqueries.check.ForMatchingPassword(email).then(
-        (result) => {
-            console.log(result)
-            if (result.recordset.length != 0) {
-                /*
-                might need Oauth 2
-                */
-                // Create a transporter object
-                const transporter = nodemailer.createTransport({
-                    host: 'smtp.office365.com', // use false for STARTTLS; true for SSL on port 465
-                    port: 587,
-                    secure: false,
-                    auth: {
-                        user: 'simplyhealthorg@outlook.com',
-                        pass: 'tzlcgvtfvhbuafab',
-                    }
-                });
-
-                // Configure the mailoptions object
-                const mailOptions = {
-                    from: 'simplyhealthorg@outlook.com',
-                    to: 'simplyhealthorg@outlook.com',
-                    subject: 'Hello world',
-                    text: 'Hello world.'
-                };
-                transporter.verify((error, success) => {
-                    if (error) {
-                        console.log(error)
-                        res.status(500).send("")
-                    } else {
-                        console.log("Nice")
-                    }
-                })
-                // Send the email
-                // transporter.sendMail(mailOptions, function (error, info) {
-                //     if (error) {
-                //         console.log('Error:', error);
-                //         res.status
-                //     } else {
-                //         console.log('Email sent: ', info.response);
-                //         return res.status(200).json({
-                //             status: "success",
-                //             message:"Email Sent!"
-                //         });
-                //     }
-                // });
-            }
-            else {
-                console.log("buh where da email");
-            }
-        }
-    ).catch(
-        (error) => {
-            console.log(error)
-            res.status(500).json({
-                status: "failure",
-                message: "it was a failure..."
-            })
-        }
-    )
 }
 
 function resetPassword(req, res) {
