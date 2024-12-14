@@ -6,7 +6,7 @@ export default function Activity(props) {
 
     return (
         <div className="col-12 col-md-4 Activity">
-                <h2>{props.name}</h2>
+                <h2>{props.Name}</h2>
                 <p>{props.descr}</p>
                 <div className="progress-bar-holder"><div style={style} className="progress_bar"></div></div>
                 <button onClick={null}>Edit Activity</button>
@@ -17,14 +17,13 @@ export default function Activity(props) {
                                     aria-expanded="false">
                                     Edit Activity
                                 </h2>
-                                <ul className="dropdown-menu">
-                                    <li></li>
-                                    <li></li>
-                                </ul>
+                                <p className="dropdown-menu">
+
+                                </p>
                             </div>
 
 
-                <button onClick={null}>Delete Activity</button>
+                <button onClick={props.delete}>Delete Activity</button>
         </div>
     )
 }
