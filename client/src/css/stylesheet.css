@@ -56,10 +56,12 @@ td{
 }
 .Activity{
     border: 1px solid black;
+    display:inline-block;
 }
-.editActivity{
+.activityForm{
     color: black;
     text-decoration: none;
+    display:none;
 }
 .progress-bar-holder{
     padding: 2px;
