@@ -14,6 +14,7 @@ const passport = require("passport");
 const {Strategy} = require("passport-local");
 
 const loginController = require("../controllers/login.controller"); 
+const { log } = require("console");
 
 const loginRouter = express.Router();
 
@@ -34,6 +35,10 @@ loginRouter.post("/pwdreset", loginController.passwordReset)
 loginRouter.post("/signup/user", loginController.signupUser)//maybe allow leaders to signup users with this?
 
 loginRouter.post("/signup/company", loginController.signupCompany)
+
+loginRouter.post("/create/team", loginController.createTeam)
+
+loginRouter.post("/changeteam", loginController.switchUserTeam)
 
 function createSession(req, res) {
 }

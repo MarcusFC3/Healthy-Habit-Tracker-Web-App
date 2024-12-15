@@ -7,15 +7,14 @@ const get = {
     UserInfoFromUserID : async function getNamesFromUserID(userID) {
         const connectionPool = await sql.connect(adminconf);
         let request = await connectionPool.request();
-        request = await request.input("userID", sql.VarChar, `${userID}`);
+        request = await request.input("userID", sql.Int,userID);
         return await request.query("SELECT firstName, lastName, username, TeamName, CompanyID, isTeamLeader, isCompanyLeader FROM Users WHERE UserID = @userID")
     },
-
-    TeamIDFromName: async function getTeamIDFromName(teamName) {
+    UserInfoFromEmail : async function getNamesFromUseremail(email) {
         const connectionPool = await sql.connect(adminconf);
         let request = await connectionPool.request();
-        request = await request.input("teamName", sql.VarChar, `${teamName}`);
-        return await request.query("SELECT TeamID FROM Teams WHERE TeamName = @teamName")
+        request = await request.input("email", sql.VarChar, email);
+        return await request.query("SELECT UserID, firstName, lastName, username, TeamName, CompanyID, isTeamLeader, isCompanyLeader FROM Users WHERE email = @email")
     },
     UserInfoFromTeamID: async function getUsersFromTeamID(teamName, companyID) {
         const connectionPool = await sql.connect(adminconf);
@@ -27,7 +26,7 @@ const get = {
 
     UsersFromTeam: function getUsersFromTeam(teamName) {
         get.TeamIDFromName(teamName).then((response => {
-            if (!response.recordset[0]) {
+            if (!response.recordset[0]) { 
                 return "teamNotFound"
             }
             else {
@@ -80,7 +79,7 @@ const check = {
         const connectionPool = await sql.connect(adminconf);
         let request = await connectionPool.request();
         request = await request.input("companyName", sql.VarChar, `${companyName}`);
-        return await request.query("SELECT CompanyName FROM Companies WHERE CompanyName = @companyName")
+        return await request.query("SELECT * FROM Companies WHERE CompanyName = @companyName")
     },
     IfTeamExists: async function checkIfTeamExists(teamName) {
         const connectionPool = await sql.connect(adminconf);
@@ -95,7 +94,7 @@ const check = {
         return await request.query("SELECT * FROM Users WHERE email = @email ")
         // unhash the password
 
-    }
+    },
 }
 const add = {
     UserToDbCreateCompanyAndTeam: async function addUserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName) {
@@ -313,9 +312,16 @@ const update = {
         return await request.query("UPDATE Users SET hashedpassword = @newpassword WHERE email = @email")
     }
 }
+
+const remove = {
+    
+}
+
+
 module.exports = {
     get,
     check,
     add,
     update
 }
+
