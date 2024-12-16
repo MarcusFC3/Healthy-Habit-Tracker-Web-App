@@ -229,24 +229,65 @@ function switchUserTeam(req, res) {
 function deleteTeam(req, res) {
     let teamName = req.user.TeamName;
     let companyID = req.user.CompanyID;
+    //Validate input lansludh yaddayadba doo
 
+    async function deleteTeam(teamName, CompanyID){
+      const connection = await sql.connect(adminconf);
+      const request = connection.request()
+      request.input("teamName", sql.VarChar, teamName);
+      request.input("CompanyID", sql.Int,CompanyID);
+      return await request.query("DELETE Teams WHERE TeamName = @teamName AND CompanyID = @CompanyID");
+
+    }
     
 }
 
 function deleteCompany(req, res) {
-    
+
+  async function deleteTeam(CompanyID){
+    const connection = await sql.connect(adminconf);
+    const request = connection.request()
+    request.input("CompanyID", sql.Int,CompanyID);
+    return await request.query("DELETE Companies WHERECompanyID = @CompanyID");
+
+  }
 }
 function addTeamLeader(req, res) {
+  async function addTeamLeader(userID){
+    const connection = await sql.connect(adminconf);
+    const request = connection.request()
+    request.input("UserID", sql.Int,userID);
+    return await request.query("UPDATE Users SET isTeamLeader = 1 WHERE UserID = @UserID");
 
+  }
 }
 function removeTeamLeader(req, res) {
+  //Check
+  async function RemoveTeamLeader(userID){
+    const connection = await sql.connect(adminconf);
+    const request = connection.request()
+    request.input("UserID", sql.Int,userID);
+    return await request.query("UPDATE Users SET isTeamLeader = 0 WHERE UserID = @UserID");
 
+  }
 }
 function addCompanyLeader(req, res) {
+  async function addCompanyLeader(userID){
+    const connection = await sql.connect(adminconf);
+    const request = connection.request()
+    request.input("UserID", sql.Int,userID);
+    return await request.query("UPDATE Users SET isCompanyLeader = 1 WHERE UserID = @UserID");
 
+  }
 }
 function removeCompanyLeader(req, res) {
+  async function removeCompanyLeader(userID){
+    const connection = await sql.connect(adminconf);
+    const request = connection.request()
+    request.input("UserID", sql.Int,userID);
+    return await request.query("UPDATE Users SET isCompanyLeader = 0 WHERE UserID = @UserID");
 
+  }
 }
 
 function login(req, res, next) {

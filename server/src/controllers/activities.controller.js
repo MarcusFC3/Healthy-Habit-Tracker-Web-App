@@ -263,7 +263,21 @@ function createCompanyActivity(req, res) {
         )
     }
 }
+function removeCompanyActivity(req, res){
 
+}
+function removeTeamActvitiy(req, res){
+
+}
+function removeUserActivity(req,res){
+    //chage date to datetime in activities
+}
+function deincrementAmount(req,res){
+    //if amount = 0 set to completed
+}
+function setCompleted(req, res){
+
+}
 
 
 
