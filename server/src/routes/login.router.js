@@ -20,7 +20,7 @@ const loginRouter = express.Router();
 
 
 loginRouter.post("/", loginController.login, passport.authenticate('local'), (req,res) =>{
-    console.log("skibodi");
+    console.log(req.session.message + "apijsdoiajhodipaowidnbwoiadfb ou llalalallala");
     return res.status(200).json({
         status: "success!",
         message: "User has successfully logged in!"

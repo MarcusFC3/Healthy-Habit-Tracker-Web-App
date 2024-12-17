@@ -33,7 +33,7 @@ app.use(helmet())
 
 app.use(session({
   secret: 'secret',
-  resave: true,
+  resave: false,
   saveUninitialized: false,
   cookie: {secure: true, sameSite: "none",maxAge:  60 * 60 * 1000},
   store: sqlstore,
@@ -51,7 +51,7 @@ passport.use(new Strategy({
       const connection = await sql.connect(adminconf);
       const request = connection.request()
       request.input("email", sql.VarChar, email)
-      return await request.query("SELECT UserID FROM Users")
+      return await request.query("SELECT UserID FROM Users WHERE email = @email")
       
     }
    getUserSessionData().then((result) =>{
@@ -71,6 +71,7 @@ passport.use(new Strategy({
 
 passport.serializeUser(
   (user, done)=>{
+    console.log("asdpjasdj" + user)
   user = JSON.parse(user)
    return done(null, user)
  //{"cookie":{"originalMaxAge":3600000,"expires":"2024-11-21T19:38:26.272Z","secure":true,"httpOnly":true,"path":"/","sameSite":"none"},"passport":{"user":{}}}
@@ -85,7 +86,6 @@ passport.deserializeUser((user, done)=>{
   const userID = user.UserID;
   db.get.UserInfoFromUserID(userID).then(
      (result) =>{
-      console.log(JSON.stringify(result.recordset[0]))
         user = result.recordset[0]
         console.log(JSON.stringify(user))
         return done(null, user)
@@ -94,12 +94,13 @@ passport.deserializeUser((user, done)=>{
   
 })}
 catch(err){
-  console.log(err)
+  console.log(err + "IT BROKE NO")
 }
 
 
 
 function checkLoggedIn(req, res, next){
+  console.log(req.session)
   if (!req.session.passport){
     return res.status(401).json({
       error: "You must login"
@@ -148,14 +149,16 @@ app.get("/asd", (req, res)=>{
 
 })
 
-app.use("/activities",checkLoggedIn, activitiesRouter)
+app.use("/activities", checkLoggedIn, activitiesRouter)
 app.use("/login", loginRouter);
 app.use("/user", userRouter);
 app.get("/", (req, res) => {return res.send(req.user)})    
 
 app.get("/logout", (req, res) =>{
-  req.logout();
-  return res.redirect("/")
+  req.logout(()=>{
+    return res.redirect("/")
+  });
+
 })
 module.exports = app;
 // fetch(

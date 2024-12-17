@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const sql = require("mssql");
 const { adminconf } = require("../models/dbusers");
+const { DATE } = require("mysql/lib/protocol/constants/types");
 
 
 //personal activities
@@ -18,6 +19,7 @@ const { adminconf } = require("../models/dbusers");
 
 
 function getUserActivityData(req, res) {
+    console.log(req.user)
     if (!req.session.passport) {
         res.status(400).json({
             status: "Failure",
@@ -28,7 +30,7 @@ function getUserActivityData(req, res) {
             const connection = await sql.connect(adminconf);
             const request = connection.request();
             request.input("UserID", sql.Int, UserID);
-            return await request.query("SELECT * FROM UserActivities WHERE UserID = @UserID")
+            return await request.query("SELECT UserActivities.*, TeamActivities.CompanyActivityID FROM UserActivities LEFT OUTER JOIN TeamActivities ON UserActivities.TeamActivityID = TeamActivities.ActivityID WHERE UserID = 8")
             }
         getUserActivities(req.session.passport.user.UserID).then((results) => {
             return res.status(200).json({
@@ -146,7 +148,7 @@ function viewTopUsers(req, res) {
     }
 
 function createUserActivity(req, res) {
-    let date = new Date()
+    let date = new Date() 
     let { ActivityName, repsorduration, amount, activityDescription } = req.body;//many variables may be predetermined by activites we create
     //Input validation
     if ( !ActivityName || !repsorduration || !amount) {
@@ -164,7 +166,8 @@ function createUserActivity(req, res) {
             request.input("repsorduration", sql.Int, repsorduration)
             request.input("amount", sql.Int, amount)
             request.input("activityDescription", sql.VarChar, activityDescription)
-            request.input("Date", sql.Date, date.toLocaleDateString().substring(0, 10))
+            console.log(date.toLocaleDateString() +" "+ date.toLocaleTimeString("en-US",{hour12: false}))
+            request.input("Date", sql.DateTime, date)
 
             return await request.query("INSERT INTO UserActivities(UserID, ActivityName, RepetitionsOrDuration, amount, activityDescription, DateCreated) VALUES (@UserID, @ActivityName, @repsorduration, @amount, @activityDescription, @Date)");
         }
@@ -204,7 +207,7 @@ function createTeamActivity(req, res) {
             request.input("repsorduration", sql.Int, repsorduration)
             request.input("amount", sql.Int, amount)
             request.input("activityDescription", sql.VarChar, activityDescription)
-            request.input("Date", sql.Date, date.toLocaleDateString().substring(0, 10))
+            request.input("Date", sql.DateTime, date)
             return await request.query("INSERT INTO TeamActivities(TeamName,CompanyID, ActivityName, RepetitionsOrDuration, amount, activityDescription, DateCreated) VALUES (@TeamName,@CompanyID, @ActivityName, @repsorduration, @amount, @activityDescription, @Date)");
         }
         addTeamActivityToDb(req.user.TeamName,req.user.CompanyID, ActivityName, repsorduration, amount, activityDescription).then((result) => {
@@ -244,7 +247,7 @@ function createCompanyActivity(req, res) {
             request.input("repsorduration", sql.Int, repsorduration)
             request.input("amount", sql.Int, amount)
             request.input("activityDescription", sql.VarChar, activityDescription)
-            request.input("Date", sql.Date, date.toLocaleDateString().substring(0, 10))
+            request.input("Date", sql.DateTime, date)
             return await request.query("INSERT INTO CompanyActivities(CompanyID, ActivityName, RepetitionsOrDuration, amount, activityDescription, DateCreated) VALUES (@CompanyID, @ActivityName, @repsorduration, @amount, @activityDescription, @Date)");
         }
         console.log(req.user.CompanyID)
@@ -270,6 +273,8 @@ function removeTeamActvitiy(req, res){
 
 }
 function removeUserActivity(req,res){
+    let time = req.body.time 
+    let date = new Date(time)
     //chage date to datetime in activities
 }
 function deincrementAmount(req,res){
@@ -288,4 +293,6 @@ module.exports = {
     viewTopTeams,
     viewTopUsers,
     getUserActivityData,
+    removeUserActivity,
+
 }

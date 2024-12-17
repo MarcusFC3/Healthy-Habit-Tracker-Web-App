@@ -124,7 +124,7 @@ CREATE TABLE CompanyActivities(
 	Amount int NOT NULL,
 	Completed BIT NOT NULL Default 'FALSE',
 	ActivityDescription varchar(100),
-    DateCreated Date,
+    DateCreated DateTime,
     CONSTRAINT PK_CompanyActivites PRIMARY KEY (ActivityID),
     CONSTRAINT FK_CompanyID FOREIGN KEY (CompanyID) REFERENCES Companies (CompanyID),
 )
@@ -138,7 +138,7 @@ CREATE TABLE TeamActivities(
 	Completed BIT NOT NULL Default 'FALSE',
 	ActivityDescription varchar(100),
 	CompanyActivityID int,
-    DateCreated Date,
+    DateCreated DateTime,
     CONSTRAINT PK_TeamActivites PRIMARY KEY (ActivityID),
     CONSTRAINT FK_TeamID FOREIGN KEY (TeamID) REFERENCES Teams (TeamID),
 	CONSTRAINT FK_CompanyActivityID FOREIGN KEY (CompanyActivityID) REFERENCES CompanyActivities (ActivityID)
@@ -155,7 +155,7 @@ CREATE TABLE UserActivities(
 	Completed BIT NOT NULL Default 'FALSE',
 	ActivityDescription varchar(100),
 	TeamActivityID int,
-    DateCreated Date,
+    DateCreated DateTime,
     CONSTRAINT PK_UserActivites PRIMARY KEY (ActivityID),
     CONSTRAINT FK_UserID FOREIGN KEY (UserID) REFERENCES Users (UserID),
 	CONSTRAINT FK_TeamActivityID FOREIGN KEY (TeamActivityID) REFERENCES TeamActivities (ActivityID)
