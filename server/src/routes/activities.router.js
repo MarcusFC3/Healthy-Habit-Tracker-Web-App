@@ -13,5 +13,7 @@ activitiesRouter.get("/",activitesController.viewTopTeams)
 activitiesRouter.get("/u",activitesController.viewTopUsers)
 activitiesRouter.get("/user", activitesController.getUserActivityData)
 
+activitiesRouter.post("/del/u",)
+
 
 module.exports = activitiesRouter;

@@ -28,12 +28,25 @@ function deleteUser(req, res) {
    }
    async function deleteUser(email) {
       const connection = await sql.connect(adminconf);
-      const request = connection.request();
+      const transaction = connection.transaction();
+      const request = transaction.request();
       request.input("email", sql.VarChar, email);
-      return await request.query("DELETE Users WHERE email = @email");
-   }
+      await transaction.begin();
+      try{
+
+         await request.query("DELETE UserActivities WHERE UserID = (SELECT UserID FROM Users WHERE email = @email)");
+         await request.query("DELETE Users WHERE email = @email");
+         transaction.commit();
+      }
+      catch(err){
+         await transaction.rollback();
+         return err
+      }
+      }
+     
    deleteUser(email).then(
       (response) => {
+         console.log(response)
          res.status(200).json({
             status: "Success",
             message: "User successfully deleted"

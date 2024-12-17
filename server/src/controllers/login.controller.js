@@ -301,13 +301,15 @@ function login(req, res, next) {
 
   dbqueries.check
     .ForMatchingPassword(email)
-    .then((result) => {
+    .then(async (result) => {
       console.log(result);
       if (result.recordset.length != 0) {
-        const correctPassword = bcrypt.compare(
-          result.recordset[0]["hashedpassword"],
-          password
+        const correctPassword = await bcrypt.compare(
+          password,
+          result.recordset[0]["hashedpassword"]
+ 
         );
+        console.log(correctPassword + "ASDUIBUASB" + password)
         if (correctPassword) {
           console.log("Correct password input!");
           next();
@@ -402,10 +404,10 @@ function passwordReset(req, res) {
   console.log(email);
   dbqueries.check
     .ForMatchingPassword(email)
-    .then((result) => {
+    .then(async (result) => {
       console.log(result);
       if (result.recordset.length != 0) {
-        const correctPassword = bcrypt.compare(
+        const correctPassword = await bcrypt.compare(
           result.recordset[0]["hashedpassword"],
           oldpassword
         );
