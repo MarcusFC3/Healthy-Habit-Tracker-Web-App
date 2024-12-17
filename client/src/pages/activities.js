@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import Activity from "../components/Activity";
 
+import { postActivityData } from '../hooks/requests';
+
 let activityCount = 1
 
 const Activities = () => {
@@ -11,7 +13,7 @@ const Activities = () => {
     function generateActivity() {
         const activityArray = []
 
-        activityArray[0] = { key:0, Name:"Activity Name", descr: "Activity Description"}
+        activityArray[0] = { key:0, Name:"Activity Name", descr: "Activity Description", amount: 43}
 
         return activityArray
     }
@@ -22,41 +24,46 @@ const Activities = () => {
         const activityKey = activityCount
         const activityName = formData.get("activityName");
         const activityDescr = formData.get("activityDescr");
-        activityCount++
+        const activityAmount = formData.get("activityAmount");
+
+        const activityData = {
+            Name: activityName,
+            descr: activityDescr,
+            amount: activityAmount
+        }
+
+        postActivityData(activityData);
+
+        activityCount++;
+
         setActivities(prevActivities => [
             ...prevActivities, {
                 key: activityKey,
                 Name: activityName,
-                descr: activityDescr }
+                descr: activityDescr,
+                amount: activityAmount }
         ])
     }
 
-    function deleteActivity(activityKey) {
-        setActivities(prevActivities => {
-            console.log(activityKey)
-            prevActivities.splice(prevActivities[activityKey], 1)
-            return [
-            ...prevActivities,
-            ]
-    })
-    }
-
-    // function editActivity(activityKey) {
-
-    //     setActivities(prevActivities => {
-    //         prevActivities[activityKey] = {}
-    //     })
-    // }
+    
 
     const activityElements = activities.map(activityObj => 
     <Activity 
         key={activityObj.key} 
         Name={activityObj.Name} 
-        descr={activityObj.descr} 
-        delete={() => deleteActivity(activityObj.key)}
+        descr={activityObj.descr}
+        amount={activityObj.amount} 
+        delete={function deleteActivity() {
+            setActivities(prevActivities => {
+                prevActivities.splice(prevActivities[activityObj.key], 1)
+                return [
+                ...prevActivities,
+                ]
+        })
+        }
+    }
         /> )
 
-        // Create an open form function      onClick={() => {createNewActivity(activityCount, "Activity " + activityCount, "This is a test activity")}}
         function openForm() {
             document.getElementById("activity_form_container").style.display = "block"
         }
@@ -78,11 +85,11 @@ const Activities = () => {
                     <label>Activity Name</label>
                     <input id="acitivity_name" name="activityName" type="text"></input>
 
-                    <label>Activity Description</label>
+                    <label>Reps/Duration of Activity</label>
                     <input id="acitivity_descr" name="activityDescr" type="text"></input>
 
-                    <label>Activity Progress</label>
-                    <input id="acitivity_progress" name="activityProgress" type="text"></input>
+                    <label>Amount to complete</label>
+                    <input id="acitivity_amount" name="activityAmount" type="text"></input>
 
                     <button>Create Activity</button>
                     <button type="button" onClick={closeForm}>Close</button>

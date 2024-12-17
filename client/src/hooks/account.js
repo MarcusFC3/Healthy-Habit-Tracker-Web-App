@@ -1,4 +1,4 @@
-import {httpRegisterAccount, httpGetAccount} from "./requests";
+import {httpRegisterAccount, httpAccountLogin} from "./requests";
 
 /* 
 function that collects the data from the sign up form 
@@ -51,16 +51,24 @@ async function checkAccount (event){
     const formData = new FormData(event.target);
     const email = formData.get("email");
     const password = formData.get("password");
-
+    let response = undefined;
     const account = {
         email,
         password
     }
-    console.log(account)
 
-    response = await httpGetAccount(account).catch((error)=>{
+    response = await httpAccountLogin(account)
+    .catch((error)=>{
         console.log(error)
     })
+
+    if (response.ok){
+        console.log(response.json())
+        
+    } else{
+        console.log("didn't work")
+        //Something went wrong
+    }
 }
 
 export {registerAccount, checkAccount} 
