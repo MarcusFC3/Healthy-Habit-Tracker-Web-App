@@ -11,20 +11,22 @@ const passport = require("passport");
 const {Strategy} = require("passport-local");
 const bodyParser = require("body-parser");
 const sql = require("mssql");
-const { adminconf } = require("./models/dbusers");
-const db = require("./models/dbqueries");
 
 
-const userRouter = require("./routes/user.router");
-const activitiesRouter = require("./routes/activities.router");
-const loginRouter = require("./routes/login.router");
+const { adminconf } = require("../models/dbusers");
+const db = require("../models/dbqueries");
+
+
+const userRouter = require("../routes/user.router");
+const activitiesRouter = require("../routes/activities.router");
+const loginRouter = require("../routes/login.router");
 
 const app = express();
 
 const sqlstore = new MssqlStore(adminconf)
 
 
-app.use(cors());
+app.use(cors()); 
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(helmet())
