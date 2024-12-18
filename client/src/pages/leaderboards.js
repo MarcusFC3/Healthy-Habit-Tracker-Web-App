@@ -1,19 +1,16 @@
 
-const Leaderboard = () => {
+import { useState } from "react"
+import LeaderboardRow from "../components/LeaderboardRow"
 
-    function createTableBody(){
-        /* 
-        I want to do something like this : 
-        for each team in our team database 
-        create a new tr and return it
-        */
-        return <tr>
-            <td>1</td>
-            <td>IT Academy</td>
-            <td>Four County Career Center</td>
-            <td>5</td>
-        </tr>
-    }
+const Leaderboard = () => {
+    // const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
+
+    // function generateTableBody(){
+    //     return [{Rank: 1, Team: "IT Academy", Company: F, ActiviyCompletes},{Rank: 2, Team: , Company: , ActiviyCompletes}]
+    // }
+
+    // const leaderboardRowElements = leaderboardRows.map(leaderboardRowObj => 
+    //     <LeaderboardRow /> )
 
     return <div>
         <div className="row">
@@ -21,7 +18,7 @@ const Leaderboard = () => {
                 <h2>Teams</h2>
                 <div>
 
-                    {/* 
+                    {/* To Do
                     add more content to the leaderboards.
                     add the ability to sort/search through the teams 
                     */}
@@ -36,7 +33,7 @@ const Leaderboard = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {createTableBody()}
+                            {/* {createTableBody()} */}
                             <tr>
                                 <td>2</td>
                                 <td>Culinary</td>
