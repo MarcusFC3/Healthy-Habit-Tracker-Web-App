@@ -13,7 +13,7 @@ const Activities = () => {
     function generateActivity() {
         const activityArray = []
 
-        activityArray[0] = { key:0, Name:"Activity Name", descr: "Activity Description", amount: 43}
+        activityArray[0] = { key:0, Name:"Activity Name", descr: "Activity Description", amount: 4, progress: 0}
 
         return activityArray
     }
@@ -41,27 +41,48 @@ const Activities = () => {
                 key: activityKey,
                 Name: activityName,
                 descr: activityDescr,
-                amount: activityAmount }
+                amount: activityAmount, 
+                progress: 0}
         ])
     }
 
     
-
+    // There is an error with the delete and increaseprogress 
+    // functions that has to do with the fact it is stored in 
+    // an object in an array
     const activityElements = activities.map(activityObj => 
     <Activity 
         key={activityObj.key} 
+        id={activityObj.key}
         Name={activityObj.Name} 
         descr={activityObj.descr}
         amount={activityObj.amount} 
+        progress={activityObj.progress}
         delete={function deleteActivity() {
             setActivities(prevActivities => {
+                console.log(prevActivities[activityObj.key])
                 prevActivities.splice(prevActivities[activityObj.key], 1)
                 return [
                 ...prevActivities,
                 ]
-        })
-        }
-    }
+            })
+        }}
+        increaseProgress={function increaseProgress() {
+            setActivities(prevActivities => {
+                console.log(prevActivities[activityObj.key])
+                console.log(...prevActivities[activityObj.key])
+                prevActivities.splice(prevActivities[activityObj.key], 1 ,{
+                    ...prevActivities[activityObj.key],
+                    progress: activityObj.progress < activityObj.amount ?
+                     activityObj.progress+=1 : activityObj.progress
+                })
+
+                return [
+                ...prevActivities,
+                ]
+            })
+        }}
+
         /> )
 
         function openForm() {
