@@ -2,7 +2,6 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const sql = require("mssql");
 const { adminconf } = require("../models/dbusers")
-const { response } = require("../app");
 const get = {
     UserInfoFromUserID : async function getNamesFromUserID(userID) {
         const connectionPool = await sql.connect(adminconf);
