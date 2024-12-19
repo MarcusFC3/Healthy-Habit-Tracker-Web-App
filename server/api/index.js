@@ -37,7 +37,7 @@ app.use(session({
   secret: 'secret',
   resave: false,
   saveUninitialized: false,
-  cookie: {secure: true, sameSite: "none",maxAge:  60 * 60 * 1000},
+  cookie: {secure: true, sameSite: "none", maxAge:  60 * 60 * 1000},
   store: sqlstore,
 
 }));
@@ -95,7 +95,6 @@ passport.deserializeUser((user, done)=>{
   try{
   console.log("DESERIALIZING" )
   let userID = user["UserID"]
-  console.log("DESERIALIZING" + user[5])
    db.get.UserInfoFromUserID(userID).then(
      (result) =>{
       console.log("DESERIALIZING 2222222")
