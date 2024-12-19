@@ -1,4 +1,4 @@
-"use strict"
+
 
 const express = require("express");
 const morgan = require("morgan");
@@ -41,10 +41,11 @@ app.use(session({
   store: sqlstore,
 
 }));
+
 app.use(passport.initialize())
 app.use(passport.session())
 
-passport.use(new Strategy({
+passport.use('local', new Strategy({
   usernameField: "email",
 },
   (email, password, done) =>{
@@ -57,11 +58,12 @@ passport.use(new Strategy({
       
     }
    getUserSessionData().then((result) =>{
+    console.log("LOCAL STRATEGY" + JSON.stringify(result.recordset[0]))
     let user = result.recordset[0]
-    done(null,JSON.stringify(user))
+   done(null,JSON.stringify(user))
   }).catch(
     (err)=>{
-      return done("it buggin :(" + err)
+      done(null,  err)
     }
   )
 
@@ -73,31 +75,48 @@ passport.use(new Strategy({
 
 passport.serializeUser(
   (user, done)=>{
-    console.log("asdpjasdj" + user)
-  user = JSON.parse(user)
-   return done(null, user)
+    console.log("SERIALIZING" + user)
+  
+    console.log("working")
+
+   done(null, JSON.parse(user))
+  
+   
+  
+   
  //{"cookie":{"originalMaxAge":3600000,"expires":"2024-11-21T19:38:26.272Z","secure":true,"httpOnly":true,"path":"/","sameSite":"none"},"passport":{"user":{}}}
 
 });
 
 
 //FIX ERROR 
-try{
+
 passport.deserializeUser((user, done)=>{
-  console.log(JSON.stringify(user))
-  const userID = user.UserID;
-  db.get.UserInfoFromUserID(userID).then(
+  try{
+  console.log("DESERIALIZING" )
+  let userID = user["UserID"]
+  console.log("DESERIALIZING" + user[5])
+   db.get.UserInfoFromUserID(userID).then(
      (result) =>{
+      console.log("DESERIALIZING 2222222")
         user = result.recordset[0]
-        console.log(JSON.stringify(user))
-        return done(null, user)
+        console.log(JSON.stringify(result))
+        console.log("DESERIALIZING 4444")
+        done(null, user)
      }
+  ).catch(
+    (err)=>{
+      console.log("BD" + err )
+      done(null, err)
+    }
   )
   
-})}
-catch(err){
-  console.log(err + "IT BROKE NO")
+}catch(e){
+  console.log(e)
+  done(null, e)
 }
+})
+
 
 
 
@@ -105,7 +124,8 @@ function checkLoggedIn(req, res, next){
   console.log(req.session)
   if (!req.session.passport){
     return res.status(401).json({
-      error: "You must login"
+      error: "You must login",
+      session: req.session
     })
   }
   next();
@@ -123,7 +143,6 @@ function checkPermissions(req, res, next){
   }
   next();
 }
-
 
 app.use(morgan('combined'));
 
