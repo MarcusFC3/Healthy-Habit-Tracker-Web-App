@@ -2,18 +2,18 @@
 import { useState } from 'react'
 import Activity from "../components/Activity";
 
-import { postActivityData } from '../hooks/requests';
+import { postActivityData, getActivityData } from '../hooks/requests';
 
-let activityCount = 1
+let activityCount = 0
 
 const Activities = () => {
-    const [activities, setActivities] = useState(generateActivity())
+    const [activities, setActivities] = useState(generateActivity)
 
     // This function is what will pull the activities the user already has
     function generateActivity() {
         const activityArray = []
 
-        activityArray[0] = { key:0, Name:"Activity Name", descr: "Activity Description", amount: 4, progress: 0}
+        activityArray[0] = { key:activityCount++, Name:"Activity Name", descr: "Activity Description", amount: 4, progress: 0}
 
         return activityArray
     }
@@ -32,7 +32,7 @@ const Activities = () => {
             amount: activityAmount
         }
 
-        //postActivityData(activityData);
+        postActivityData(activityData);
 
         activityCount++;
 
@@ -46,11 +46,11 @@ const Activities = () => {
         ])
     }
 
-    function alignkeys(key){
+    function alignKeys(key){
         console.log("Running alignKeys function")
         activities.forEach((activityObj) => {
             if(activityObj.key > key){
-                activityObj.key -= 1
+                activityObj.key--;
             } 
         })
     }
@@ -67,17 +67,18 @@ const Activities = () => {
         amount={activityObj.amount} 
         progress={activityObj.progress}
         delete={function deleteActivity() {
-            console.log("Running delete function")
+            console.log("Running deleteActivity function")
             setActivities(prevActivities => {
-                activityCount -= 1;
+                activityCount--;
                 prevActivities.splice(prevActivities[activityObj.key].key, 1);
-                alignkeys(activityObj.key);
+                alignKeys(activityObj.key);
                 return [
                 ...prevActivities,
                 ]
             })
         }}
         increaseProgress={function increaseProgress() {
+            console.log("Running increaseProgress function")
             setActivities(prevActivities => {
                 console.log(prevActivities[activityObj.key].progress += activityObj.progress < activityObj.amount? 1 : 0)
                 return [

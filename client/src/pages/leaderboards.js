@@ -2,6 +2,8 @@
 import { useState } from "react"
 import LeaderboardRow from "../components/LeaderboardRow"
 
+import { getForLeaderboard } from "../hooks/requests"
+
 const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
 

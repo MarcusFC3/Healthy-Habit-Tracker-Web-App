@@ -5,7 +5,6 @@ export default function Activity(props) {
     
     return (
         <div className="col-12 col-md-4 Activity">
-                <h6>{console.log(props.id)}</h6>
                 <h2>{props.Name}</h2>
                 <h3>Reps/Duration: {props.descr}</h3>
                 <h4>Progress: {props.progress} / {props.amount}</h4>

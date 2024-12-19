@@ -32,7 +32,15 @@ async function postActivityData(activityData){
             body: JSON.stringify(activityData),
             credentials: 'include'
         }
-    ).then((response)=> {console.log(response.json())})
+    )
+    .then( (response) => {
+        console.log(response.json())
+    })
+    .catch(
+        (error) => { 
+            console.log( error)
+        }
+    )
 }
 
 // Function that sends a GET request to the API asking for the activities
@@ -96,4 +104,8 @@ async function getForLeaderboard(){
     )
 }
 
-export {httpRegisterAccount, httpAccountLogin, postActivityData}
+export {httpRegisterAccount, 
+    httpAccountLogin, 
+    postActivityData, 
+    getForLeaderboard, 
+    getActivityData}
