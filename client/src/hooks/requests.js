@@ -9,7 +9,8 @@ async function httpRegisterAccount(accountData){
             headers: {
                 "Content-Type":"application/json"
             } ,
-            body: JSON.stringify(accountData)
+            body: JSON.stringify(accountData),
+            credentials: 'include'
         }
     ).catch(
         (error) => { 
@@ -28,9 +29,10 @@ async function postActivityData(activityData){
             headers: {
                 "Content-Type":"application/json"
             } ,
-            body: JSON.stringify(activityData)
+            body: JSON.stringify(activityData),
+            credentials: 'include'
         }
-    )
+    ).then((response)=> {console.log(response.json())})
 }
 
 // Function that sends a GET request to the API asking for the activities
@@ -63,7 +65,8 @@ async function httpAccountLogin(accountLoginData){
             headers: {
                 "Content-Type":"application/json"
             },
-            body: JSON.stringify(accountLoginData)
+            body: JSON.stringify(accountLoginData),
+            credentials: 'include'
         }
     ).catch(
         (error) => { 

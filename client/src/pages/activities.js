@@ -32,7 +32,7 @@ const Activities = () => {
             amount: activityAmount
         }
 
-        postActivityData(activityData);
+        //postActivityData(activityData);
 
         activityCount++;
 
@@ -46,6 +46,14 @@ const Activities = () => {
         ])
     }
 
+    function alignkeys(key){
+        console.log("Running alignKeys function")
+        activities.forEach((activityObj) => {
+            if(activityObj.key > key){
+                activityObj.key -= 1
+            } 
+        })
+    }
     
     // There is an error with the delete and increaseprogress 
     // functions that has to do with the fact it is stored in 
@@ -59,9 +67,11 @@ const Activities = () => {
         amount={activityObj.amount} 
         progress={activityObj.progress}
         delete={function deleteActivity() {
+            console.log("Running delete function")
             setActivities(prevActivities => {
-                console.log(prevActivities[activityObj.key])
-                prevActivities.splice(prevActivities[activityObj.key], 1)
+                activityCount -= 1;
+                prevActivities.splice(prevActivities[activityObj.key].key, 1);
+                alignkeys(activityObj.key);
                 return [
                 ...prevActivities,
                 ]
@@ -69,14 +79,7 @@ const Activities = () => {
         }}
         increaseProgress={function increaseProgress() {
             setActivities(prevActivities => {
-                console.log(prevActivities[activityObj.key])
-                console.log(...prevActivities[activityObj.key])
-                prevActivities.splice(prevActivities[activityObj.key], 1 ,{
-                    ...prevActivities[activityObj.key],
-                    progress: activityObj.progress < activityObj.amount ?
-                     activityObj.progress+=1 : activityObj.progress
-                })
-
+                console.log(prevActivities[activityObj.key].progress += activityObj.progress < activityObj.amount? 1 : 0)
                 return [
                 ...prevActivities,
                 ]
