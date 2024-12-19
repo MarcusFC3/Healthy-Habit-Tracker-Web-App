@@ -8,15 +8,19 @@ const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
 
     function generateTableBody(){
-        return [{Rank: 1, Team: "IT Academy", Company: "Four County Career Center", ActiviyComplete: 5},{Rank: 2, Team: "Culinary", Company: "Four County Career Center", ActiviyComplete: 3}]
+
+        // getForLeaderboard()
+
+        return [{key: 0, Rank: 1, Team: "IT Academy", Company: "Four County Career Center", ActivityComplete: 5},{key: 1, Rank: 2, Team: "Culinary", Company: "Four County Career Center", ActivityComplete: 3}]
     }
 
     const leaderboardRowElements = leaderboardRows.map(leaderboardRowObj => 
         <LeaderboardRow 
+        key={leaderboardRowObj.key}
         Rank={leaderboardRowObj.Rank}
         Team={leaderboardRowObj.Team}
         Company={leaderboardRowObj.Company}
-        ActiviyComplete={leaderboardRowObj.ActiviyComplete}
+        ActivityComplete={leaderboardRowObj.ActivityComplete}
         /> 
     )
 
