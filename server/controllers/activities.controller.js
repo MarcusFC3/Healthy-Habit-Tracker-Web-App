@@ -2,7 +2,6 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const sql = require("mssql");
 const { adminconf } = require("../models/dbusers");
-const { DATE } = require("mysql/lib/protocol/constants/types");
 
 
 //personal activities

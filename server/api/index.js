@@ -26,13 +26,13 @@ const app = express();
 const sqlstore = new MssqlStore(adminconf)
 
 
-app.use(cors()); 
+app.use(cors({credentials: true})); 
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(helmet())
 
 
-
+console.log(JSON.stringify(process.env) + "URL")
 app.use(session({
   secret: 'secret',
   resave: false,

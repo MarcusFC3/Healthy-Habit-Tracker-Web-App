@@ -1,5 +1,5 @@
 // URL of the API
-const API_URL = "https://10.44.142.88:8000";
+const API_URL = "https://" + process.env.VERCEL_URL;
 
 // Function that sends a POST request to create an account
 async function httpRegisterAccount(accountData){
