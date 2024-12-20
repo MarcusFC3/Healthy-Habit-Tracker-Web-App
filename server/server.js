@@ -7,7 +7,7 @@ const sql = require("mssql");
 const fs = require("fs");
 const path = require("path");
 
-const PORT = 8000;
+const PORT = process.env.PORT || 3000;;
 
 const server = https.createServer({
     key: fs.readFileSync(path.join(__dirname, ".." , "key.pem")),
