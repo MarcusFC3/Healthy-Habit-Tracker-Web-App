@@ -67,6 +67,7 @@ async function getActivityData(){
 
 // The function that sends a POST request for the login page
 async function httpAccountLogin(accountLoginData){
+    console.log(API_URL)
     return await fetch(`${API_URL}/login`, 
         {
             method: "POST",
