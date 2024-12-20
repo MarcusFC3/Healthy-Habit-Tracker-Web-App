@@ -1,8 +1,9 @@
 {
     "version": 2,
     "rewrites": [
-    {"source": "/api/(.*)", "destination":"/api/"}, {"source": "/(.*)", "destination:":"/"}
+      { "source": "/(.*)", "destination": "/" }, {"source": "/api/(.*)", "destination":"/api/"}
   ],
+  "redirects": {},
   "headers":[
     {
       "source": "/api/(.*)",
