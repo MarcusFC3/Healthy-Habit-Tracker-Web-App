@@ -27,6 +27,7 @@ loginRouter.post("/", loginController.login, passport.authenticate('local'), (re
     // You can now safely send a response, since the user has been authenticated
     return res.status(200).json({
       message: "Authentication successful",
+      session: req.session,
       user: req.user  // You can access the authenticated user from req.user
     });
   });

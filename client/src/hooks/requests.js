@@ -1,6 +1,7 @@
 // URL of the API
-const API_URL = "https://" + process.env.PORT;
-;
+const API_URL = "https://healthy-habit-tracker-web-app.vercel.app/api";
+const axios = require("axios")
+
 
 // Function that sends a POST request to create an account
 async function httpRegisterAccount(accountData){
@@ -49,7 +50,7 @@ async function postActivityData(activityData){
 async function getActivityData(){
     // I will need the users ID, Team ID, and Company ID to find which
     // activities they need to be displayed
-    await fetch(`${API_URL}`)
+    await fetch(`${API_URL}`,{credentials: 'include'})
     .then(response => {
         if (!response.ok) {
             throw new Error("Response was not ok");
@@ -69,6 +70,7 @@ async function getActivityData(){
 // The function that sends a POST request for the login page
 async function httpAccountLogin(accountLoginData){
     console.log(API_URL)
+    console.log(JSON.stringify(process.env))
     return await fetch(`${API_URL}/login`, 
         {
             method: "POST",
@@ -89,7 +91,7 @@ async function httpAccountLogin(accountLoginData){
 
 // The function that sends a GET request for the leaderboard
 async function getForLeaderboard(){
-    await fetch(`${API_URL}`)
+    await fetch(`${API_URL}`,{credentials: 'include'})
     .then(response => {
         if (!response.ok) {
             throw new Error("Response was not ok");

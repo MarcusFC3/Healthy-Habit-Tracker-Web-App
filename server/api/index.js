@@ -11,7 +11,6 @@ const passport = require("passport");
 const {Strategy} = require("passport-local");
 const bodyParser = require("body-parser");
 const sql = require("mssql");
-const path = require("path")
 
 
 const { adminconf } = require("../models/dbusers");
@@ -26,8 +25,9 @@ const app = express();
 
 const sqlstore = new MssqlStore(adminconf)
 
-app.use(express.static(path.join(__dirname, '../public')))
-app.use(cors({credentials: true})); 
+
+app.set('trust proxy', 1);
+app.use(cors({origin: "https://healthy-habit-tracker-web-app.vercel.app/", credentials: true})); 
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(helmet())
@@ -36,7 +36,8 @@ app.use(helmet())
 console.log(JSON.stringify(process.env) + "URL")
 app.use(session({
   secret: 'secret',
-  resave: false,
+  resave: true,
+  proxy: true,
   saveUninitialized: false,
   cookie: {secure: true, sameSite: "none", maxAge:  60 * 60 * 1000},
   store: sqlstore,
@@ -118,8 +119,6 @@ passport.deserializeUser((user, done)=>{
 })
 
 
-
-
 function checkLoggedIn(req, res, next){
   console.log(req.session)
   if (!req.session.passport){
@@ -170,16 +169,20 @@ app.get("/asd", (req, res)=>{
 
 })
 
-app.use("/activities", checkLoggedIn, activitiesRouter)
-app.use("/login", loginRouter);
-app.use("/user", userRouter);
-app.get("/", (req, res) => {return res.send(req.user)})    
+app.use("/api/activities", checkLoggedIn, activitiesRouter)
+app.use("/api/login", loginRouter);
+app.use("/api/user", userRouter);
+app.get("/api", (req, res) => {return res.send("hyecuh")})    
 
 app.get("/logout", (req, res) =>{
   req.logout(()=>{
     return res.redirect("/")
   });
 
+})
+const PORT = process.env.PORT || 3000;;
+app.listen(PORT, ()=>{
+  console.log("Server started listening on port " + PORT)
 })
 module.exports = app;
 // fetch(

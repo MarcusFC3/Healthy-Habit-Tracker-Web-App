@@ -1,13 +1,10 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "engines": {
-        "node": "20.x"
-      },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "nodemon server.js",
+    "watch": "nodemon api/index.js",
     "start": "node server.js"
   },
   "keywords": [],
@@ -24,6 +21,7 @@
     "express": "^4.21.1",
     "express-session": "^1.18.1",
     "helmet": "^8.0.0",
+    "http-proxy-agent": "^7.0.2",
     "morgan": "^1.10.0",
     "mssql": "^11.0.1",
     "nodemailer": "^6.9.16",
