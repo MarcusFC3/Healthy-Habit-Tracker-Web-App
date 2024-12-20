@@ -1,7 +1,9 @@
 {
   "name": "healthy-habit-tracker-web-app",
   "version": "1.0.0",
-  
+  "engines": {
+        "node": "20.x"
+      },
   "main": "index.js",
   "scripts": {
     "build": "npm run build --prefix client",
