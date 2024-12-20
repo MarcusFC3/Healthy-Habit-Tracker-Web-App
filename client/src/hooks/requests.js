@@ -1,5 +1,6 @@
 // URL of the API
-const API_URL = "https://" + process.env.VERCEL_URL + process.env.port;
+const API_URL = "https://healthy-habit-tracker-web-app.vercel.app";
+;
 
 // Function that sends a POST request to create an account
 async function httpRegisterAccount(accountData){
