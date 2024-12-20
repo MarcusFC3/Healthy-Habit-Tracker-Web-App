@@ -1,16 +1,13 @@
 {
   "name": "healthy-habit-tracker-web-app",
   "version": "1.0.0",
+  "engines": {
+        "node": "20.x"
+      },
   "main": "index.js",
   "scripts": {
     "deploy": "npm run build --prefix client && npm start --prefix server",
-    "install-client": "npm install --prefix client",
-    "install-server": "npm install --prefix server",
-    "install": "npm run install-client && npm install-server",
-    "test": "npm run test --prefix && npm run text --prefix client",
-    "server": "npm run watch --prefix server",
-    "client": "npm start --prefix client",
-    "watch": "npm run server & npm run client"
+
   },
   "keywords": [],
   "author": "",
