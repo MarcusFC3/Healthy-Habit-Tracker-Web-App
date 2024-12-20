@@ -2,7 +2,7 @@ export default function Footer()
 {
     return(
     <footer>
-        Copyright
+        Copyright 2025
     </footer>
     )
 }
