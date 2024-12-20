@@ -11,7 +11,7 @@
     "install-client": "npm install --prefix client",
     "install-server": "npm install --prefix server",
     "install": "npm run install-client && npm run install-server",
-    "test": "npm run test --prefix && npm run text --prefix client",
+    "test": "npm run test --prefix && npm run test --prefix client",
     "server": "npm run watch --prefix server",
     "client": "npm start --prefix client",
     "watch": "npm run server & npm run client"
