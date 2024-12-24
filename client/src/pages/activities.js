@@ -27,8 +27,8 @@ const Activities = () => {
         const activityAmount = formData.get("activityAmount");
 
         const activityData = {
-            Name: activityName,
-            descr: activityDescr,
+            ActivityName: activityName,
+            repsorduration: activityDescr,
             amount: activityAmount
         }
 
