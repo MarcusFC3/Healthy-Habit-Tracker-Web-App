@@ -91,7 +91,7 @@ async function httpAccountLogin(accountLoginData){
 
 // The function that sends a GET request for the leaderboard
 async function getForLeaderboard(){
-    await fetch(`${API_URL}`,{credentials: 'include'})
+    await fetch(`${API_URL}/activities`,{credentials: 'include'})
     .then(response => {
         if (!response.ok) {
             throw new Error("Response was not ok");
