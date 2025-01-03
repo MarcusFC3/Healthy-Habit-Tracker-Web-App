@@ -1,15 +1,51 @@
 /*Light theme colors*/
 :root{
     --background: white;
-    --secondary-background: rgba(225, 225, 225, 0.719);
+    /* --secondary-background: rgba(225, 225, 225, 0.719); */
+    --secondary-background: white;
     --main-text-color: black;
     --secondary-text-color: grey;
+    
 }
 body{ /*Temporary background change to be able to see better*/
     background-color: var(--secondary-background);
+    
+    
 }
+main{
+    height:100%;
+}
+@media screen and (min-width: 768px){
+    .home-col{
+        margin: 10px auto;
+    }
+}
+@media screen and (min-width: 0px) and (max-width:767px){
+    .home-col{
+        margin: 10px 0px;
+    }
+}
+.home-col{
+    border-style: groove;
+    border-radius: 25px;
+    padding: 10px;
+    position: relative;
+    height: 50vh;
+}
+.home-col:nth-child(1){
+    border-color: rgba(238, 9, 9, 0.500);
+
+}
+.home-col:nth-child(2){
+    border-color: rgba(14, 35, 223, 0.5);
+}
+.home-col:nth-child(3){
+    border-color: rgba(32, 223, 14, 0.5);
+}
+
 .container{
     background-color: var(--background);
+    
 }
 p{
     padding: 10px;
@@ -52,7 +88,6 @@ td{
 
 .home_text{
     margin: auto;
-    background-color: rgb(175, 175, 175);
 }
 .Activity{
     border: 1px solid black;
@@ -124,4 +159,8 @@ footer{
     background-color: rgb(136, 136, 136);
     margin: 5px 0px;
     padding: 5px;
+}
+.activity-container{
+    margin-top: 15px;
+    min-height: 67vh;
 }

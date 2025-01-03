@@ -44,7 +44,5 @@ loginRouter.post("/create/team", loginController.createTeam)
 
 loginRouter.post("/changeteam", loginController.switchUserTeam)
 
-function createSession(req, res) {
 
-}
 module.exports = loginRouter; 

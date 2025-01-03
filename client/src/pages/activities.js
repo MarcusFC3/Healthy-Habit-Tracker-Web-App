@@ -97,7 +97,7 @@ const Activities = () => {
             document.getElementById("activity_form_container").style.display = "none"
         }
 
-    return <div>
+    return <div className='activityBody'>
         <div className="row">
             <h1>Activities</h1>
 
@@ -124,6 +124,7 @@ const Activities = () => {
             <div className="activity-container">
                 {activityElements}
             </div>
+            
         </div>
     </div>
 }

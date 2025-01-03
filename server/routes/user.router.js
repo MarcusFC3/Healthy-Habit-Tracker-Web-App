@@ -7,10 +7,10 @@ const userRouter = express.Router();
 userRouter.get("/data", function(req, res){
     if(!req.session.passport){
         return res.status(400).json({message: "Session does not exist"});
-    }else{
+    } else{
 
     
-    return res.status(200).json(req.session.passport.user);
+    return res.status(200).json(req.user);
     }
 })
 
