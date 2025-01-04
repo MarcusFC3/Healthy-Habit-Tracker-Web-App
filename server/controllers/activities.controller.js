@@ -94,11 +94,12 @@ function getUserActivityData(req, res) {
                     )
                    
                 }
+                console.log(activitiesArray[i])
                 return activitiesArray[i]
             }
            
             for (let i = 0; i < activitiesArray.length; i++){
-                
+                console.log(loop(i, activitiesArray))
                 UserActivites.push(loop(i, activitiesArray))
             
             };
