@@ -97,7 +97,7 @@ function getUserActivityData(req, res) {
                 }
             
             }
-            for (let i = 0; i < activitiesArray; i++){
+            for (let i = 0; i < activitiesArray.length; i++){
                 loop(i, activitiesArray);
                 };
             return res.status(200).json({
