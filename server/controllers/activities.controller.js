@@ -36,13 +36,13 @@ function getUserActivityData(req, res) {
                 const connection = await sql.connect(adminconf);
                 const request = connection.request();
                 request.input("TeamActivityID", sql.Int, TeamActivityID);
-                request.query("SELECT Completed FROM UserActivities WHERE TeamActivityID = @TeamActivityID")
+                return request.query("SELECT Completed FROM UserActivities WHERE TeamActivityID = @TeamActivityID")
             }
             async function getCompanyActivityData(CompanyActivityID) {
                 const connection = await sql.connect(adminconf);
                 const request = connection.request();
                 request.input("CompanyActivityID", sql.Int, CompanyActivityID);
-                request.query("SELECT Completed FROM TeamActivities WHERE CompanyActivityID = @CompanyActivityID")
+                return request.query("SELECT Completed FROM TeamActivities WHERE CompanyActivityID = @CompanyActivityID")
             }
             let activitiesArray = results.recordset;
             console.log("starting loop... and this is the result " + JSON.stringify(activitiesArray))
@@ -58,7 +58,7 @@ function getUserActivityData(req, res) {
                         (results)=>{
                             let total = results.recordset[0].length;
                             let completed = 0;
-                            for (let i = 0; i < results.recordset.length; i++){
+                            for (let i = 0; i < results.recordset[0].length; i++){
                                 if (results.recordset[i]["Completed"] == 1){
                                     completed++;
                                 }
@@ -77,9 +77,9 @@ function getUserActivityData(req, res) {
                 if (companyActivityID !== null){
                     await getCompanyActivityData(companyActivityID).then(
                         (results)=>{
-                            let total = results.recordset.length;
+                            let total = results.recordset[0].length;
                             let completed = 0;
-                            for (let i = 0; i < results.recordset.length; i++){
+                            for (let i = 0; i < results.recordset[0].length; i++){
                                 if (results.recordset[i]["Completed"] == 1){
                                     completed++;
                                 }
