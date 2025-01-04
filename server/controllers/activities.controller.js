@@ -32,6 +32,68 @@ function getUserActivityData(req, res) {
             return await request.query("SELECT UserActivities.*, TeamActivities.CompanyActivityID FROM UserActivities LEFT OUTER JOIN TeamActivities ON UserActivities.TeamActivityID = TeamActivities.ActivityID WHERE UserID = @UserID")
             }
         getUserActivities(req.session.passport.user.UserID).then((results) => {
+            async function getTeamActivityData(TeamActivityID) {
+                const connection = await sql.connect(adminconf);
+                const request = connection.request();
+                request.input("TeamActivityID", sql.Int, TeamActivitiyID);
+                request.query("SELECT Completed FROM UserActivities WHERE TeamActivityID = @TeamActivityID")
+            }
+            async function getCompanyActivityData(CompanyActivityID) {
+                const connection = await sql.connect(adminconf);
+                const request = connection.request();
+                request.input("CompanyActivityID", sql.Int, CompanyActivitiyID);
+                request.query("SELECT Completed FROM TeamActivities WHERE CompanyActivityID = @CompanyActivityID")
+            }
+            console.log("starting loop... and this is the result " + JSON.stringify(results.recordset))
+            results.recordset.array.forEach(async (element) => {
+                let teamActivityID = element["TeamActivitiyID"]
+                let companyActivityID = element["TCompanyActivitiyID"]
+               console.log("teamActivityID= " + teamActivityID + "companyActivityID= " + companyActivityID)
+                if (teamActivityID != null){
+                    
+
+                    await getTeamActivityData(teamActivityID).then(
+                        (results)=>{
+                            let total = results.recordset.length;
+                            let completed = 0;
+                            for (let i = 0; i < results.recordset.length; i++){
+                                if (results.recordset[i]["Completed"] == 1){
+                                    completed++;
+                                }
+                            }
+                                element["TeamData"] = {
+                                    UsersStarted: total,
+                                    UsersCompleted: completed
+                                    
+                                }
+                            
+                            //for loop to count total and completed
+                        }
+                    )
+                    
+                }
+                if (companyActivityID !== null){
+                    await getTeamActivityData(companyActivityID).then(
+                        (results)=>{
+                            let total = results.recordset.length;
+                            let completed = 0;
+                            for (let i = 0; i < results.recordset.length; i++){
+                                if (results.recordset[i]["Completed"] == 1){
+                                    completed++;
+                                }
+                            }
+                            element["CompanyData"] = {
+                                TeamsStarted: total,
+                                TeamsCompleted: completed
+                                
+                            }
+                            
+                            //for loop to count total and completed
+                        }
+                    )
+                   
+                }
+            });
             return res.status(200).json({
                 "status": "success",
                 "UserActivites": results.recordset
