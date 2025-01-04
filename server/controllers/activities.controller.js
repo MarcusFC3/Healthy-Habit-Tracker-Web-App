@@ -50,7 +50,7 @@ function getUserActivityData(req, res) {
             async function loop(i, activitiesArray){
                 let teamActivityID = activitiesArray[i]["TeamActivityID"]
                 let companyActivityID = activitiesArray[i]["CompanyActivityID"]
-                console.log("element= "+ activitiesArray[i] + "teamActivityID= " + teamActivityID + "companyActivityID= " + companyActivityID)
+                console.log("element= "+JSON.stringify(activitiesArray[i]) + "teamActivityID= " + teamActivityID + "companyActivityID= " + companyActivityID)
                 if (teamActivityID != null){
                     
 
