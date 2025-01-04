@@ -47,10 +47,10 @@ function getUserActivityData(req, res) {
             let activitiesArray = results.recordset;
             console.log("starting loop... and this is the result " + JSON.stringify(activitiesArray))
             
-            async function loop(element){
-                let teamActivityID = element["TeamActivitiyID"]
-                let companyActivityID = element["CompanyActivitiyID"]
-               console.log("teamActivityID= " + teamActivityID + "companyActivityID= " + companyActivityID)
+            async function loop(i, activitiesArray){
+                let teamActivityID = activitiesArray[i]["TeamActivityID"]
+                let companyActivityID = activitiesArray[i]["CompanyActivityID"]
+                console.log("element= "+ activitiesArray[i] + "teamActivityID= " + teamActivityID + "companyActivityID= " + companyActivityID)
                 if (teamActivityID != null){
                     
 
@@ -63,7 +63,7 @@ function getUserActivityData(req, res) {
                                     completed++;
                                 }
                             }
-                                element["TeamData"] = {
+                               activitiesArray[i]["TeamData"] = {
                                     UsersStarted: total,
                                     UsersCompleted: completed
                                 }
@@ -84,7 +84,7 @@ function getUserActivityData(req, res) {
                                     completed++;
                                 }
                             }
-                            element["CompanyData"] = {
+                            activitiesArray[i]["CompanyData"] = {
                                 TeamsStarted: total,
                                 TeamsCompleted: completed
                                 
@@ -97,9 +97,8 @@ function getUserActivityData(req, res) {
                 }
             
             }
-            for (let element of activitiesArray){
-                console.log(element);
-                loop(element);
+            for (let i = 0; i < activitiesArray; i++){
+                loop(i, activitiesArray);
                 };
             return res.status(200).json({
                 "status": "success",
