@@ -19,6 +19,7 @@ const { adminconf } = require("../models/dbusers");
 
 function getUserActivityData(req, res) {
     console.log(req.user)
+    const UserActivites = []
     if (!req.session.passport) {
         res.status(400).json({
             status: "Failure",
@@ -95,8 +96,9 @@ function getUserActivityData(req, res) {
                 }
                 return activitiesArray[i]
             }
+           
             for (let i = 0; i < activitiesArray.length; i++){
-                let UserActivites = [];
+                
                 UserActivites.push(loop(i, activitiesArray))
             
             };
