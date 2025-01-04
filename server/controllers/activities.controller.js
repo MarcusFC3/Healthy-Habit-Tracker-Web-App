@@ -53,7 +53,6 @@ function getUserActivityData(req, res) {
                 console.log("element= "+JSON.stringify(activitiesArray[i]) + "teamActivityID= " + teamActivityID + "companyActivityID= " + companyActivityID)
                 if (teamActivityID != null){
                     
-
                     await getTeamActivityData(teamActivityID).then(
                         (results)=>{
                             let total = results.recordset[0].length;
@@ -63,15 +62,14 @@ function getUserActivityData(req, res) {
                                     completed++;
                                 }
                             }
+                            console.log("we made it here")
                                activitiesArray[i]["TeamData"] = {
                                     UsersStarted: total,
                                     UsersCompleted: completed
                                 }
-                            
                             //for loop to count total and completed
                         }
                     )
-                    
                 }
 
                 if (companyActivityID !== null){
@@ -95,14 +93,16 @@ function getUserActivityData(req, res) {
                     )
                    
                 }
-            
+                return activitiesArray[i]
             }
             for (let i = 0; i < activitiesArray.length; i++){
-                loop(i, activitiesArray);
+                let UserActivites = [];
+                UserActivites.push(loop(i, activitiesArray))
+            
             };
             return res.status(200).json({
                 "status": "success",
-                "UserActivites": activitiesArray
+                "UserActivites": UserActivites
             })
         })
     }
