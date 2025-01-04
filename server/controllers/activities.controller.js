@@ -44,7 +44,7 @@ function getUserActivityData(req, res) {
                 request.input("CompanyActivityID", sql.Int, CompanyActivitiyID);
                 request.query("SELECT Completed FROM TeamActivities WHERE CompanyActivityID = @CompanyActivityID")
             }
-            console.log("starting loop... and this is the result " + JSON.stringify(results.recordset[0]))
+            console.log("starting loop... and this is the result " + JSON.stringify(results.recordset))
             let activitiesArray = results.recordset[0];
             for (let element of activitiesArray){
                 async (element) =>{
