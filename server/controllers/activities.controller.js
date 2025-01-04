@@ -35,13 +35,13 @@ function getUserActivityData(req, res) {
             async function getTeamActivityData(TeamActivityID) {
                 const connection = await sql.connect(adminconf);
                 const request = connection.request();
-                request.input("TeamActivityID", sql.Int, TeamActivitiyID);
+                request.input("TeamActivityID", sql.Int, TeamActivityID);
                 request.query("SELECT Completed FROM UserActivities WHERE TeamActivityID = @TeamActivityID")
             }
             async function getCompanyActivityData(CompanyActivityID) {
                 const connection = await sql.connect(adminconf);
                 const request = connection.request();
-                request.input("CompanyActivityID", sql.Int, CompanyActivitiyID);
+                request.input("CompanyActivityID", sql.Int, CompanyActivityID);
                 request.query("SELECT Completed FROM TeamActivities WHERE CompanyActivityID = @CompanyActivityID")
             }
             let activitiesArray = results.recordset;
@@ -99,7 +99,7 @@ function getUserActivityData(req, res) {
             }
             for (let i = 0; i < activitiesArray.length; i++){
                 loop(i, activitiesArray);
-                };
+            };
             return res.status(200).json({
                 "status": "success",
                 "UserActivites": activitiesArray
