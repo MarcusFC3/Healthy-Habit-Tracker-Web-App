@@ -46,7 +46,8 @@ function getUserActivityData(req, res) {
             }
             console.log("starting loop... and this is the result " + JSON.stringify(results.recordset[0]))
             let activitiesArray = results.recordset[0];
-            activitiesArray.forEach(async (element) => {
+            for (let element of activitiesArray){
+                async (element) =>{
                 let teamActivityID = element["TeamActivitiyID"]
                 let companyActivityID = element["TCompanyActivitiyID"]
                console.log("teamActivityID= " + teamActivityID + "companyActivityID= " + companyActivityID)
@@ -73,6 +74,7 @@ function getUserActivityData(req, res) {
                     )
                     
                 }
+
                 if (companyActivityID !== null){
                     await getTeamActivityData(companyActivityID).then(
                         (results)=>{
@@ -94,7 +96,8 @@ function getUserActivityData(req, res) {
                     )
                    
                 }
-            });
+            
+            }};
             return res.status(200).json({
                 "status": "success",
                 "UserActivites": results.recordset
