@@ -44,8 +44,9 @@ function getUserActivityData(req, res) {
                 request.input("CompanyActivityID", sql.Int, CompanyActivitiyID);
                 request.query("SELECT Completed FROM TeamActivities WHERE CompanyActivityID = @CompanyActivityID")
             }
-            console.log("starting loop... and this is the result " + JSON.stringify(results.recordset))
             let activitiesArray = results.recordset;
+            console.log("starting loop... and this is the result " + JSON.parse(activitiesArray) + JSON.stringify(activitiesArray))
+            
             async function loop(element){
                 let teamActivityID = element["TeamActivitiyID"]
                 let companyActivityID = element["CompanyActivitiyID"]
@@ -97,11 +98,12 @@ function getUserActivityData(req, res) {
             
             }
             for (let element of activitiesArray){
-                loop(element)
+                console.log(element);
+                loop(element);
                 };
             return res.status(200).json({
                 "status": "success",
-                "UserActivites": results.recordset
+                "UserActivites": activitiesArray
             })
         })
     }
