@@ -46,10 +46,9 @@ function getUserActivityData(req, res) {
             }
             console.log("starting loop... and this is the result " + JSON.stringify(results.recordset))
             let activitiesArray = results.recordset;
-            for (let element of activitiesArray){
-                async (element) =>{
+            async function loop(element){
                 let teamActivityID = element["TeamActivitiyID"]
-                let companyActivityID = element["TCompanyActivitiyID"]
+                let companyActivityID = element["CompanyActivitiyID"]
                console.log("teamActivityID= " + teamActivityID + "companyActivityID= " + companyActivityID)
                 if (teamActivityID != null){
                     
@@ -66,7 +65,6 @@ function getUserActivityData(req, res) {
                                 element["TeamData"] = {
                                     UsersStarted: total,
                                     UsersCompleted: completed
-                                    
                                 }
                             
                             //for loop to count total and completed
@@ -97,7 +95,10 @@ function getUserActivityData(req, res) {
                    
                 }
             
-            }};
+            }
+            for (let element of activitiesArray){
+                loop(element)
+                };
             return res.status(200).json({
                 "status": "success",
                 "UserActivites": results.recordset
