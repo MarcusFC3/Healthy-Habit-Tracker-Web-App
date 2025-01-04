@@ -32,7 +32,7 @@ function getUserActivityData(req, res) {
             request.input("UserID", sql.Int, UserID);
             return await request.query("SELECT UserActivities.*, TeamActivities.CompanyActivityID FROM UserActivities LEFT OUTER JOIN TeamActivities ON UserActivities.TeamActivityID = TeamActivities.ActivityID WHERE UserID = @UserID")
             }
-        getUserActivities(req.session.passport.user.UserID).then((results) => {
+        getUserActivities(req.session.passport.user.UserID).then(async (results) => {
             async function getTeamActivityData(TeamActivityID) {
                 const connection = await sql.connect(adminconf);
                 const request = connection.request();
@@ -99,8 +99,8 @@ function getUserActivityData(req, res) {
             }
            
             for (let i = 0; i < activitiesArray.length; i++){
-                console.log(loop(i, activitiesArray))
-                UserActivites.push(loop(i, activitiesArray))
+                console.log(await loop(i, activitiesArray))
+                UserActivites.push(await loop(i, activitiesArray))
             
             };
             return res.status(200).json({
