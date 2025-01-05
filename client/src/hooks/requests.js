@@ -80,18 +80,7 @@ async function getActivityData(){
 async function httpAccountLogin(accountLoginData){
     console.log(API_URL)
 
-    return await axios.post(`${API_URL}/login`, accountLoginData, {
-        proxy: proxyobj,
-        headers: {
-            "Content-Type":"application/json"
-        },
-        withCredentials: true
-      }).catch((error)=>{
-        console.log("An error occurred. :( here it is!" + error + "Again with json string" + JSON.stringify(error))
-      })
-      
-    
-    fetch(`${API_URL}/login`, 
+    return await fetch(`${API_URL}/login`, 
         {
             method: "POST",
             headers: {
