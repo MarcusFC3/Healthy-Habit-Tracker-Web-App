@@ -35,6 +35,9 @@ app.use(helmet())
 
 
 console.log(JSON.stringify(process.env) + "URL")
+console.log(process.env.FIXIE_URL)
+console.log(process.env.adminconfuser)
+console.log(process.env["FIXIE_URL"])
 app.use(session({
   secret: 'secret',
   resave: true,
