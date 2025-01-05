@@ -1,7 +1,5 @@
 // URL of the API
 const API_URL = "https://healthy-habit-tracker-web-app.vercel.app/api";
-const axios = require("axios")
-
 
 const axios = require('axios');
 const url = require('url');
