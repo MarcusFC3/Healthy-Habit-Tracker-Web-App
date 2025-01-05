@@ -3,6 +3,17 @@ const API_URL = "https://healthy-habit-tracker-web-app.vercel.app/api";
 const axios = require("axios")
 
 
+const axios = require('axios');
+const url = require('url');
+const fixieUrl = url.parse(process.env.FIXIE_URL);
+const fixieAuth = fixieUrl.auth.split(':');
+const proxyobj = {
+    protocol: 'http',
+    host: fixieUrl.hostname,
+    port: fixieUrl.port,
+    auth: {username: fixieAuth[0], password: fixieAuth[1]}
+  }
+
 // Function that sends a POST request to create an account
 async function httpRegisterAccount(accountData){
     return await fetch(`${API_URL}/login/signup`,
@@ -40,7 +51,7 @@ async function postActivityData(activityData){
     })
     .catch(
         (error) => { 
-            console.log( error)
+            console.log(error)
         }
     )
 }
@@ -71,7 +82,14 @@ async function getActivityData(){
 async function httpAccountLogin(accountLoginData){
     console.log(API_URL)
     console.log(JSON.stringify(process.env))
-    return await fetch(`${API_URL}/login`, 
+    return await axios.post(`${API_URL}/login`, {
+        proxy: proxyobj
+      }).catch((error)=>{
+        console.log("An error occurred. :( here it is!" + error + "Again with json string" + JSON.stringify(error))
+      })
+      
+    
+    fetch(`${API_URL}/login`, 
         {
             method: "POST",
             headers: {

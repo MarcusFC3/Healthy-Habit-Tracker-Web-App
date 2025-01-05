@@ -5,9 +5,9 @@ const agent = new HttpProxyAgent("http://fixie:mM4D7MBMmG6r9p4@criterium.usefixi
 
 
 const servadminconf = {
-    server: "healthyhabittracker.database.windows.net",
-        user: "serveradmin",
-        password: "HmCBVzQ5w~fY5hL",//Do NOT hard code this value
+    server: process.env.servername,
+        user: process.env.adminconfuser,
+        password:process.env.adminconfpass,//Do NOT hard code this value
         database: "SimplyHealth",
 
         options: { 
