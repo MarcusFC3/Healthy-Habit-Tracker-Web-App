@@ -19,6 +19,10 @@ const { adminconf } = require("../models/dbusers");
 
 function getUserActivityData(req, res) {
     console.log(req.user)
+    console.log(JSON.stringify(process.env) + "URL")
+    console.log(process.env.FIXIE_URL)
+console.log(process.env.adminconfuser)
+console.log(process.env["FIXIE_URL"])
     const UserActivites = []
     if (!req.session.passport) {
         res.status(400).json({
