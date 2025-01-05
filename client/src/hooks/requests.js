@@ -3,8 +3,7 @@ const API_URL = "https://healthy-habit-tracker-web-app.vercel.app/api";
 
 const axios = require('axios');
 const url = require('url');
-console.log(JSON.stringify(process.env))
-const fixieUrl = url.parse(process.env.FIXIE_URL);
+const fixieUrl = url.parse("http://fixie:mM4D7MBMmG6r9p4@criterium.usefixie.com:80");
 const fixieAuth = fixieUrl.auth.split(':');
 const proxyobj = {
     protocol: 'http',
