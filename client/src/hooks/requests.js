@@ -3,7 +3,8 @@ const API_URL = "https://healthy-habit-tracker-web-app.vercel.app/api";
 
 const axios = require('axios');
 const url = require('url');
-const fixieUrl = url.parse(process.env.FIXIE_URL);
+console.log(JSON.stringify(process.env))
+// const fixieUrl = url.parse(process.env.FIXIE_URL);
 const fixieAuth = fixieUrl.auth.split(':');
 const proxyobj = {
     protocol: 'http',
@@ -79,7 +80,7 @@ async function getActivityData(){
 // The function that sends a POST request for the login page
 async function httpAccountLogin(accountLoginData){
     console.log(API_URL)
-    console.log(JSON.stringify(process.env))
+
     return await axios.post(`${API_URL}/login`, {
         proxy: proxyobj
       }).catch((error)=>{
