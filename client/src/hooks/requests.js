@@ -1,17 +1,19 @@
 // URL of the API
 const API_URL = "https://healthy-habit-tracker-web-app.vercel.app/api";
 
-const axios = require('axios');
-const url = require('url');
+const {HttpProxyAgent} = require("http-proxy-agent");
+const axios = require('axios');  
+ const url = require('url');
 const fixieUrl = url.parse("http://fixie:mM4D7MBMmG6r9p4@criterium.usefixie.com:80");
 const fixieAuth = fixieUrl.auth.split(':');
-const proxyobj = {
-    protocol: 'http',
-    host: fixieUrl.hostname,
-    port: fixieUrl.port,
-    auth: {username: fixieAuth[0], password: fixieAuth[1]}
-  }
+// const proxyobj = {
+//     protocol: 'http',
+//     host: fixieUrl.hostname,
+//     port: fixieUrl.port,
+//     auth: {username: fixieAuth[0], password: fixieAuth[1]}
+//   }  
 
+const agent =  new HttpProxyAgent(fixieUrl);
 // Function that sends a POST request to create an account
 async function httpRegisterAccount(accountData){
     return await fetch(`${API_URL}/login/signup`,
@@ -82,6 +84,7 @@ async function httpAccountLogin(accountLoginData){
 
     return await fetch(`${API_URL}/login`, 
         {
+            agent,
             method: "POST",
             headers: {
                 "Content-Type":"application/json"
