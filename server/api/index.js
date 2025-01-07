@@ -27,13 +27,17 @@ const sqlstore = new MssqlStore(adminconf)
 
 
 app.set('trust proxy', 1);
-app.use(cors({origin: "https://healthy-habit-tracker-web-app.vercel.app/", credentials: true})); 
+//app.use(cors({origin: "https://healthy-habit-tracker-web-app.vercel.app/", credentials: true})); 
+app.use(cors())
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(helmet())
 
 
 console.log(JSON.stringify(process.env) + "URL")
+// console.log(process.env.FIXIE_URL)
+// console.log(process.env.adminconfuser)
+// console.log(process.env["FIXIE_URL"])
 app.use(session({
   secret: 'secret',
   resave: true,

@@ -1,6 +1,16 @@
 // URL of the API
 const API_URL = "https://healthy-habit-tracker-web-app.vercel.app/api";
 
+const axios = require('axios');
+const url = require('url');
+const fixieUrl = url.parse("http://fixie:mM4D7MBMmG6r9p4@criterium.usefixie.com:80");
+const fixieAuth = fixieUrl.auth.split(':');
+const proxyobj = {
+    protocol: 'http',
+    host: fixieUrl.hostname,
+    port: fixieUrl.port,
+    auth: {username: fixieAuth[0], password: fixieAuth[1]}
+  }
 
 // Function that sends a POST request to create an account
 async function httpRegisterAccount(accountData){
@@ -39,7 +49,7 @@ async function postActivityData(activityData){
     })
     .catch(
         (error) => { 
-            console.log( error)
+            console.log(error)
         }
     )
 }
@@ -69,7 +79,7 @@ async function getActivityData(){
 // The function that sends a POST request for the login page
 async function httpAccountLogin(accountLoginData){
     console.log(API_URL)
-    console.log(JSON.stringify(process.env))
+
     return await fetch(`${API_URL}/login`, 
         {
             method: "POST",
@@ -90,7 +100,7 @@ async function httpAccountLogin(accountLoginData){
 
 // The function that sends a GET request for the leaderboard
 async function getForLeaderboard(){
-    await fetch(`${API_URL}`,{credentials: 'include'})
+    await fetch(`${API_URL}/activities`,{credentials: 'include'})
     .then(response => {
         if (!response.ok) {
             throw new Error("Response was not ok");

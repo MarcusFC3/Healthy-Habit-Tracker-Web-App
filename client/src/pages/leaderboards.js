@@ -8,6 +8,20 @@ const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
 
     function generateTableBody(){
+
+        // getForLeaderboard().then(
+        //     (response) =>{
+        //         let teamData = response.json()["StatsByTeamID"];
+        //         let key = 0;
+        //         let rank = 1;
+        //         let teams = []
+        //         teamData.array.forEach(element => {
+        //             teams.push({key: key, Rank : rank, Team : Object.keys(teamData)[key], Company: "Four County Career Center", ActivityComplete: element.Completed})
+        //         });
+        //         return teams;
+        //     }
+        // )
+
         return [{key: 0, Rank: 1, Team: "IT Academy", Company: "Four County Career Center", ActivityComplete: 5},{key: 1, Rank: 2, Team: "Culinary", Company: "Four County Career Center", ActivityComplete: 3}]
     }
 
