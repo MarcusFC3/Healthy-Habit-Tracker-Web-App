@@ -60,12 +60,13 @@ console.log(process.env["FIXIE_URL"])
                     
                     await getTeamActivityData(teamActivityID).then(
                         (results)=>{
-                            let total = results.recordset[0].length;
+                            let total = 0
                             let completed = 0;
                             for (let i = 0; i < results.recordset[0].length; i++){
                                 if (results.recordset[i]["Completed"] == 1){
                                     completed++;
                                 }
+                                total++;
                             }
                             console.log("we made it here")
                                activitiesArray[i]["TeamData"] = {
@@ -80,12 +81,13 @@ console.log(process.env["FIXIE_URL"])
                 if (companyActivityID !== null){
                     await getCompanyActivityData(companyActivityID).then(
                         (results)=>{
-                            let total = results.recordset[0].length;
+                            let total = 0;
                             let completed = 0;
                             for (let i = 0; i < results.recordset[0].length; i++){
                                 if (results.recordset[i]["Completed"] == 1){
                                     completed++;
                                 }
+                                total++;
                             }
                             activitiesArray[i]["CompanyData"] = {
                                 TeamsStarted: total,
