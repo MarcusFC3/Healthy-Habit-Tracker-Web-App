@@ -8,9 +8,6 @@ const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
 
     function generateTableBody(){
-
-        // getForLeaderboard()
-
         return [{key: 0, Rank: 1, Team: "IT Academy", Company: "Four County Career Center", ActivityComplete: 5},{key: 1, Rank: 2, Team: "Culinary", Company: "Four County Career Center", ActivityComplete: 3}]
     }
 
@@ -28,6 +25,7 @@ const Leaderboard = () => {
         <div className="row">
             <div className="col-12 col-md-8">
                 <h2>Teams</h2>
+                <button onClick={getForLeaderboard}>Generate Leaderboard</button>
                 <div id="TeamRankTable">
 
                     {/* To Do

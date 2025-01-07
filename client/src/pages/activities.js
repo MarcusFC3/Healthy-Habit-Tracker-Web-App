@@ -27,8 +27,8 @@ const Activities = () => {
         const activityAmount = formData.get("activityAmount");
 
         const activityData = {
-            Name: activityName,
-            descr: activityDescr,
+            ActivityName: activityName,
+            repsorduration: activityDescr,
             amount: activityAmount
         }
 
@@ -113,7 +113,7 @@ const Activities = () => {
                     <label>Reps/Duration of Activity</label>
                     <input id="acitivity_descr" name="activityDescr" type="text"></input>
 
-                    <label>Amount to complete</label>
+                    <label>Sets of Reps</label>
                     <input id="acitivity_amount" name="activityAmount" type="text"></input>
 
                     <button>Create Activity</button>
