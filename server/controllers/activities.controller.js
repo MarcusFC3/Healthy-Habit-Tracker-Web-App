@@ -62,6 +62,10 @@ console.log(process.env["FIXIE_URL"])
                         (results)=>{
                             let total = 0
                             let completed = 0;
+                            console.log(results.recordset[0])
+                            console.log(results.recordset[0].length)
+                            console.log(results.recordset)
+                            console.log(results.recordset.length)
                             for (let i = 0; i < results.recordset[0].length; i++){
                                 if (results.recordset[i]["Completed"] == 1){
                                     completed++;
