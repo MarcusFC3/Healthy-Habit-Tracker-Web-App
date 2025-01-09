@@ -44,14 +44,8 @@ function inputValidation(bodyobj) {
           status: "Failure",
           message: "must only contain alphanumeric characters", //add specific field name
         };
-      } else if (body.username === body[i]) {
-        if (/^[a-z0-9]+$/i.test(body[i])) {
-          return {
-            status: "Failure",
-            message: "must only contain alphanumeric characters", //add specific field name
-          };
-        }
-      }
+      } 
+      
     }
   }
   return {
@@ -66,7 +60,6 @@ function signupUser(req, res) {
    */
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
-  let username = req.body.username;
   let email = req.body.email;
   let password = req.body.password;
   let teamName = req.body.teamName;
@@ -77,7 +70,6 @@ function signupUser(req, res) {
   const valid = inputValidation({
     firstName,
     lastName,
-    username,
     email,
     password,
   });
@@ -105,7 +97,6 @@ function signupUser(req, res) {
             .userToDbAddToCompanyAndTeam(
               firstName,
               lastName,
-              username,
               email,
               password,
               teamName,
@@ -342,7 +333,6 @@ function login(req, res, next) {
 function signupCompany(req, res) {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
-  let username = req.body.username;
   let email = req.body.email;
   let password = req.body.password;
   let teamName = req.body.teamName;
@@ -352,7 +342,6 @@ function signupCompany(req, res) {
   const valid = inputValidation({
     firstName,
     lastName,
-    username,
     email,
     password,
   });
@@ -371,7 +360,6 @@ function signupCompany(req, res) {
           .UserToDbCreateCompanyAndTeam(
             firstName,
             lastName,
-            username,
             email,
             password,
             teamName,

@@ -7,20 +7,20 @@ const get = {
         const connection = await sql.connect(adminconf);
         let request =  connection.request();
         request = request.input("userID", sql.Int,userID);
-        return await request.query("SELECT firstName, lastName, username, TeamName, CompanyID, isTeamLeader, isCompanyLeader FROM Users WHERE UserID = @userID")
+        return await request.query("SELECT firstName, lastName, TeamName, CompanyID, isTeamLeader, isCompanyLeader FROM Users WHERE UserID = @userID")
     },
     UserInfoFromEmail : async function getNamesFromUseremail(email) {
         const connectionPool = await sql.connect(adminconf);
         let request = await connectionPool.request();
         request = await request.input("email", sql.VarChar, email);
-        return await request.query("SELECT UserID, firstName, lastName, username, TeamName, CompanyID, isTeamLeader, isCompanyLeader FROM Users WHERE email = @email")
+        return await request.query("SELECT UserID, firstName, lastName, TeamName, CompanyID, isTeamLeader, isCompanyLeader FROM Users WHERE email = @email")
     },
     UserInfoFromTeamID: async function getUsersFromTeamID(teamName, companyID) {
         const connectionPool = await sql.connect(adminconf);
         let request = connectionPool.request();
         request.input("teamName", sql.VarChar,teamName)
         request.input("companyID", sql.Int,companyID)
-        return await request.query("SELECT firstName + lastName as Name, Username, isTeamLeader, isCompanyLeader FROM Users WHERE TeamID = @TeamID")
+        return await request.query("SELECT firstName + lastName as Name, isTeamLeader, isCompanyLeader FROM Users WHERE TeamID = @TeamID")
     },
 
     UsersFromTeam: function getUsersFromTeam(teamName) {
@@ -96,7 +96,7 @@ const check = {
     },
 }
 const add = {
-    UserToDbCreateCompanyAndTeam: async function addUserToDbWithTeam(firstName, lastName, username, email, password, teamName, companyName) {
+    UserToDbCreateCompanyAndTeam: async function addUserToDbWithTeam(firstName, lastName, email, password, teamName, companyName) {
        
         const connection = await sql.connect(adminconf).then(() => console.log('Connected to Azure SQL Database'))
         .catch(err => console.error('Connection failed:', err));;
@@ -198,10 +198,9 @@ try {
     // Inserting User
     tRequest.input("firstName", sql.VarChar, firstName);
     tRequest.input("lastName", sql.VarChar, lastName);
-    tRequest.input("username", sql.VarChar, username);
     tRequest.input("email", sql.VarChar, email);
     tRequest.input("password", sql.VarChar, hashedpassword);
-    await tRequest.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword, TeamName, CompanyID, isCompanyLeader, isTeamLeader) VALUES (@firstName, @lastName, @username, @email, @password, @teamName, @companyID, 1, 1)");
+    await tRequest.query("INSERT INTO Users (firstName,lastName,  email, hashedPassword, TeamName, CompanyID, isCompanyLeader, isTeamLeader) VALUES (@firstName, @lastName,  @email, @password, @teamName, @companyID, 1, 1)");
 
     console.log("User inserted");
 
@@ -236,7 +235,7 @@ try {
 
 },
 
-    userToDbAddToCompanyAndTeam: async function addUserToDbNoTeam(firstName, lastName, username, email, password, teamName, companyName) {
+    userToDbAddToCompanyAndTeam: async function addUserToDbNoTeam(firstName, lastName, email, password, teamName, companyName) {
         const connection = await sql.connect(adminconf);
         const request = connection.request();
         let companyID;
@@ -271,13 +270,12 @@ try {
 
         request.input("firstName", sql.VarChar, firstName);//put all fields in
         request.input("lastName", sql.VarChar, lastName);
-        request.input("username", sql.VarChar, username);
         request.input("email", sql.VarChar, email);
         request.input("password", sql.VarChar, hashedpassword);
         request.input("teamName", sql.VarChar, teamName);
         request.input("companyID", sql.Int, companyID);
 
-        return await request.query("INSERT INTO Users (firstName,lastName, username, email, hashedPassword, TeamName, CompanyID) VALUES (@firstName, @lastName, @username, @email, @password, @teamName, @companyID)");
+        return await request.query("INSERT INTO Users (firstName,lastName, email, hashedPassword, TeamName, CompanyID) VALUES (@firstName, @lastName, @email, @password, @teamName, @companyID)");
     }
 }
 const update = {
