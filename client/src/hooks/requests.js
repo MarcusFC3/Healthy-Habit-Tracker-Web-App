@@ -59,8 +59,6 @@ async function postActivityData(activityData){
 // Function that sends a GET request to the API asking for the activities
 //  that are needed for a specific user
 async function getActivityData(){
-    // I will need the users ID, Team ID, and Company ID to find which
-    // activities they need to be displayed
     await fetch(`${API_URL}`,{credentials: 'include'})
     .then(response => {
         if (!response.ok) {
@@ -118,6 +116,10 @@ async function getForLeaderboard(){
     }
 
     )
+}
+
+async function checkSession() {
+    await fetch
 }
 
 export {httpRegisterAccount, 

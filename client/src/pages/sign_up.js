@@ -6,6 +6,7 @@ export default function signUp() {
     return <div>
         <div className="row">
             <div className="col-12 col-md-4 mx-auto">
+
             <form id="sign_up_form" onSubmit={registerAccount}>
 
                     <h4>Sign Up</h4>
@@ -73,6 +74,7 @@ export default function signUp() {
 
                     <button id="Submit">Sign Up</button>
                 </form>
+                {/* Already have an account? <Link to="/login">Click Here</Link> to go to the Login Page */}
             </div>
         </div>
     </div>

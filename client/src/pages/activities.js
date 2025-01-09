@@ -13,7 +13,7 @@ const Activities = () => {
     function generateActivity() {
         const activityArray = []
 
-        activityArray[0] = { key:activityCount++, Name:"Activity Name", descr: "Activity Description", amount: 4, progress: 0}
+        activityArray[0] = { key: activityCount++, Name:"Activity Name", descr: "Activity Description", amount: 4, progress: 0}
 
         return activityArray
     }

@@ -30,6 +30,7 @@ export default function Login() {
 
                     <button id="Submit">Login</button>
                 </form>
+                {/* Don't have an account? <Link to="/sign_up">Click Here</Link> to create an account*/}
             </div>
         </div>
     </div>
