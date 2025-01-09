@@ -1,9 +1,6 @@
 import {httpRegisterAccount, httpAccountLogin} from "./requests";
 
-/* 
-function that collects the data from the sign up form 
-to register an account
-*/
+const isLoggedIn = false;
 
 async function registerAccount(event){
     event.preventDefault();
@@ -65,6 +62,7 @@ async function checkAccount (event){
 
     if (response.ok){
         console.log(response.json())
+        isLoggedIn = true;
         
     } else{
         console.log("didn't work")
