@@ -106,7 +106,6 @@ CREATE TABLE Users
 (UserID int IDENTITY(1,1),
 firstName varchar(25) NOT NULL,
 lastName varchar(25) NOT NULL,
-Username varchar(25) NOT NULL,
 email varchar(60) NOT NULL ,
 hashedpassword varchar(130) NOT NULL ,
 TeamName varchar(40),
