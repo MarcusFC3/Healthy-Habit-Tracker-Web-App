@@ -7,7 +7,7 @@
     --secondary-text-color: grey;
     
 }
-body{ /*Temporary background change to be able to see better*/
+body{
     background-color: var(--secondary-background);
     
     

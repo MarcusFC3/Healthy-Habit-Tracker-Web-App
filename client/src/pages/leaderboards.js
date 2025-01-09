@@ -41,15 +41,6 @@ const Leaderboard = () => {
                 <h2>Teams</h2>
                 <button onClick={getForLeaderboard}>Generate Leaderboard</button>
                 <div id="TeamRankTable">
-
-                    {/* To Do
-                    set up a leaderboard row component
-                    have it automatically set up the leaderboard with data
-                    add a button that adds more teams to the leaderboard
-                    add more content to the leaderboards page
-                    add the ability to sort/search through the teams 
-                    */}
-
                     <table>
                         <thead>
                             <tr>
@@ -64,7 +55,6 @@ const Leaderboard = () => {
                         </tbody>
                     </table>
                 </div>
-                {/* <button onClick={null}>More</button> */}
             </div>
             <div className="col-12 col-md-4">
                 <h2>Something else</h2>

@@ -47,7 +47,6 @@ const Activities = () => {
     }
 
     function alignKeys(key){
-        console.log("Running alignKeys function")
         activities.forEach((activityObj) => {
             if(activityObj.key > key){
                 activityObj.key--;
@@ -67,7 +66,6 @@ const Activities = () => {
         amount={activityObj.amount} 
         progress={activityObj.progress}
         delete={function deleteActivity() {
-            console.log("Running deleteActivity function")
             setActivities(prevActivities => {
                 activityCount--;
                 prevActivities.splice(prevActivities[activityObj.key].key, 1);
@@ -78,7 +76,6 @@ const Activities = () => {
             })
         }}
         increaseProgress={function increaseProgress() {
-            console.log("Running increaseProgress function")
             setActivities(prevActivities => {
                 console.log(prevActivities[activityObj.key].progress += activityObj.progress < activityObj.amount? 1 : 0)
                 return [
