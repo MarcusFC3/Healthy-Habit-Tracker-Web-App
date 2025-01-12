@@ -9,7 +9,7 @@ const Leaderboard = () => {
 
     function generateTableBody(){
 
-        return {key: 1, Rank : 2, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}
+        return {key: 0, Rank : 1, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}
        
     }
     async function loadleaderboard(){

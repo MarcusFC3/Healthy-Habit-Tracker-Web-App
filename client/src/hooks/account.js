@@ -1,6 +1,6 @@
 import {httpRegisterAccount, httpAccountLogin} from "./requests";
 
-const isLoggedIn = false;
+let isLoggedIn = false;
 
 async function registerAccount(event){
     event.preventDefault();
