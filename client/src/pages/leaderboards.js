@@ -3,7 +3,6 @@ import { useState } from "react"
 import LeaderboardRow from "../components/LeaderboardRow"
 
 import { getForLeaderboard } from "../hooks/requests"
-let tableGenerated = false;
 const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
 
@@ -35,11 +34,9 @@ const Leaderboard = () => {
                    key++;
                    rank++;
                 }
-                for (let item of teams){
-                    setLeaderboardRows(prevLeaderboardRows => [
-                        ...prevLeaderboardRows, item
-                    ])
-                }
+                setLeaderboardRows(prevLeaderboardRows => [
+                    ...prevLeaderboardRows, ...teams
+                ])
             }
         ).catch((error) =>{
             console.log(error + "AN ERROR HAS OCCURED")

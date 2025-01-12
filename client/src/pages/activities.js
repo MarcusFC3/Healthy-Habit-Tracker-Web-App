@@ -26,7 +26,7 @@ const Activities = () => {
                     ...prevActivities,
                     ]
                 })
-                
+                console.log(response)
                 let activityData = response["UserActivities"]
                 console.log(activityData)
                 console.log(Object.entries(activityData))
@@ -41,11 +41,11 @@ const Activities = () => {
                    activityCount++;
                    rank++;
                 }
-                for (let item of UserActivities){
+                
                     setActivities(prevActivities => [
-                        ...prevActivities, item
+                        ...prevActivities, ...UserActivities
                     ])
-                }
+                
             }
         ).catch((error) =>{
             console.log(error + "AN ERROR HAS OCCURED")
