@@ -30,7 +30,8 @@ const Activities = () => {
                 console.log(Object.entries(activityData))
                 let UserActivities = []
                 for (let [team, element] of Object.entries(activityData)) {
-                   UserActivities.push({key: activityCount, activityName : element.ActivityName,
+                   UserActivities.push({key: activityCount, 
+                    activityName : element.ActivityName,
                     activityDescription : element.ActivityDescription,
                    activityAmount: element.Amount,
                    progress: 0,
@@ -100,10 +101,9 @@ const Activities = () => {
     const activityElements = activities.map(activityObj => 
     <Activity 
         key={activityObj.key} 
-        id={activityObj.key}
-        Name={activityObj.Name} 
-        descr={activityObj.descr}
-        amount={activityObj.amount} 
+        Name={activityObj.activityName} 
+        descr={activityObj.activityDescription}
+        amount={activityObj.activityAmount} 
         progress={activityObj.progress}
         TimeCreated={activityObj.dateCreated}
         delete={function deleteActivity() {
