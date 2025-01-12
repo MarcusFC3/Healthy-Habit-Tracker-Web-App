@@ -47,12 +47,12 @@ async function postActivityData(activityData){
 // Function that sends a GET request to the API asking for the activities
 //  that are needed for a specific user
 async function getActivityData(){
-    return await fetch(`${API_URL}`,{credentials: 'include'})
-    .then(response => {
+    return await fetch(`${API_URL}/activities/user`,{credentials: 'include'})
+    .then(async response => {
         if (!response.ok) {
             throw new Error("Response was not ok");
         }
-        return response.json();
+        return await response.json();
     })
     .catch(error => {
         console.error("There was a problem with the fetch operation:", error);

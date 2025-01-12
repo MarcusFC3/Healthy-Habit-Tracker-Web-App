@@ -7,17 +7,11 @@ import { getForLeaderboard } from "../hooks/requests"
 const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
 
-    function generateTableBody(){
-
-        return [{key: 0, Rank : 1, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}]
-       
-    }
-    async function loadleaderboard(){
-        await getForLeaderboard().then(
+    async function generateTableBody(){
+        getForLeaderboard().then(
             (response) =>{
                 console.log(response)
-                console.log(response.json())
-                let teamData = response.json()["StatsByTeamID"];
+                let teamData = response["StatsByTeamID"];
                 let key = 0;
                 let rank = 1;
                 let teams = []
@@ -34,8 +28,9 @@ const Leaderboard = () => {
             console.log(error + "AN ERROR HAS OCCURED")
             return [{key: 1, Rank : 2, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}]
         })
-    };
-    loadleaderboard();
+        //return [{key: 0, Rank : 1, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}]
+       
+    }
     const leaderboardRowElements = leaderboardRows.map(leaderboardRowObj => 
         <LeaderboardRow 
         key={leaderboardRowObj.key}
