@@ -11,7 +11,7 @@ const Activities = () => {
 
     // This function is what will pull the activities the user already has
     function generateActivity() {
-        setTimeout(600, getActivities())
+        setTimeout(getActivities(), 600)
         return [{ key: 0, Name:"Loading...", descr: "Loading...", amount: 4, progress: 0}]
 
           

@@ -8,7 +8,7 @@ const Leaderboard = () => {
 
     function generateTableBody(){
         setTimeout(600, getLeaderboard())
-        return [{key: 0, Rank : 1, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}]
+        return [{key: 0, Rank : 1, Team: "loading" , activitiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}]
        
     }
     function getLeaderboard(){

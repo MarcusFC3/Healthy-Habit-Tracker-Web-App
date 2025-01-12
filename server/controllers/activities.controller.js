@@ -23,7 +23,7 @@ function getUserActivityData(req, res) {
     console.log(process.env.FIXIE_URL)
 console.log(process.env.adminconfuser)
 console.log(process.env["FIXIE_URL"])
-    const UserActivites = []
+    const UserActivities = []
     if (!req.session.passport) {
         res.status(400).json({
             status: "Failure",
@@ -105,12 +105,12 @@ console.log(process.env["FIXIE_URL"])
            
             for (let i = 0; i < activitiesArray.length; i++){
                 console.log(await loop(i, activitiesArray))
-                UserActivites.push(await loop(i, activitiesArray))
+                UserActivities.push(await loop(i, activitiesArray))
             
             };
             return res.status(200).json({
                 "status": "success",
-                "UserActivites": UserActivites
+                "UserActivities": UserActivities
             })
         })
     }
@@ -133,7 +133,7 @@ function getTeamActivityData(req, res) {
         getTeamActivities(req.user.teamName, req.user.CompanyID).then((results) => {
             return res.status(200).json({
                 "status": "success",
-                "UserActivites": results.recordset
+                "UserActivities": results.recordset
             })
         })
     }
@@ -391,7 +391,7 @@ function removeCompanyActivity(req, res){
         })
         request.input("teamActivityID", sql.Int, teamActivityID);
         await request.query("DELETE TeamActivities WHERE CompanyActivityID = @companyActivityID")
-        await request.query("DELETE UserActivites WHERE TeamActivityID = @teamActivityID")
+        await request.query("DELETE UserActivities WHERE TeamActivityID = @teamActivityID")
         transaction.commit();
         return "success!"
         }
@@ -421,7 +421,7 @@ function removeTeamActvitiy(req, res){
         })
         request.input("activityID", sql.Int, activityID);
         await request.query("DELETE TeamActivities WHERE ActivityID = @activityID")
-        await request.query("DELETE UserActivites WHERE TeamActivityID = @activityID")
+        await request.query("DELETE UserActivities WHERE TeamActivityID = @activityID")
         transaction.commit();
         return "success!"
         }
