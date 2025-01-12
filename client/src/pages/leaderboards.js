@@ -9,7 +9,11 @@ const Leaderboard = () => {
 
     function generateTableBody(){
 
-        getForLeaderboard().then(
+        return {key: 1, Rank : 2, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}
+       
+    }
+    async function loadleaderboard(){
+        await getForLeaderboard().then(
             (response) =>{
                 console.log(response)
                 let teamData = response["StatsByTeamID"];
@@ -29,10 +33,8 @@ const Leaderboard = () => {
             console.log(error + "AN ERROR HAS OCCURED")
             return {key: 1, Rank : 2, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
         })
-
-       
-    }
-
+    };
+    loadleaderboard();
     const leaderboardRowElements = leaderboardRows.map(leaderboardRowObj => 
         <LeaderboardRow 
         key={leaderboardRowObj.key}
