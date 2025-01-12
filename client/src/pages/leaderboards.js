@@ -16,7 +16,8 @@ const Leaderboard = () => {
         await getForLeaderboard().then(
             (response) =>{
                 console.log(response)
-                let teamData = response["StatsByTeamID"];
+                console.log(response.json())
+                let teamData = response.json()["StatsByTeamID"];
                 let key = 0;
                 let rank = 1;
                 let teams = []

@@ -5,8 +5,10 @@ export default function LeaderboardRow(props) {
         <tr >
             <td>{props.Rank}</td>
             <td>{props.Team}</td>
-            <td>{props.Company}</td>
-            <td>{props.ActivityComplete}</td>
+            <td>{props.activitiesStarted}</td>
+            <td>{props.activitiesCompleted}</td>
+            <td>{props.activitiesCompletedPercentage}</td>
+
         </tr>
     )
 }
