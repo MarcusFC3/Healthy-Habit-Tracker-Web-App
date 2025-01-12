@@ -88,7 +88,7 @@ async function httpAccountLogin(accountLoginData){
 async function getForLeaderboard(){
     await fetch(`${API_URL}/activities`,{credentials: 'include'})
     .then(response => {
-    
+        console.log(response)
         return response;
     })
     .catch(error => {
