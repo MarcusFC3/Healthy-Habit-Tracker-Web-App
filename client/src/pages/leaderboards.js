@@ -8,7 +8,7 @@ const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
 
     function generateTableBody(){
-        
+        setTimeout(600, getLeaderboard())
         return [{key: 0, Rank : 1, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}]
        
     }
@@ -44,15 +44,11 @@ const Leaderboard = () => {
         ).catch((error) =>{
             console.log(error + "AN ERROR HAS OCCURED")
             setLeaderboardRows(prevLeaderboardRows => [
-                ...prevLeaderboardRows, {key: 1, Rank : 2, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
+                ...prevLeaderboardRows, {key: 1, Rank : 2, Team: "error" , activitiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
             ])
         })
         
     
-    }
-    if (!tableGenerated){
-        getLeaderboard()
-        tableGenerated = true;
     }
    
     
@@ -61,7 +57,7 @@ const Leaderboard = () => {
         key={leaderboardRowObj.key}
         Rank={leaderboardRowObj.Rank}
         Team={leaderboardRowObj.Team}
-        activtiiesStarted={leaderboardRowObj.activitiesStarted}
+        activitiesStarted={leaderboardRowObj.activitiesStarted}
         activitiesCompleted={leaderboardRowObj.activitiesCompleted}
         activitiesCompletedPercentage={leaderboardRowObj.activitiesCompletedPercentage}
         /> 
