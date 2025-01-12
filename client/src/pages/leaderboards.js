@@ -9,7 +9,7 @@ const Leaderboard = () => {
 
     function generateTableBody(){
 
-        return {key: 0, Rank : 1, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}
+        return [{key: 0, Rank : 1, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}]
        
     }
     async function loadleaderboard(){
@@ -32,7 +32,7 @@ const Leaderboard = () => {
             }
         ).catch((error) =>{
             console.log(error + "AN ERROR HAS OCCURED")
-            return {key: 1, Rank : 2, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
+            return [{key: 1, Rank : 2, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}]
         })
     };
     loadleaderboard();

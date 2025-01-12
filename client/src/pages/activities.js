@@ -13,11 +13,11 @@ const Activities = () => {
     function generateActivity() {
         const activityArray = []
             getActivityData().then((response)=>{
-                activityArray[0] = { key: activityCount++, Name:"Activity Name asdasdasdad", descr: "Activity Description", amount: 4, progress: 0}
-
-                return activityArray
+                
             })
-        
+            activityArray[0] = { key: activityCount++, Name:"Activity Name asdasdasdad", descr: "Activity Description", amount: 4, progress: 0}
+
+            return activityArray
     }
 
     function createNewActivity(event) {

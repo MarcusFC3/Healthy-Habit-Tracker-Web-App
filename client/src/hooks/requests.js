@@ -47,7 +47,7 @@ async function postActivityData(activityData){
 // Function that sends a GET request to the API asking for the activities
 //  that are needed for a specific user
 async function getActivityData(){
-    await fetch(`${API_URL}`,{credentials: 'include'})
+    return await fetch(`${API_URL}`,{credentials: 'include'})
     .then(response => {
         if (!response.ok) {
             throw new Error("Response was not ok");
@@ -86,7 +86,13 @@ async function httpAccountLogin(accountLoginData){
 
 // The function that sends a GET request for the leaderboard
 async function getForLeaderboard(){
-    await fetch(`${API_URL}/activities`,{credentials: 'include'})
+    return await fetch(`${API_URL}/activities`,{credentials: 'include'})
+    .then(async response => {
+        if (!response.ok) {
+            throw new Error("Response was not ok");
+        }
+        return await response.json();
+    })
     .catch(error => {
         console.error("There was a problem with the fetch operation:", error);
     }
