@@ -19,10 +19,11 @@ const Activities = () => {
     function getActivities(){
         getActivityData().then(
             (response) =>{
+                activityCount = 0;
                 setActivities(prevActivities => {
-                    prevActivities.splice(prevLeaderboardRows[0], 1);
+                    prevActivities.splice(prevActivities[0], 1);
                     return [
-                    ...prevLeaderboardRows,
+                    ...prevActivities,
                     ]
                 })
                 
@@ -41,17 +42,21 @@ const Activities = () => {
                    rank++;
                 }
                 for (let item of UserActivities){
-                    setActivities(prevLeaderboardRows => [
-                        ...prevLeaderboardRows, item
+                    setActivities(prevActivities => [
+                        ...prevActivities, item
                     ])
                 }
             }
         ).catch((error) =>{
             console.log(error + "AN ERROR HAS OCCURED")
-            setLeaderboardRows(prevLeaderboardRows => [
-                ...prevLeaderboardRows, {key: 1, Rank : 1, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
+            setActivities(prevActivities => [
+                ...prevActivities, {key: 0, activityName : "Error",
+                    activityDescription : "Error",
+                   activityAmount: "Error",
+                   progress: "Error",
+                   dateCreated: "Error"
+                }
             ])})
-        tableGenerated = true;
     }
     if (!activitiesGenerated){
         getActivities()
@@ -107,13 +112,12 @@ const Activities = () => {
         TimeCreated={activityObj.dateCreated}
         delete={function deleteActivity() {
             setActivities(prevActivities => {
-                activityCount--;
-                prevActivities.splice(prevActivities[activityObj.key].key, 1);
-                alignKeys(activityObj.key);
+                prevActivities.splice(0, prevActivities.length);
                 return [
                 ...prevActivities,
                 ]
             })
+            getActivities()
         }}
         increaseProgress={function increaseProgress() {
             setActivities(prevActivities => {

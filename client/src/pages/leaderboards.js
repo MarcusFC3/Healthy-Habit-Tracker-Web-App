@@ -61,7 +61,7 @@ const Leaderboard = () => {
         key={leaderboardRowObj.key}
         Rank={leaderboardRowObj.Rank}
         Team={leaderboardRowObj.Team}
-        activtiiesStarted={leaderboardRowObj.activtiiesStarted}
+        activtiiesStarted={leaderboardRowObj.activitiesStarted}
         activitiesCompleted={leaderboardRowObj.activitiesCompleted}
         activitiesCompletedPercentage={leaderboardRowObj.activitiesCompletedPercentage}
         /> 
