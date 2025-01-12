@@ -11,7 +11,13 @@ const Activities = () => {
 
     // This function is what will pull the activities the user already has
     function generateActivity() {
-        return [{ key: 0, Name:"Loading...", descr: "Loading...", amount: 4, progress: 0}]
+        return [{key: 1, 
+            activityName : "Loading",
+            activityDescription : "Loading",
+           activityAmount: 0,
+           progress: 0,
+           dateCreated: "Loading"
+        }]
    
     }
     function getActivities(){
