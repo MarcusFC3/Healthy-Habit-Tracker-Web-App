@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useState, useEffect } from 'react';
 import LeaderboardRow from "../components/LeaderboardRow"
 
 import { getForLeaderboard } from "../hooks/requests"

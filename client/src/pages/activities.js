@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
 import Activity from "../components/Activity";
 
 import { postActivityData, getActivityData } from '../hooks/requests';
