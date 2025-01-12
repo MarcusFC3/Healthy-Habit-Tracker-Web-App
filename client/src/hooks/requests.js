@@ -54,9 +54,6 @@ async function getActivityData(){
         }
         return response.json();
     })
-    .then(data => {
-        console.log("Data recieved:", data)
-    })
     .catch(error => {
         console.error("There was a problem with the fetch operation:", error);
     }

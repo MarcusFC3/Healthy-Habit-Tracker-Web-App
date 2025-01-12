@@ -11,13 +11,10 @@ const Leaderboard = () => {
 
         getForLeaderboard().then(
             (response) =>{
-                let teamData = response.json()["StatsByTeamID"];
+                let teamData = response["StatsByTeamID"];
                 let key = 0;
                 let rank = 1;
                 let teams = []
-                let bruh = {
-                    "asd" : "ASd"
-                }
                 teamData.array.forEach(element => {
 
                     console.log(element)
@@ -29,7 +26,7 @@ const Leaderboard = () => {
             }
         ).catch((error) =>{
             console.log(error + "AN ERROR HAS OCCURED")
-            return {key: key, Rank : rank, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
+            return {key: 1, Rank : 2, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
         })
 
        
