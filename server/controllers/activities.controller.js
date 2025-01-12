@@ -34,8 +34,8 @@ console.log(process.env["FIXIE_URL"])
             const connection = await sql.connect(adminconf);
             const request = connection.request();
             request.input("UserID", sql.Int, UserID);
-            return await request.query("SELECT UserActivities.*, TeamActivities.CompanyActivityID FROM UserActivities LEFT OUTER JOIN TeamActivities ON UserActivities.TeamActivityID = TeamActivities.ActivityID WHERE UserID = @UserID")
-            }
+            return await request.query("SELECT UserActivities.ActivityName,UserActivities.RepetitionsOrDuration, UserActivities.Amount, UserActivities.Completed, UserActivities.TeamActivityID, UserActivities.DateCreated, TeamActivities.CompanyActivityID FROM UserActivities LEFT OUTER JOIN TeamActivities ON UserActivities.TeamActivityID = TeamActivities.ActivityID WHERE UserID = @UserID")
+        }
         getUserActivities(req.session.passport.user.UserID).then(async (results) => {
             async function getTeamActivityData(TeamActivityID) {
                 const connection = await sql.connect(adminconf);

@@ -5,21 +5,58 @@ import Activity from "../components/Activity";
 import { postActivityData, getActivityData } from '../hooks/requests';
 
 let activityCount = 0
-
+let activitiesGenerated = false;
 const Activities = () => {
     const [activities, setActivities] = useState(generateActivity)
 
     // This function is what will pull the activities the user already has
     function generateActivity() {
-        const activityArray = []
-            getActivityData().then((response)=>{
-                
-            })
-            activityArray[0] = { key: activityCount++, Name:"Activity Name asdasdasdad", descr: "Activity Description", amount: 4, progress: 0}
+       
+           return [{ key: 0, Name:"Loading...", descr: "Loading...", amount: 4, progress: 0}]
 
-            return activityArray
+          
     }
-
+    function getActivities(){
+        getActivityData().then(
+            (response) =>{
+                setActivities(prevActivities => {
+                    prevActivities.splice(prevLeaderboardRows[0], 1);
+                    return [
+                    ...prevLeaderboardRows,
+                    ]
+                })
+                
+                let activityData = response["UserActivities"]
+                console.log(activityData)
+                console.log(Object.entries(activityData))
+                let UserActivities = []
+                for (let [team, element] of Object.entries(activityData)) {
+                   UserActivities.push({key: activityCount, activityName : element.ActivityName,
+                    activityDescription : element.ActivityDescription,
+                   activityAmount: element.Amount,
+                   progress: 0,
+                   dateCreated: element.dateCreated
+                })
+                   activityCount++;
+                   rank++;
+                }
+                for (let item of UserActivities){
+                    setActivities(prevLeaderboardRows => [
+                        ...prevLeaderboardRows, item
+                    ])
+                }
+            }
+        ).catch((error) =>{
+            console.log(error + "AN ERROR HAS OCCURED")
+            setLeaderboardRows(prevLeaderboardRows => [
+                ...prevLeaderboardRows, {key: 1, Rank : 1, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
+            ])})
+        tableGenerated = true;
+    }
+    if (!activitiesGenerated){
+        getActivities()
+        activitiesGenerated = true;
+    }
     function createNewActivity(event) {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -47,7 +84,7 @@ const Activities = () => {
                 progress: 0}
         ])
     }
-
+ 
     function alignKeys(key){
         activities.forEach((activityObj) => {
             if(activityObj.key > key){
@@ -67,6 +104,7 @@ const Activities = () => {
         descr={activityObj.descr}
         amount={activityObj.amount} 
         progress={activityObj.progress}
+        TimeCreated={activityObj.dateCreated}
         delete={function deleteActivity() {
             setActivities(prevActivities => {
                 activityCount--;

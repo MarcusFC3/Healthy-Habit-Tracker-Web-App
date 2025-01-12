@@ -3,7 +3,7 @@ import { useState } from "react"
 import LeaderboardRow from "../components/LeaderboardRow"
 
 import { getForLeaderboard } from "../hooks/requests"
-
+let tableGenerated = false;
 const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
 
@@ -12,39 +12,50 @@ const Leaderboard = () => {
         return [{key: 0, Rank : 1, Team: "loading" , activtiiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}]
        
     }
-    getForLeaderboard().then(
-        (response) =>{
-            setLeaderboardRows(prevLeaderboardRows => {
-                prevLeaderboardRows.splice(prevLeaderboardRows[0], 1);
-                return [
-                ...prevLeaderboardRows,
-                ]
-            })
-            let teamData = response["StatsByTeamID"];
-            console.log(response)
-            console.log(Object.keys(teamData))
-            console.log(Object.entries(teamData))
-           console.log()
-            let key = 0;
-            let rank = 1;
-            let teams = []
-            for (let [team, element] of Object.entries(teamData)) {
-               teams.push({key: key, Rank : rank, Team : team , activtiiesStarted : element.Started, activitiesCompleted : element.Completed ,activitiesCompletedPercentage : "%"+((element.Completed / element.Started) * 100).toString()})
-               key++;
-               rank++;
+    function getLeaderboard(){
+    
+        getForLeaderboard().then(
+            (response) =>{
+                setLeaderboardRows(prevLeaderboardRows => {
+                    prevLeaderboardRows.splice(prevLeaderboardRows[0], 1);
+                    return [
+                    ...prevLeaderboardRows,
+                    ]
+                })
+                let teamData = response["StatsByTeamID"];
+                console.log(response)
+                console.log(Object.keys(teamData))
+                console.log(Object.entries(teamData))
+               console.log()
+                let key = 0;
+                let rank = 1;
+                let teams = []
+                for (let [team, element] of Object.entries(teamData)) {
+                   teams.push({key: key, Rank : rank, Team : team , activitiesStarted : element.Started, activitiesCompleted : element.Completed ,activitiesCompletedPercentage : "%"+((element.Completed / element.Started) * 100).toString()})
+                   key++;
+                   rank++;
+                }
+                for (let item of teams){
+                    setLeaderboardRows(prevLeaderboardRows => [
+                        ...prevLeaderboardRows, item
+                    ])
+                }
             }
-            for (let item of teams){
-                setLeaderboardRows(prevLeaderboardRows => [
-                    ...prevLeaderboardRows, item
-                ])
-            }
-        }
-    ).catch((error) =>{
-        console.log(error + "AN ERROR HAS OCCURED")
-        setLeaderboardRows(prevLeaderboardRows => [
-            ...prevLeaderboardRows, {key: 1, Rank : 2, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
-        ])
-    })
+        ).catch((error) =>{
+            console.log(error + "AN ERROR HAS OCCURED")
+            setLeaderboardRows(prevLeaderboardRows => [
+                ...prevLeaderboardRows, {key: 1, Rank : 2, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
+            ])
+        })
+        
+    
+    }
+    if (!tableGenerated){
+        getLeaderboard()
+        tableGenerated = true;
+    }
+   
+    
     const leaderboardRowElements = leaderboardRows.map(leaderboardRowObj => 
         <LeaderboardRow 
         key={leaderboardRowObj.key}
