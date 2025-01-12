@@ -47,10 +47,7 @@ const Leaderboard = () => {
         
     
     }
-    if(!tableGenerated){
-        getLeaderboard();
-        tableGenerated = true;
-    }
+    useEffect(getLeaderboard(), [])
     const leaderboardRowElements = leaderboardRows.map(leaderboardRowObj => 
         <LeaderboardRow 
         key={leaderboardRowObj.key}

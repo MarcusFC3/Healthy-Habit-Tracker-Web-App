@@ -55,10 +55,7 @@ const Activities = () => {
                 }
             ])})
     }
-    if(!activitiesGenerated){
-        getActivities();
-        activitiesGenerated = true;
-    }
+    useEffect(getActivities(), [])
     function createNewActivity(event) {
         event.preventDefault();
         const formData = new FormData(event.target);
