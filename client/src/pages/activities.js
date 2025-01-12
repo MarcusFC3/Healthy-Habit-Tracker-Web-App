@@ -12,10 +12,12 @@ const Activities = () => {
     // This function is what will pull the activities the user already has
     function generateActivity() {
         const activityArray = []
+            getActivityData().then((response)=>{
+                activityArray[0] = { key: activityCount++, Name:"Activity Name asdasdasdad", descr: "Activity Description", amount: 4, progress: 0}
 
-        activityArray[0] = { key: activityCount++, Name:"Activity Name", descr: "Activity Description", amount: 4, progress: 0}
-
-        return activityArray
+                return activityArray
+            })
+        
     }
 
     function createNewActivity(event) {

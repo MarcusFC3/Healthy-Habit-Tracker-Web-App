@@ -10,7 +10,7 @@ import Leaderboard from "./pages/leaderboards"
 import Sign_Up from "./pages/sign_up"
 import Login from "./pages/login"
 import Layout from "./components/Layout"
-import LoginCheck from "./components/LoginCheck";
+//import LoginCheck from "./components/LoginCheck";
 
 import "./css/stylesheet.css"
 
