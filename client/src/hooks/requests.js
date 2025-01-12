@@ -87,10 +87,6 @@ async function httpAccountLogin(accountLoginData){
 // The function that sends a GET request for the leaderboard
 async function getForLeaderboard(){
     await fetch(`${API_URL}/activities`,{credentials: 'include'})
-    .then(response => {
-        console.log(response)
-        return response;
-    })
     .catch(error => {
         console.error("There was a problem with the fetch operation:", error);
     }
