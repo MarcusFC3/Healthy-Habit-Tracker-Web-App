@@ -10,17 +10,21 @@ const Leaderboard = () => {
     async function generateTableBody(){
         return await getForLeaderboard().then(
             (response) =>{
-                console.log(response)
-                console.log(teamData.keys())
-                console.log(teamData.entries())
                 let teamData = response["StatsByTeamID"];
+                console.log(response)
+                console.log(Object.keys(teamData))
+                console.log(Object.entries(teamData))
+               console.log()
                 let key = 0;
                 let rank = 1;
                 let teams = []
+                for (let [key, value] of Object.entries(teamData)) {
+                    console.log(key + value)
+                  }
                 teamData.array.forEach(element => {
-
+                    teamData.keys()[key]
                     console.log(element)
-                    teams.push({key: key, Rank : rank, Team : "idk" , activtiiesStarted : element.Started, activitiesCompleted : element.Completed ,activitiesCompletedPercentage : "%"+((element.Completed / element.Started) * 100).toString()})
+                    teams.push({key: key, Rank : rank, Team : Object.keys(teamData)[key] , activtiiesStarted : element.Started, activitiesCompleted : element.Completed ,activitiesCompletedPercentage : "%"+((element.Completed / element.Started) * 100).toString()})
                     key++;
                     rank++;
                 });
