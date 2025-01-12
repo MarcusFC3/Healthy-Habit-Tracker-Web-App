@@ -55,7 +55,9 @@ const Activities = () => {
                 }
             ])})
     }
-    useEffect(getActivities(), [])
+    useEffect(() =>{
+        getActivities()}
+        , [])
     function createNewActivity(event) {
         event.preventDefault();
         const formData = new FormData(event.target);

@@ -47,7 +47,8 @@ const Leaderboard = () => {
         
     
     }
-    useEffect(getLeaderboard(), [])
+    useEffect(() =>{
+        getLeaderboard()}, [])
     const leaderboardRowElements = leaderboardRows.map(leaderboardRowObj => 
         <LeaderboardRow 
         key={leaderboardRowObj.key}
