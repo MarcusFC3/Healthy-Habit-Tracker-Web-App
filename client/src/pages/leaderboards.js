@@ -11,6 +11,7 @@ const Leaderboard = () => {
 
         getForLeaderboard().then(
             (response) =>{
+                console.log(response)
                 let teamData = response["StatsByTeamID"];
                 let key = 0;
                 let rank = 1;
