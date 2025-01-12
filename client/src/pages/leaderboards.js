@@ -3,11 +3,11 @@ import { useState } from "react"
 import LeaderboardRow from "../components/LeaderboardRow"
 
 import { getForLeaderboard } from "../hooks/requests"
+let tableGenerated = false;
 const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
-
+     
     function generateTableBody(){
-        setTimeout(600, getLeaderboard())
         return [{key: 0, Rank : 1, Team: "loading" , activitiesStarted : "loading", activitiesCompleted : "loading" ,activitiesCompletedPercentage : "loading"}]
        
     }
@@ -47,8 +47,10 @@ const Leaderboard = () => {
         
     
     }
-   
-    
+    if(!tableGenerated){
+        getLeaderboard();
+        tableGenerated = true;
+    }
     const leaderboardRowElements = leaderboardRows.map(leaderboardRowObj => 
         <LeaderboardRow 
         key={leaderboardRowObj.key}

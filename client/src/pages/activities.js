@@ -11,10 +11,8 @@ const Activities = () => {
 
     // This function is what will pull the activities the user already has
     function generateActivity() {
-        setTimeout(getActivities(), 600)
         return [{ key: 0, Name:"Loading...", descr: "Loading...", amount: 4, progress: 0}]
-
-          
+   
     }
     function getActivities(){
         getActivityData().then(
@@ -39,7 +37,6 @@ const Activities = () => {
                    dateCreated: element.dateCreated
                 })
                    activityCount++;
-                   rank++;
                 }
                 
                     setActivities(prevActivities => [
@@ -57,6 +54,10 @@ const Activities = () => {
                    dateCreated: "Error"
                 }
             ])})
+    }
+    if(!activitiesGenerated){
+        getActivities();
+        activitiesGenerated = true;
     }
     function createNewActivity(event) {
         event.preventDefault();
