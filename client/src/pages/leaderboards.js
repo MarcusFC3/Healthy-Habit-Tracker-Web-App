@@ -45,14 +45,6 @@ const Leaderboard = () => {
             ...prevLeaderboardRows, {key: 1, Rank : 2, Team: "error" , activtiiesStarted : "error", activitiesCompleted : "error" ,activitiesCompletedPercentage : "error"}
         ])
     })
-    setLeaderboardRows(prevLeaderboardRows => [
-        ...prevLeaderboardRows, {
-            key: activityKey,
-            Name: activityName,
-            descr: activityDescr,
-            amount: activityAmount, 
-            progress: 0}
-    ])
     const leaderboardRowElements = leaderboardRows.map(leaderboardRowObj => 
         <LeaderboardRow 
         key={leaderboardRowObj.key}
