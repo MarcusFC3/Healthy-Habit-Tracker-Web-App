@@ -8,9 +8,11 @@ const Leaderboard = () => {
     const [leaderboardRows, setLeaderboardRows] = useState(generateTableBody())
 
     async function generateTableBody(){
-        getForLeaderboard().then(
+        return await getForLeaderboard().then(
             (response) =>{
                 console.log(response)
+                console.log(teamData.keys())
+                console.log(teamData.entries())
                 let teamData = response["StatsByTeamID"];
                 let key = 0;
                 let rank = 1;
